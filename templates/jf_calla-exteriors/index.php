@@ -139,15 +139,6 @@ else
 			</div>
 		</div>
 		
-		<?php if(JRequest::getVar('option') == 'com_contact') : ?>
-		<div id="jf-map">
-			<?php if ($this->params->get('map')) : ?>
-				<div id="map">
-					<div id="googleMap" style="height: 510px;width:100%;"></div>
-				</div>
-			<?php endif; ?>
-		</div>
-		<?php endif; ?>
 		
 		<?php if($this->countModules('home-c-l') || $this->countModules('home-c-r')) : ?>
 		<div id="jf-home-c">
