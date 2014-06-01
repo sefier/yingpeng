@@ -58,7 +58,7 @@ abstract class JHtmlFormbehavior
 			$debug  = (boolean) $config->get('debug');
 		}
 
-		JHtml::_('script', 'jui/chosen.jquery.min.js', false, true, false, false, $debug);
+		JHtml::_('script', 'http://sh-yingpeng.qiniudn.com/media/jui/js/jquery.min.js', false, true, false, false, $debug);
 		JHtml::_('stylesheet', 'jui/chosen.css', false, true);
 		JFactory::getDocument()->addScriptDeclaration("
 				jQuery(document).ready(function (){
