@@ -235,29 +235,7 @@ else
 					
 					<?php if (($this->params->get('social') && ($templateparams->get('facebookicon') || $templateparams->get('flickricon') || $templateparams->get('googleicon') || $templateparams->get('skypelink') || $templateparams->get('twittericon') || $templateparams->get('pinteresticon') || $templateparams->get('youtubeticon')))) : ?>
 					<div id="jf-social">
-						<ul>
-							<?php if ($templateparams->get('facebookicon') && $templateparams->get('facebooklink') != '') : ?>
-							<li><a class="button-facebook" href="<?php echo $templateparams->get('facebooklink'); ?>" target="_blank"></a></li>
-							<?php endif; ?>
-							<?php if ($templateparams->get('flickricon') && $templateparams->get('flickrlink') != '') : ?>
-							<li><a class="button-flickr" href="<?php echo $templateparams->get('flickrlink'); ?>" target="_blank"></a></li>
-							<?php endif; ?>
-							<?php if ($templateparams->get('googleicon') && $templateparams->get('googlelink') != '') : ?>
-							<li><a class="button-google" href="<?php echo $templateparams->get('googlelink'); ?>" target="_blank"></a></li>
-							<?php endif; ?>
-							<?php if ($templateparams->get('skypeicon') && $templateparams->get('skypelink') != '') : ?>
-							<li><a class="button-skype" href="<?php echo $templateparams->get('skypelink'); ?>" target="_blank"></a></li>
-							<?php endif; ?>
-							<?php if ($templateparams->get('twittericon') && $templateparams->get('twitterlink') != '') : ?>
-							<li><a class="button-twitter" href="<?php echo $templateparams->get('twitterlink'); ?>" target="_blank"></a></li>
-							<?php endif; ?>
-							<?php if ($templateparams->get('pinteresticon') && $templateparams->get('pinterestlink') != '') : ?>
-							<li><a class="button-pinterest" href="<?php echo $templateparams->get('pinterestlink'); ?>" target="_blank"></a></li>
-							<?php endif; ?>
-							<?php if ($templateparams->get('youtubeticon') && $templateparams->get('youtubelink') != '') : ?>
-							<li><a class="button-youtube" href="<?php echo $templateparams->get('youtubelink'); ?>" target="_blank"></a></li>
-							<?php endif; ?>
-						</ul>
+						<script type="text/javascript">kfguin="543029299";eid="";ws="http://www.sh-yingpeng.com"; companyname="上海赢鹏电子科技有限公司"; welcomeword="您好，请问您是否需要咨询？"; type="1";wpadomain="bizapp";</script> <script type="text/javascript" src="http://im.bizapp.qq.com:8000/kf.js?t=110922"></script>
 					</div>
 					<?php endif; ?>
 					<div class="copyright">
