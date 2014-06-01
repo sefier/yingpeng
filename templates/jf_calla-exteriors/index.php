@@ -43,7 +43,7 @@ $sitename = $app->getCfg('sitename');
 //JHtml::_('bootstrap.framework');
 
 // Add Stylesheets
-$doc->addStyleSheet('templates/'.$this->template.'/css/fonts/stylesheet.css');
+$doc->addStyleSheet('http://sh-yingpeng.qiniudn.com/templates/'.$this->template.'/css/fonts/stylesheet.css');
 $doc->addStyleSheet('templates/'.$this->template.'/css/template.css');
 $doc->addStyleSheet('templates/'.$this->template.'/css/k2.css');
 $doc->addStyleSheet('templates/'.$this->template.'/css/jw_sigpro.css');
