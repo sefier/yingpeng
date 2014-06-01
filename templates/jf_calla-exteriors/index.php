@@ -235,7 +235,7 @@ else
 					
 					<?php if (($this->params->get('social') && ($templateparams->get('facebookicon') || $templateparams->get('flickricon') || $templateparams->get('googleicon') || $templateparams->get('skypelink') || $templateparams->get('twittericon') || $templateparams->get('pinteresticon') || $templateparams->get('youtubeticon')))) : ?>
 					<div id="jf-social">
-						<script type="text/javascript">kfguin="543029299";eid="";ws="http://www.sh-yingpeng.com"; companyname="上海赢鹏电子科技有限公司"; welcomeword="您好，请问您是否需要咨询？"; type="1";wpadomain="bizapp";</script> <script type="text/javascript" src="http://im.bizapp.qq.com:8000/kf.js?t=110922"></script>
+						<a target="_blank" href="http://wpa.qq.com/msgrd?v=1&uin=54302929299&site=qq&menu=yes" ><img border="0" src="http://wpa.qq.com/pa?p=1:54302929299:43" alt="点击这里给我发消息" title="点击这里给我发消息"></a>
 					</div>
 					<?php endif; ?>
 					<div class="copyright">
