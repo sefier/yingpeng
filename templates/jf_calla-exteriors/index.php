@@ -235,7 +235,7 @@ else
 					
 					<?php if (($this->params->get('social') && ($templateparams->get('facebookicon') || $templateparams->get('flickricon') || $templateparams->get('googleicon') || $templateparams->get('skypelink') || $templateparams->get('twittericon') || $templateparams->get('pinteresticon') || $templateparams->get('youtubeticon')))) : ?>
 					<div id="jf-social">
-						<a target="_blank" href="http://wpa.qq.com/msgrd?v=1&uin=54302929299&site=qq&menu=yes" ><img border="0" src="http://wpa.qq.com/pa?p=1:54302929299:43" alt="点击这里给我发消息" title="点击这里给我发消息"></a>
+						<a target="_blank" href="http://wpa.qq.com/msgrd?v=1&uin=543029299&site=qq&menu=yes" ><img border="0" src="http://wpa.qq.com/pa?p=1:543029299:43" alt="点击这里给我发消息" title="点击这里给我发消息"></a>
 					</div>
 					<?php endif; ?>
 					<div class="copyright">
