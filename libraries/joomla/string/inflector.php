@@ -403,7 +403,6 @@ class JStringInflector
 	{
 		// Try to get the cached plural form from the singular.
 		$cache = $this->_getCachedPlural($word);
-
 		if ($cache !== false)
 		{
 			return $cache;
@@ -417,11 +416,9 @@ class JStringInflector
 
 		// Compute the inflection.
 		$inflected = $this->_matchRegexRule($word, 'plural');
-
 		if ($inflected !== false)
 		{
 			$this->_setCache($word, $inflected);
-
 			return $inflected;
 		}
 
@@ -441,7 +438,6 @@ class JStringInflector
 	{
 		// Try to get the cached singular form from the plural.
 		$cache = $this->_getCachedSingular($word);
-
 		if ($cache !== false)
 		{
 			return $cache;
@@ -455,11 +451,9 @@ class JStringInflector
 
 		// Compute the inflection.
 		$inflected = $this->_matchRegexRule($word, 'singular');
-
 		if ($inflected !== false)
 		{
 			$this->_setCache($inflected, $word);
-
 			return $inflected;
 		}
 

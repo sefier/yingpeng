@@ -147,7 +147,7 @@ class InstallerModelDatabase extends InstallerModel
 			$db->execute();
 
 			// Add new row
-			$query->clear()
+			$query = $db->getQuery(true)
 				->insert($db->quoteName('#__schemas'))
 				->set($db->quoteName('extension_id') . '= 700')
 				->set($db->quoteName('version_id') . '= ' . $db->quote($schema));

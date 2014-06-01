@@ -77,7 +77,7 @@ class LanguagesViewInstalled extends JViewLegacy
 
 		$canDo	= LanguagesHelper::getActions();
 
-		JToolbarHelper::title(JText::_('COM_LANGUAGES_VIEW_INSTALLED_TITLE'), 'comments-2 langmanager');
+		JToolbarHelper::title(JText::_('COM_LANGUAGES_VIEW_INSTALLED_TITLE'), 'langmanager.png');
 
 		if ($canDo->get('core.edit.state'))
 		{

@@ -72,7 +72,6 @@ class JHttpTransportSocket implements JHttpTransport
 		{
 			// Make sure the connection has not timed out.
 			$meta = stream_get_meta_data($connection);
-
 			if ($meta['timed_out'])
 			{
 				throw new RuntimeException('Server connection timed out.');
@@ -160,11 +159,6 @@ class JHttpTransportSocket implements JHttpTransport
 		// Create the response object.
 		$return = new JHttpResponse;
 
-		if (empty($content))
-		{
-			throw new UnexpectedValueException('No content in response.');
-		}
-
 		// Split the response into headers and body.
 		$response = explode("\r\n\r\n", $content, 2);
 
@@ -172,17 +166,15 @@ class JHttpTransportSocket implements JHttpTransport
 		$headers = explode("\r\n", $response[0]);
 
 		// Set the body for the response.
-		$return->body = empty($response[1]) ? '' : $response[1];
+		$return->body = $response[1];
 
 		// Get the response code from the first offset of the response headers.
 		preg_match('/[0-9]{3}/', array_shift($headers), $matches);
 		$code = $matches[0];
-
 		if (is_numeric($code))
 		{
 			$return->code = (int) $code;
 		}
-
 		// No valid response code was detected.
 		else
 		{
@@ -223,7 +215,6 @@ class JHttpTransportSocket implements JHttpTransport
 		{
 			$port = ($uri->getScheme() == 'https') ? 443 : 80;
 		}
-
 		// Use the set port.
 		else
 		{
@@ -238,7 +229,6 @@ class JHttpTransportSocket implements JHttpTransport
 		{
 			// Connection reached EOF, cannot be used anymore
 			$meta = stream_get_meta_data($this->connections[$key]);
-
 			if ($meta['eof'])
 			{
 				if (!fclose($this->connections[$key]))
@@ -246,7 +236,6 @@ class JHttpTransportSocket implements JHttpTransport
 					throw new RuntimeException('Cannot close connection');
 				}
 			}
-
 			// Make sure the connection has not timed out.
 			elseif (!$meta['timed_out'])
 			{
@@ -256,34 +245,14 @@ class JHttpTransportSocket implements JHttpTransport
 
 		if (!is_numeric($timeout))
 		{
-			$timeout = ini_get('default_socket_timeout');
+			$timeout = ini_get("default_socket_timeout");
 		}
-
-		// Capture PHP errors
-		$php_errormsg = '';
-		$track_errors = ini_get('track_errors');
-		ini_set('track_errors', true);
-
-		// PHP sends a warning if the uri does not exists; we silence it and throw an exception instead.
-		// Attempt to connect to the server
-		$connection = @fsockopen($host, $port, $errno, $err, $timeout);
-
+		// Attempt to connect to the server.
+		$connection = fsockopen($host, $port, $errno, $err, $timeout);
 		if (!$connection)
 		{
-			if (!$php_errormsg)
-			{
-				// Error but nothing from php? Create our own
-				$php_errormsg = sprintf('Could not connect to resource: %s', $uri, $err, $errno);
-			}
-
-			// Restore error tracking to give control to the exception handler
-			ini_set('track_errors', $track_errors);
-
-			throw new RuntimeException($php_errormsg);
+			throw new RuntimeException($err, $errno);
 		}
-
-		// Restore error tracking to what it was before.
-		ini_set('track_errors', $track_errors);
 
 		// Since the connection was successful let's store it in case we need to use it later.
 		$this->connections[$key] = $connection;
@@ -298,13 +267,13 @@ class JHttpTransportSocket implements JHttpTransport
 	}
 
 	/**
-	 * Method to check if http transport socket available for use
+	 * method to check if http transport socket available for using
 	 *
-	 * @return  boolean   True if available else false
+	 * @return bool true if available else false
 	 *
 	 * @since   12.1
 	 */
-	public static function isSupported()
+	static public function isSupported()
 	{
 		return function_exists('fsockopen') && is_callable('fsockopen');
 	}

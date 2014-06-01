@@ -8,7 +8,6 @@
  */
 
 defined('_JEXEC') or die;
-JHtml::_('behavior.tabstate');
 
 $input = JFactory::getApplication()->input;
 
@@ -21,6 +20,6 @@ JLoader::register('JHtmlCategoriesAdministrator', JPATH_ADMINISTRATOR . '/compon
 
 $task = $input->get('task');
 
-$controller = JControllerLegacy::getInstance('Categories');
+$controller	= JControllerLegacy::getInstance('Categories');
 $controller->execute($input->get('task'));
 $controller->redirect();

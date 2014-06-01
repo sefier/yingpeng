@@ -33,7 +33,6 @@ class PlgSystemRedirect extends JPlugin
 
 		// Set the error handler for E_ERROR to be the class handleError method.
 		JError::setErrorHandling(E_ERROR, 'callback', array('PlgSystemRedirect', 'handleError'));
-		set_exception_handler(array('PlgSystemRedirect', 'handleError'));
 	}
 
 	public static function handleError(&$error)
@@ -45,8 +44,8 @@ class PlgSystemRedirect extends JPlugin
 		if (!$app->isAdmin() and ($error->getCode() == 404))
 		{
 			// Get the full current URI.
-			$uri = JUri::getInstance();
-			$current = rawurldecode($uri->toString(array('scheme', 'host', 'port', 'path', 'query', 'fragment')));
+			$uri = JURI::getInstance();
+			$current = $uri->toString(array('scheme', 'host', 'port', 'path', 'query', 'fragment'));
 
 			// Attempt to ignore idiots.
 			if ((strpos($current, 'mosConfig_') !== false) || (strpos($current, '=http://') !== false))
@@ -68,7 +67,7 @@ class PlgSystemRedirect extends JPlugin
 			// If a redirect exists and is published, permanently redirect.
 			if ($link and ($link->published == 1))
 			{
-				$app->redirect($link->new_url, true);
+				$app->redirect($link->new_url, null, null, true, false);
 			}
 			else
 			{
@@ -89,7 +88,7 @@ class PlgSystemRedirect extends JPlugin
 						$db->quoteName('published'),
 						$db->quoteName('created_date')
 					);
-					$query->clear()
+					$query = $db->getQuery(true)
 						->insert($db->quoteName('#__redirect_links'), false)
 						->columns($columns)
 						->values(
@@ -104,7 +103,7 @@ class PlgSystemRedirect extends JPlugin
 				else
 				{
 					// Existing error url, increase hit counter
-					$query->clear()
+					$query = $db->getQuery(true)
 						->update($db->quoteName('#__redirect_links'))
 						->set($db->quoteName('hits') . ' = ' . $db->quote('hits') . ' + 1')
 						->where('id = ' . (int) $res);

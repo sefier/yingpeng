@@ -17,81 +17,61 @@ defined('JPATH_PLATFORM') or die;
 abstract class JFactory
 {
 	/**
-	 * Global application object
-	 *
-	 * @var    JApplicationCms
+	 * @var    JApplication
 	 * @since  11.1
 	 */
 	public static $application = null;
 
 	/**
-	 * Global cache object
-	 *
 	 * @var    JCache
 	 * @since  11.1
 	 */
 	public static $cache = null;
 
 	/**
-	 * Global configuraiton object
-	 *
 	 * @var    JConfig
 	 * @since  11.1
 	 */
 	public static $config = null;
 
 	/**
-	 * Container for JDate instances
-	 *
 	 * @var    array
 	 * @since  11.3
 	 */
 	public static $dates = array();
 
 	/**
-	 * Global session object
-	 *
 	 * @var    JSession
 	 * @since  11.1
 	 */
 	public static $session = null;
 
 	/**
-	 * Global language object
-	 *
 	 * @var    JLanguage
 	 * @since  11.1
 	 */
 	public static $language = null;
 
 	/**
-	 * Global document object
-	 *
 	 * @var    JDocument
 	 * @since  11.1
 	 */
 	public static $document = null;
 
 	/**
-	 * Global ACL object
-	 *
 	 * @var    JAccess
 	 * @since  11.1
-	 * @deprecated  13.3 (Platform) & 4.0 (CMS)
+	 * @deprecated  13.3
 	 */
 	public static $acl = null;
 
 	/**
-	 * Global database object
-	 *
 	 * @var    JDatabaseDriver
 	 * @since  11.1
 	 */
 	public static $database = null;
 
 	/**
-	 * Global mailer object
-	 *
 	 * @var    JMail
 	 * @since  11.1
 	 */
@@ -100,13 +80,13 @@ abstract class JFactory
 	/**
 	 * Get a application object.
 	 *
-	 * Returns the global {@link JApplicationCms} object, only creating it if it doesn't already exist.
+	 * Returns the global {@link JApplication} object, only creating it if it doesn't already exist.
 	 *
 	 * @param   mixed   $id      A client identifier or name.
 	 * @param   array   $config  An optional associative array of configuration settings.
 	 * @param   string  $prefix  Application prefix
 	 *
-	 * @return  JApplicationCms object
+	 * @return  JApplication object
 	 *
 	 * @see     JApplication
 	 * @since   11.1
@@ -121,7 +101,7 @@ abstract class JFactory
 				throw new Exception('Application Instantiation Error', 500);
 			}
 
-			self::$application = JApplicationCms::getInstance($id);
+			self::$application = JApplication::getInstance($id, $config, $prefix);
 		}
 
 		return self::$application;
@@ -261,17 +241,14 @@ abstract class JFactory
 	 * @return  JCacheController object
 	 *
 	 * @see     JCache
-	 * @since   11.1
 	 */
 	public static function getCache($group = '', $handler = 'callback', $storage = null)
 	{
 		$hash = md5($group . $handler . $storage);
-
 		if (isset(self::$cache[$hash]))
 		{
 			return self::$cache[$hash];
 		}
-
 		$handler = ($handler == 'function') ? 'callback' : $handler;
 
 		$options = array('defaultgroup' => $group);
@@ -296,7 +273,7 @@ abstract class JFactory
 	 *
 	 * @return  JAccess object
 	 *
-	 * @deprecated  13.3 (Platform) & 4.0 (CMS) - Use JAccess directly.
+	 * @deprecated  13.3  Use JAccess directly.
 	 */
 	public static function getACL()
 	{
@@ -324,7 +301,12 @@ abstract class JFactory
 	{
 		if (!self::$database)
 		{
+			// Get the debug configuration setting
+			$conf = self::getConfig();
+			$debug = $conf->get('debug');
+
 			self::$database = self::createDbo();
+			self::$database->setDebug($debug);
 		}
 
 		return self::$database;
@@ -346,7 +328,6 @@ abstract class JFactory
 		{
 			self::$mailer = self::createMailer();
 		}
-
 		$copy = clone self::$mailer;
 
 		return $copy;
@@ -361,7 +342,6 @@ abstract class JFactory
 	 * @return  mixed  SimplePie parsed object on success, false on failure.
 	 *
 	 * @since   11.1
-	 * @throws  BadMethodCallException
 	 * @deprecated  4.0  Use directly JFeedFactory or supply SimplePie instead. Mehod will be proxied to JFeedFactory beginning in 3.2
 	 */
 	public static function getFeedParser($url, $cache_time = 0)
@@ -387,14 +367,13 @@ abstract class JFactory
 	 * @see     JXMLElement
 	 * @since   11.1
 	 * @note    When JXMLElement is not present a SimpleXMLElement will be returned.
-	 * @deprecated  13.3 (Platform) & 4.0 (CMS) - Use SimpleXML directly.
+	 * @deprecated  13.3 Use SimpleXML directly.
 	 */
 	public static function getXML($data, $isFile = true)
 	{
 		JLog::add(__METHOD__ . ' is deprecated. Use SimpleXML directly.', JLog::WARNING, 'deprecated');
 
 		$class = 'SimpleXMLElement';
-
 		if (class_exists('JXMLElement'))
 		{
 			$class = 'JXMLElement';
@@ -440,8 +419,7 @@ abstract class JFactory
 	 * @return  JEditor instance of JEditor
 	 *
 	 * @since   11.1
-	 * @throws  BadMethodCallException
-	 * @deprecated 12.3 (Platform) & 4.0 (CMS) - Use JEditor directly
+	 * @deprecated 12.3 Use JEditor directly
 	 */
 	public static function getEditor($editor = null)
 	{
@@ -451,6 +429,8 @@ abstract class JFactory
 		{
 			throw new BadMethodCallException('JEditor not found');
 		}
+
+		JLog::add(__METHOD__ . ' is deprecated. Use JEditor directly.', JLog::WARNING, 'deprecated');
 
 		// Get the editor configuration setting
 		if (is_null($editor))
@@ -463,21 +443,21 @@ abstract class JFactory
 	}
 
 	/**
-	 * Return a reference to the {@link JUri} object
+	 * Return a reference to the {@link JURI} object
 	 *
 	 * @param   string  $uri  Uri name.
 	 *
-	 * @return  JUri object
+	 * @return  JURI object
 	 *
-	 * @see     JUri
+	 * @see     JURI
 	 * @since   11.1
-	 * @deprecated  13.3 (Platform) & 4.0 (CMS) - Use JUri directly.
+	 * @deprecated  13.3 Use JURI directly.
 	 */
 	public static function getURI($uri = 'SERVER')
 	{
-		JLog::add(__METHOD__ . ' is deprecated. Use JUri directly.', JLog::WARNING, 'deprecated');
+		JLog::add(__METHOD__ . ' is deprecated. Use JURI directly.', JLog::WARNING, 'deprecated');
 
-		return JUri::getInstance($uri);
+		return JURI::getInstance($uri);
 	}
 
 	/**
@@ -593,7 +573,6 @@ abstract class JFactory
 		$options['expire'] = ($conf->get('lifetime')) ? $conf->get('lifetime') * 60 : 900;
 
 		$session = JSession::getInstance($handler, $options);
-
 		if ($session->getState() == 'expired')
 		{
 			$session->restart();
@@ -634,7 +613,6 @@ abstract class JFactory
 			{
 				header('HTTP/1.1 500 Internal Server Error');
 			}
-
 			jexit('Database Error: ' . $e->getMessage());
 		}
 
@@ -723,16 +701,8 @@ abstract class JFactory
 		$input = self::getApplication()->input;
 		$type = $input->get('format', 'html', 'word');
 
-		$version = new JVersion;
-
-		$attributes = array(
-			'charset' => 'utf-8',
-			'lineend' => 'unix',
-			'tab' => '  ',
-			'language' => $lang->getTag(),
-			'direction' => $lang->isRTL() ? 'rtl' : 'ltr',
-			'mediaversion' => $version->getMediaVersion()
-		);
+		$attributes = array('charset' => 'utf-8', 'lineend' => 'unix', 'tab' => '  ', 'language' => $lang->getTag(),
+			'direction' => $lang->isRTL() ? 'rtl' : 'ltr');
 
 		return JDocument::getInstance($type, $attributes);
 	}
@@ -747,7 +717,7 @@ abstract class JFactory
 	 *
 	 * @return  JStream
 	 *
-	 * @see     JStream
+	 * @see JStream
 	 * @since   11.1
 	 */
 	public static function getStream($use_prefix = true, $use_network = true, $ua = null, $uamask = false)

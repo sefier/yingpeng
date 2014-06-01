@@ -57,7 +57,7 @@ class LanguagesViewLanguage extends JViewLegacy
 		$isNew = empty($this->item->lang_id);
 		$canDo = LanguagesHelper::getActions();
 
-		JToolbarHelper::title(JText::_($isNew ? 'COM_LANGUAGES_VIEW_LANGUAGE_EDIT_NEW_TITLE' : 'COM_LANGUAGES_VIEW_LANGUAGE_EDIT_EDIT_TITLE'), 'comments-2 langmanager');
+		JToolbarHelper::title(JText::_($isNew ? 'COM_LANGUAGES_VIEW_LANGUAGE_EDIT_NEW_TITLE' : 'COM_LANGUAGES_VIEW_LANGUAGE_EDIT_EDIT_TITLE'), 'langmanager.png');
 
 		// If a new item, can save.
 		if ($isNew && $canDo->get('core.create'))

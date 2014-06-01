@@ -20,18 +20,14 @@ defined('JPATH_PLATFORM') or die;
 class JCacheStorageCachelite extends JCacheStorage
 {
 	/**
-	 * Static cache of the Cache_Lite instance
-	 *
 	 * @var    object
 	 * @since  11.1
 	 */
 	protected static $CacheLiteInstance = null;
 
 	/**
-	 * Root path
-	 *
-	 * @var    string
-	 * @since  11.1
+	 * @var
+	 * @since   11.1
 	 */
 	protected $_root;
 
@@ -232,6 +228,16 @@ class JCacheStorageCachelite extends JCacheStorage
 	public function clean($group, $mode = null)
 	{
 		jimport('joomla.filesystem.folder');
+
+		if (trim($group) == '')
+		{
+			$clmode = 'notgroup';
+		}
+
+		if ($mode == null)
+		{
+			$clmode = 'group';
+		}
 
 		switch ($mode)
 		{

@@ -82,7 +82,7 @@
 				<field
 					name="show_label"
 					type="radio"
-					class="btn-group btn-group-yesno"
+					class="btn-group"
 					default="1"
 					label="MOD_FINDER_FIELDSET_ADVANCED_SHOW_LABEL_LABEL"
 					description="MOD_FINDER_FIELDSET_ADVANCED_SHOW_LABEL_DESCRIPTION">
@@ -109,7 +109,7 @@
 				<field
 					name="show_button"
 					type="radio"
-					class="btn-group btn-group-yesno"
+					class="btn-group"
 					default="0"
 					label="MOD_FINDER_FIELDSET_ADVANCED_SHOW_BUTTON_LABEL"
 					description="MOD_FINDER_FIELDSET_ADVANCED_SHOW_BUTTON_DESCRIPTION">
@@ -136,23 +136,20 @@
 				<field
 					name="opensearch"
 					type="radio"
-					class="btn-group btn-group-yesno"
+					class="btn-group"
 					label="MOD_FINDER_FIELD_OPENSEARCH_LABEL"
 					description="MOD_FINDER_FIELD_OPENSEARCH_DESCRIPTION"
 					default="1">
-					<option value="1">JYES</option>
-					<option value="0">JNO</option>
+					<option
+						value="0">JNO</option>
+					<option
+						value="1">JYES</option>
 				</field>
 				<field
 					name="opensearch_title"
 					type="text"
 					label="MOD_FINDER_FIELD_OPENSEARCH_TEXT_LABEL"
 					description="MOD_FINDER_FIELD_OPENSEARCH_TEXT_DESCRIPTION" />
-				<field
-					name="set_itemid"
-					type="text"
-					label="MOD_FINDER_FIELDSET_ADVANCED_SETITEMID_LABEL"
-					description="MOD_FINDER_FIELDSET_ADVANCED_SETITEMID_DESCRIPTION" />
 			</fieldset>
 		</fields>
 	</config>

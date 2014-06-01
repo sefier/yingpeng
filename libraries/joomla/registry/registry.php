@@ -99,17 +99,16 @@ class JRegistry implements JsonSerializable
 	 * Sets a default value if not already assigned.
 	 *
 	 * @param   string  $key      The name of the parameter.
-	 * @param   mixed   $default  An optional value for the parameter.
+	 * @param   string  $default  An optional value for the parameter.
 	 *
-	 * @return  mixed  The value set, or the default if the value was not previously set (or null).
+	 * @return  string  The value set, or the default if the value was not previously set (or null).
 	 *
 	 * @since   11.1
 	 */
 	public function def($key, $default = '')
 	{
-		$value = $this->get($key, $default);
+		$value = $this->get($key, (string) $default);
 		$this->set($key, $value);
-
 		return $value;
 	}
 
@@ -170,7 +169,6 @@ class JRegistry implements JsonSerializable
 		{
 			return (isset($this->data->$path) && $this->data->$path !== null && $this->data->$path !== '') ? $this->data->$path : $default;
 		}
-
 		// Explode the registry path into an array
 		$nodes = explode('.', $path);
 
@@ -192,7 +190,6 @@ class JRegistry implements JsonSerializable
 				break;
 			}
 		}
-
 		if ($found && $node !== null && $node !== '')
 		{
 			$result = $node;
@@ -320,7 +317,6 @@ class JRegistry implements JsonSerializable
 				$this->data->$k = $v;
 			}
 		}
-
 		return true;
 	}
 
@@ -340,8 +336,7 @@ class JRegistry implements JsonSerializable
 
 		/**
 		 * Explode the registry path into an array and remove empty
-		 * nodes caused by passing in double dotted strings. ex: joomla..test.
-		 * Finally, re-key the array so it is sequential.
+		 * nodes, then re-key the array so it's sequential.
 		 */
 		$nodes = array_values(array_filter(explode('.', $path), 'strlen'));
 
@@ -357,8 +352,7 @@ class JRegistry implements JsonSerializable
 				{
 					$node->$nodes[$i] = new stdClass;
 				}
-
-				$node = (object) $node->$nodes[$i];
+				$node = $node->$nodes[$i];
 			}
 
 			// Get the old value if exists so we can return it

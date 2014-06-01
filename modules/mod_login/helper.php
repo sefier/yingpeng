@@ -47,7 +47,7 @@ class ModLoginHelper
 		if (!$url)
 		{
 			// Stay on the same page
-			$uri = clone JUri::getInstance();
+			$uri = clone JURI::getInstance();
 			$vars = $router->parse($uri);
 			unset($vars['lang']);
 			if ($router->getMode() == JROUTER_MODE_SEF)
@@ -63,17 +63,17 @@ class ModLoginHelper
 						$url = 'index.php?Itemid='.$itemid;
 					}
 					else {
-						$url = 'index.php?'.JUri::buildQuery($vars).'&Itemid='.$itemid;
+						$url = 'index.php?'.JURI::buildQuery($vars).'&Itemid='.$itemid;
 					}
 				}
 				else
 				{
-					$url = 'index.php?'.JUri::buildQuery($vars);
+					$url = 'index.php?'.JURI::buildQuery($vars);
 				}
 			}
 			else
 			{
-				$url = 'index.php?'.JUri::buildQuery($vars);
+				$url = 'index.php?'.JURI::buildQuery($vars);
 			}
 		}
 
@@ -84,11 +84,5 @@ class ModLoginHelper
 	{
 		$user = JFactory::getUser();
 		return (!$user->get('guest')) ? 'logout' : 'login';
-	}
-
-	public static function getTwoFactorMethods()
-	{
-		require_once JPATH_ADMINISTRATOR . '/components/com_users/helpers/users.php';
-		return UsersHelper::getTwoFactorMethods();
 	}
 }

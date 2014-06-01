@@ -27,11 +27,10 @@ class TemplatesController extends JControllerLegacy
 	/**
 	 * Method to display a view.
 	 *
-	 * @param   boolean  $cachable   If true, the view output will be cached
-	 * @param   boolean  $urlparams  An array of safe url parameters and their variable types, for valid values see {@link JFilterInput::clean()}.
+	 * @param   boolean			If true, the view output will be cached
+	 * @param   array  An array of safe url parameters and their variable types, for valid values see {@link JFilterInput::clean()}.
 	 *
-	 * @return  TemplatesController  This object to support chaining.
-	 *
+	 * @return  JController		This object to support chaining.
 	 * @since   1.5
 	 */
 	public function display($cachable = false, $urlparams = false)
@@ -39,27 +38,6 @@ class TemplatesController extends JControllerLegacy
 		$view   = $this->input->get('view', 'styles');
 		$layout = $this->input->get('layout', 'default');
 		$id     = $this->input->getInt('id');
-
-		$document = JFactory::getDocument();
-
-		// For JSON requests
-		if ($document->getType() == 'json')
-		{
-			$view = new TemplatesViewStyle;
-
-			// Get/Create the model
-			if ($model = new TemplatesModelStyle)
-			{
-				$model->addTablePath(JPATH_ADMINISTRATOR . '/components/com_templates/tables');
-
-				// Push the model into the view (as default)
-				$view->setModel($model, true);
-			}
-
-			$view->document = $document;
-
-			return $view->display();
-		}
 
 		// Check for edit form.
 		if ($view == 'style' && $layout == 'edit' && !$this->checkEditId('com_templates.edit.style', $id))
@@ -72,6 +50,6 @@ class TemplatesController extends JControllerLegacy
 			return false;
 		}
 
-		return parent::display();
+		parent::display();
 	}
 }

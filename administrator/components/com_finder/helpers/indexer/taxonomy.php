@@ -75,11 +75,9 @@ class FinderIndexerTaxonomy
 			return self::$branches[$title]->id;
 		}
 
-		/*
-		 * The database did not match the input. This could be because the
-		 * state has changed or because the branch does not exist. Let's figure
-		 * out which case is true and deal with it.
-		 */
+		// The database did not match the input. This could be because the
+		// state has changed or because the branch does not exist. Let's figure
+		// out which case is true and deal with it.
 		$branch = new JObject;
 		if (empty($result))
 		{
@@ -154,11 +152,9 @@ class FinderIndexerTaxonomy
 			return self::$nodes[$branch][$title]->id;
 		}
 
-		/*
-		 * The database did not match the input. This could be because the
-		 * state has changed or because the node does not exist. Let's figure
-		 * out which case is true and deal with it.
-		 */
+		// The database did not match the input. This could be because the
+		// state has changed or because the node does not exist. Let's figure
+		// out which case is true and deal with it.
 		$node = new JObject;
 		if (empty($result))
 		{
@@ -219,7 +215,7 @@ class FinderIndexerTaxonomy
 
 		if ($id)
 		{
-			$db->updateObject('#__finder_taxonomy_map', $map, array('link_id', 'node_id'));
+			$db->updateObject('#__finder_taxonomy_map', $map);
 		}
 		else
 		{

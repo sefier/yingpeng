@@ -19,20 +19,20 @@ defined('JPATH_PLATFORM') or die;
 class JDatabaseQueryOracle extends JDatabaseQueryPdo implements JDatabaseQueryPreparable, JDatabaseQueryLimitable
 {
 	/**
-	 * @var    integer  The offset for the result set.
-	 * @since  12.1
-	 */
-	protected $offset;
-
-	/**
-	 * @var    integer  The limit for the result set.
-	 * @since  12.1
+	 * @var integer
+	 * @since 12.1
 	 */
 	protected $limit;
 
 	/**
-	 * @var    array  Bounded object array
-	 * @since  12.1
+	 * @var integer
+	 * @since 12.1
+	 */
+	protected $offset;
+
+	/**
+	 * @var mixed
+	 * @since 12.1
 	 */
 	protected $bounded = array();
 
@@ -48,7 +48,7 @@ class JDatabaseQueryOracle extends JDatabaseQueryPdo implements JDatabaseQueryPr
 	 * @param   integer         $length         The length of the variable. Usually required for OUTPUT parameters.
 	 * @param   array           $driverOptions  Optional driver options to be used.
 	 *
-	 * @return  JDatabaseQueryOracle
+	 * @return  JDatabaseQuery
 	 *
 	 * @since   12.1
 	 */
@@ -58,7 +58,6 @@ class JDatabaseQueryOracle extends JDatabaseQueryPdo implements JDatabaseQueryPr
 		if (empty($key))
 		{
 			$this->bounded = array();
-
 			return $this;
 		}
 
@@ -116,7 +115,7 @@ class JDatabaseQueryOracle extends JDatabaseQueryPdo implements JDatabaseQueryPr
 	 *
 	 * @param   string  $clause  Optionally, the name of the clause to clear, or nothing to clear the whole query.
 	 *
-	 * @return  JDatabaseQueryOracle  Returns this object to allow chaining.
+	 * @return  JDatabaseQuery  Returns this object to allow chaining.
 	 *
 	 * @since   12.1
 	 */
@@ -190,7 +189,7 @@ class JDatabaseQueryOracle extends JDatabaseQueryPdo implements JDatabaseQueryPr
 	 * @param   integer  $limit   The limit for the result set
 	 * @param   integer  $offset  The offset for the result set
 	 *
-	 * @return  JDatabaseQueryOracle  Returns this object to allow chaining.
+	 * @return  JDatabaseQuery  Returns this object to allow chaining.
 	 *
 	 * @since   12.1
 	 */

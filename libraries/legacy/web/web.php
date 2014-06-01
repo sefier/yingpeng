@@ -15,8 +15,7 @@ defined('JPATH_PLATFORM') or die;
  * @package     Joomla.Legacy
  * @subpackage  Application
  * @since       11.3
- * @deprecated  12.3 (Platform) & 4.0 (CMS) - Use JApplicationWeb instead.
- * @codeCoverageIgnore
+ * @deprecated  12.3 Use JApplicationWeb instead.
  */
 class JWeb extends JApplicationWeb
 {
@@ -34,11 +33,11 @@ class JWeb extends JApplicationWeb
 	 *                          the application's client object, otherwise a default client object is created.
 	 *
 	 * @since   11.3
-	 * @deprecated  12.3 (Platform) & 4.0 (CMS) Use JApplicationWeb instead.
+	 * @deprecated  12.3 Use JApplicationWeb instead.
 	 */
 	public function __construct(JInput $input = null, JRegistry $config = null, JApplicationWebClient $client = null)
 	{
 		JLog::add('JWeb is deprecated. Use JApplicationWeb instead.', JLog::WARNING, 'deprecated');
-		parent::__construct($input, $config, $client);
+		parent::__construct($input, $registry, $client);
 	}
 }

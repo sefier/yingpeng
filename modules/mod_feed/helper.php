@@ -24,6 +24,12 @@ class ModFeedHelper
 		$rssurl	= $params->get('rssurl', '');
 
 		// get RSS parsed object
+		$cache_time = 0;
+		if ($params->get('cache'))
+		{
+			$cache_time  = $params->get('cache_time', 15) * 60;
+		}
+
 		try
 		{
 			$feed = new JFeedFactory;
@@ -31,20 +37,17 @@ class ModFeedHelper
 		}
 		catch (InvalidArgumentException $e)
 		{
-			return JText::_('MOD_FEED_ERR_FEED_NOT_RETRIEVED');
+			$msg = JText::_('MOD_NEWSFEEDS_ERRORS_FEED_NOT_RETRIEVED');
 		}
 		catch (RunTimeException $e)
 		{
-			return JText::_('MOD_FEED_ERR_FEED_NOT_RETRIEVED');
-		}
-		catch (LogicException $e)
-		{
-			return JText::_('MOD_FEED_ERR_FEED_NOT_RETRIEVED');
+			$msg = JText::_('MOD_FEED_ERR_FEED_NOT_RETRIEVED');
 		}
 
 		if (empty($rssDoc))
 		{
-			return JText::_('MOD_FEED_ERR_FEED_NOT_RETRIEVED');
+			$msg = JText::_('MOD_FEED_ERR_FEED_NOT_RETRIEVED');
+			return $msg;
 		}
 
 		if ($rssDoc)

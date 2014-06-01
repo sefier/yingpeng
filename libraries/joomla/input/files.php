@@ -18,20 +18,13 @@ defined('JPATH_PLATFORM') or die;
  */
 class JInputFiles extends JInput
 {
-	/**
-	 * The pivoted data from a $_FILES or compatible array.
-	 *
-	 * @var    array
-	 * @since  11.1
-	 */
 	protected $decodedData = array();
 
 	/**
-	 * The class constructor.
+	 * Constructor.
 	 *
-	 * @param   array  $source   The source argument is ignored. $_FILES is always used.
-	 * @param   array  $options  An optional array of configuration options:
-	 *                           filter : a custom JFilterInput object.
+	 * @param   array  $source   Ignored.
+	 * @param   array  $options  Array of configuration parameters (Optional)
 	 *
 	 * @since   12.1
 	 */
@@ -56,13 +49,12 @@ class JInputFiles extends JInput
 	/**
 	 * Gets a value from the input data.
 	 *
-	 * @param   string  $name     The name of the input property (usually the name of the files INPUT tag) to get.
-	 * @param   mixed   $default  The default value to return if the named property does not exist.
-	 * @param   string  $filter   The filter to apply to the value.
+	 * @param   string  $name     Name of the value to get.
+	 * @param   mixed   $default  Default value to return if variable does not exist.
+	 * @param   string  $filter   Filter to apply to the value.
 	 *
 	 * @return  mixed  The filtered input value.
 	 *
-	 * @see     JFilterInput::clean()
 	 * @since   11.1
 	 */
 	public function get($name, $default = null, $filter = 'cmd')
@@ -78,7 +70,6 @@ class JInputFiles extends JInput
 					$this->data[$name]['size']
 				)
 			);
-
 			return $results;
 		}
 
@@ -112,10 +103,10 @@ class JInputFiles extends JInput
 	}
 
 	/**
-	 * Sets a value.
+	 * Sets a value
 	 *
-	 * @param   string  $name   The name of the input property to set.
-	 * @param   mixed   $value  The value to assign to the input property.
+	 * @param   string  $name   Name of the value to set.
+	 * @param   mixed   $value  Value to assign to the input.
 	 *
 	 * @return  void
 	 *
@@ -123,5 +114,6 @@ class JInputFiles extends JInput
 	 */
 	public function set($name, $value)
 	{
+
 	}
 }

@@ -19,6 +19,82 @@ defined('JPATH_PLATFORM') or die;
 class JDatabaseImporterPostgresql extends JDatabaseImporter
 {
 	/**
+	 * @var    array  An array of cached data.
+	 * @since  12.1
+	 */
+	protected $cache = array();
+
+	/**
+	 * The database connector to use for exporting structure and/or data.
+	 *
+	 * @var    JDatabaseDriverPostgresql
+	 * @since  12.1
+	 */
+	protected $db = null;
+
+	/**
+	 * The input source.
+	 *
+	 * @var    mixed
+	 * @since  12.1
+	 */
+	protected $from = array();
+
+	/**
+	 * The type of input format (XML).
+	 *
+	 * @var    string
+	 * @since  12.1
+	 */
+	protected $asFormat = 'xml';
+
+	/**
+	 * An array of options for the exporter.
+	 *
+	 * @var    object
+	 * @since  12.1
+	 */
+	protected $options = null;
+
+	/**
+	 * Constructor.
+	 *
+	 * Sets up the default options for the exporter.
+	 *
+	 * @since   12.1
+	 */
+	public function __construct()
+	{
+		$this->options = new stdClass;
+
+		$this->cache = array('columns' => array(), 'keys' => array());
+
+		// Set up the class defaults:
+
+		// Import with only structure
+		$this->withStructure();
+
+		// Export as XML.
+		$this->asXml();
+
+		// Default destination is a string using $output = (string) $exporter;
+	}
+
+	/**
+	 * Set the output option for the exporter to XML format.
+	 *
+	 * @return  JDatabaseImporterPostgresql  Method supports chaining.
+	 *
+	 * @since   12.1
+	 */
+	public function asXml()
+	{
+		$this->asFormat = 'xml';
+
+		return $this;
+	}
+
+	/**
 	 * Checks if all data and options are in order prior to exporting.
 	 *
 	 * @return  JDatabaseImporterPostgresql  Method supports chaining.
@@ -44,6 +120,22 @@ class JDatabaseImporterPostgresql extends JDatabaseImporter
 	}
 
 	/**
+	 * Specifies the data source to import.
+	 *
+	 * @param   mixed  $from  The data source to import.
+	 *
+	 * @return  JDatabaseImporterPostgresql  Method supports chaining.
+	 *
+	 * @since   12.1
+	 */
+	public function from($from)
+	{
+		$this->from = $from;
+
+		return $this;
+	}
+
+	/**
 	 * Get the SQL syntax to add a column.
 	 *
 	 * @param   string            $table  The table name.
@@ -55,7 +147,9 @@ class JDatabaseImporterPostgresql extends JDatabaseImporter
 	 */
 	protected function getAddColumnSQL($table, SimpleXMLElement $field)
 	{
-		return 'ALTER TABLE ' . $this->db->quoteName($table) . ' ADD COLUMN ' . $this->getColumnSQL($field);
+		$query = 'ALTER TABLE ' . $this->db->quoteName($table) . ' ADD COLUMN ' . $this->getColumnSQL($field);
+
+		return $query;
 	}
 
 	/**
@@ -260,7 +354,8 @@ class JDatabaseImporterPostgresql extends JDatabaseImporter
 	 */
 	protected function getDropSequenceSQL($name)
 	{
-		return 'DROP SEQUENCE ' . $this->db->quoteName($name);
+		$query = 'DROP SEQUENCE ' . $this->db->quoteName($name);
+		return $query;
 	}
 
 	/**
@@ -284,11 +379,14 @@ class JDatabaseImporterPostgresql extends JDatabaseImporter
 			$field['Start_Value'] = '1';
 		}
 
-		return 'CREATE SEQUENCE ' . (string) $field['Name'] .
-			' INCREMENT BY ' . (string) $field['Increment'] . ' MINVALUE ' . $field['Min_Value'] .
-			' MAXVALUE ' . (string) $field['Max_Value'] . ' START ' . (string) $field['Start_Value'] .
-			(((string) $field['Cycle_option'] == 'NO') ? ' NO' : '') . ' CYCLE' .
-			' OWNED BY ' . $this->db->quoteName((string) $field['Schema'] . '.' . (string) $field['Table'] . '.' . (string) $field['Column']);
+		$query = 'CREATE SEQUENCE ' . (string) $field['Name'] .
+				' INCREMENT BY ' . (string) $field['Increment'] . ' MINVALUE ' . $field['Min_Value'] .
+				' MAXVALUE ' . (string) $field['Max_Value'] . ' START ' . (string) $field['Start_Value'] .
+				(((string) $field['Cycle_option'] == 'NO' ) ? ' NO' : '' ) . ' CYCLE' .
+				' OWNED BY ' . $this->db->quoteName(
+									(string) $field['Schema'] . '.' . (string) $field['Table'] . '.' . (string) $field['Column']
+								);
+		return $query;
 	}
 
 	/**
@@ -312,10 +410,13 @@ class JDatabaseImporterPostgresql extends JDatabaseImporter
 			$field['Start_Value'] = '1';
 		}
 
-		return 'ALTER SEQUENCE ' . (string) $field['Name'] .
-			' INCREMENT BY ' . (string) $field['Increment'] . ' MINVALUE ' . (string) $field['Min_Value'] .
-			' MAXVALUE ' . (string) $field['Max_Value'] . ' START ' . (string) $field['Start_Value'] .
-			' OWNED BY ' . $this->db->quoteName((string) $field['Schema'] . '.' . (string) $field['Table'] . '.' . (string) $field['Column']);
+		$query = 'ALTER SEQUENCE ' . (string) $field['Name'] .
+				' INCREMENT BY ' . (string) $field['Increment'] . ' MINVALUE ' . (string) $field['Min_Value'] .
+				' MAXVALUE ' . (string) $field['Max_Value'] . ' START ' . (string) $field['Start_Value'] .
+				' OWNED BY ' . $this->db->quoteName(
+									(string) $field['Schema'] . '.' . (string) $field['Table'] . '.' . (string) $field['Column']
+								);
+		return $query;
 	}
 
 	/**
@@ -330,8 +431,10 @@ class JDatabaseImporterPostgresql extends JDatabaseImporter
 	 */
 	protected function getChangeColumnSQL($table, SimpleXMLElement $field)
 	{
-		return 'ALTER TABLE ' . $this->db->quoteName($table) . ' ALTER COLUMN ' . $this->db->quoteName((string) $field['Field']) . ' '
+		$query = 'ALTER TABLE ' . $this->db->quoteName($table) . ' ALTER COLUMN ' . $this->db->quoteName((string) $field['Field']) . ' '
 			. $this->getAlterColumnSQL($table, $field);
+
+		return $query;
 	}
 
 	/**
@@ -443,6 +546,23 @@ class JDatabaseImporterPostgresql extends JDatabaseImporter
 	}
 
 	/**
+	 * Get the SQL syntax to drop a column.
+	 *
+	 * @param   string  $table  The table name.
+	 * @param   string  $name   The name of the field to drop.
+	 *
+	 * @return  string
+	 *
+	 * @since   12.1
+	 */
+	protected function getDropColumnSQL($table, $name)
+	{
+		$query = 'ALTER TABLE ' . $this->db->quoteName($table) . ' DROP COLUMN ' . $this->db->quoteName($name);
+
+		return $query;
+	}
+
+	/**
 	 * Get the SQL syntax to drop an index.
 	 *
 	 * @param   string  $name  The name of the key to drop.
@@ -453,7 +573,9 @@ class JDatabaseImporterPostgresql extends JDatabaseImporter
 	 */
 	protected function getDropIndexSQL($name)
 	{
-		return 'DROP INDEX ' . $this->db->quoteName($name);
+		$query = 'DROP INDEX ' . $this->db->quoteName($name);
+
+		return $query;
 	}
 
 	/**
@@ -468,7 +590,9 @@ class JDatabaseImporterPostgresql extends JDatabaseImporter
 	 */
 	protected function getDropPrimaryKeySQL($table, $name)
 	{
-		return 'ALTER TABLE ONLY ' . $this->db->quoteName($table) . ' DROP CONSTRAINT ' . $this->db->quoteName($name);
+		$query = 'ALTER TABLE ONLY ' . $this->db->quoteName($table) . ' DROP CONSTRAINT ' . $this->db->quoteName($name);
+
+		return $query;
 	}
 
 	/**
@@ -485,7 +609,6 @@ class JDatabaseImporterPostgresql extends JDatabaseImporter
 	{
 		// First pass, create a lookup of the keys.
 		$lookup = array();
-
 		foreach ($keys as $key)
 		{
 			if ($key instanceof SimpleXMLElement)
@@ -496,12 +619,10 @@ class JDatabaseImporterPostgresql extends JDatabaseImporter
 			{
 				$kName = $key->Index;
 			}
-
 			if (empty($lookup[$kName]))
 			{
 				$lookup[$kName] = array();
 			}
-
 			$lookup[$kName][] = $key;
 		}
 
@@ -522,7 +643,6 @@ class JDatabaseImporterPostgresql extends JDatabaseImporter
 	{
 		// First pass, create a lookup of the keys.
 		$lookup = array();
-
 		foreach ($sequences as $seq)
 		{
 			if ($seq instanceof SimpleXMLElement)
@@ -533,15 +653,142 @@ class JDatabaseImporterPostgresql extends JDatabaseImporter
 			{
 				$sName = $seq->Name;
 			}
-
 			if (empty($lookup[$sName]))
 			{
 				$lookup[$sName] = array();
 			}
-
 			$lookup[$sName][] = $seq;
 		}
 
 		return $lookup;
+	}
+
+	/**
+	 * Get the real name of the table, converting the prefix wildcard string if present.
+	 *
+	 * @param   string  $table  The name of the table.
+	 *
+	 * @return  string	The real name of the table.
+	 *
+	 * @since   12.1
+	 */
+	protected function getRealTableName($table)
+	{
+		// TODO Incorporate into parent class and use $this.
+		$prefix = $this->db->getPrefix();
+
+		// Replace the magic prefix if found.
+		$table = preg_replace('|^#__|', $prefix, $table);
+
+		return $table;
+	}
+
+	/**
+	 * Merges the incoming structure definition with the existing structure.
+	 *
+	 * @return  void
+	 *
+	 * @note    Currently only supports XML format.
+	 * @since   12.1
+	 * @throws  Exception on error.
+	 * @todo    If it's not XML convert to XML first.
+	 */
+	protected function mergeStructure()
+	{
+		$prefix = $this->db->getPrefix();
+		$tables = $this->db->getTableList();
+
+		if ($this->from instanceof SimpleXMLElement)
+		{
+			$xml = $this->from;
+		}
+		else
+		{
+			$xml = new SimpleXMLElement($this->from);
+		}
+
+		// Get all the table definitions.
+		$xmlTables = $xml->xpath('database/table_structure');
+
+		foreach ($xmlTables as $table)
+		{
+			// Convert the magic prefix into the real table name.
+			$tableName = (string) $table['name'];
+			$tableName = preg_replace('|^#__|', $prefix, $tableName);
+
+			if (in_array($tableName, $tables))
+			{
+				// The table already exists. Now check if there is any difference.
+				if ($queries = $this->getAlterTableSQL($xml->database->table_structure))
+				{
+					// Run the queries to upgrade the data structure.
+					foreach ($queries as $query)
+					{
+						$this->db->setQuery($query);
+
+						try
+						{
+							$this->db->execute();
+						}
+						catch (RuntimeException $e)
+						{
+							$this->addLog('Fail: ' . $this->db->getQuery());
+							throw $e;
+						}
+						$this->addLog('Pass: ' . $this->db->getQuery());
+					}
+
+				}
+			}
+			else
+			{
+				// This is a new table.
+				$query = $this->xmlToCreate($table);
+
+				$this->db->setQuery($query);
+				try
+				{
+					$this->db->execute();
+				}
+				catch (RuntimeException $e)
+				{
+					$this->addLog('Fail: ' . $this->db->getQuery());
+					throw $e;
+				}
+				$this->addLog('Pass: ' . $this->db->getQuery());
+			}
+		}
+	}
+
+	/**
+	 * Sets the database connector to use for exporting structure and/or data from PostgreSQL.
+	 *
+	 * @param   JDatabaseDriverPostgresql  $db  The database connector.
+	 *
+	 * @return  JDatabaseImporterPostgresql  Method supports chaining.
+	 *
+	 * @since   12.1
+	 */
+	public function setDbo(JDatabaseDriverPostgresql $db)
+	{
+		$this->db = $db;
+
+		return $this;
+	}
+
+	/**
+	 * Sets an internal option to merge the structure based on the input data.
+	 *
+	 * @param   boolean  $setting  True to export the structure, false to not.
+	 *
+	 * @return  JDatabaseImporterPostgresql  Method supports chaining.
+	 *
+	 * @since   12.1
+	 */
+	public function withStructure($setting = true)
+	{
+		$this->options->withStructure = (boolean) $setting;
+
+		return $this;
 	}
 }

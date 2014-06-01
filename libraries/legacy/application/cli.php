@@ -15,8 +15,7 @@ defined('JPATH_PLATFORM') or die;
  * @package     Joomla.Platform
  * @subpackage  Application
  * @since       11.1
- * @deprecated  12.3 (Platform) & 4.0 (CMS) - Use JApplicationCli instead.
- * @codeCoverageIgnore
+ * @deprecated  12.3 Use JApplicationCli instead.
  */
 class JCli extends JApplicationCli
 {
@@ -34,9 +33,9 @@ class JCli extends JApplicationCli
 	 *                              the application's event dispatcher, if it is null then the default event dispatcher
 	 *                              will be created based on the application's loadDispatcher() method.
 	 *
-	 * @see     JApplicationBase::loadDispatcher()
+	 * @see     loadDispatcher()
 	 * @since   11.1
-	 * @deprecated  12.3 (Platform) & 4.0 (CMS) - Use JApplicationCli instead.
+	 * @deprecated  12.3 Use JApplicationCli instead.
 	 */
 	public function __construct(JInputCli $input = null, JRegistry $config = null, JEventDispatcher $dispatcher = null)
 	{

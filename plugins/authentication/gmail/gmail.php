@@ -23,7 +23,7 @@ class PlgAuthenticationGMail extends JPlugin
 	 *
 	 * @param   array   $credentials  Array holding the user credentials
 	 * @param   array   $options      Array of extra options
-	 * @param   object  &$response    Authentication response object
+	 * @param   object  $response     Authentication response object
 	 *
 	 * @return  boolean
 	 *
@@ -31,24 +31,24 @@ class PlgAuthenticationGMail extends JPlugin
 	 */
 	public function onUserAuthenticate($credentials, $options, &$response)
 	{
+		$message = '';
 		$success = 0;
 
-		// Check if we have curl or not
+		// check if we have curl or not
 		if (function_exists('curl_init'))
 		{
-			// Check if we have a username and password
+			// check if we have a username and password
 			if (strlen($credentials['username']) && strlen($credentials['password']))
 			{
 				$blacklist = explode(',', $this->params->get('user_blacklist', ''));
 
-				// Check if the username isn't blacklisted
+				// check if the username isn't blacklisted
 				if (!in_array($credentials['username'], $blacklist))
 				{
 					$suffix = $this->params->get('suffix', '');
 					$applysuffix = $this->params->get('applysuffix', 0);
-					$offset = strpos($credentials['username'], '@');
 
-					// Check if we want to do suffix stuff, typically for Google Apps for Your Domain
+					// check if we want to do suffix stuff, typically for Google Apps for Your Domain
 					if ($suffix && $applysuffix)
 					{
 						if ($applysuffix == 1 && $offset === false)
@@ -61,21 +61,19 @@ class PlgAuthenticationGMail extends JPlugin
 							// Always use suffix
 							if ($offset)
 							{
-								// If we already have an @, get rid of it and replace it
+								// if we already have an @, get rid of it and replace it
 								$credentials['username'] = substr($credentials['username'], 0, $offset);
 							}
-
 							$credentials['username'] .= '@' . $suffix;
 						}
 					}
-
 					$curl = curl_init('https://mail.google.com/mail/feed/atom');
 					curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
 					curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, $this->params->get('verifypeer', 1));
 					//curl_setopt($curl, CURLOPT_HEADER, 1);
 					curl_setopt($curl, CURLOPT_FOLLOWLOCATION, 1);
-					curl_setopt($curl, CURLOPT_USERPWD, $credentials['username'] . ':' . $credentials['password']);
-					curl_exec($curl);
+					curl_setopt($curl, CURLOPT_USERPWD, $credentials['username'].':'.$credentials['password']);
+					$result = curl_exec($curl);
 					$code = curl_getinfo($curl, CURLINFO_HTTP_CODE);
 
 					switch ($code)
@@ -96,8 +94,8 @@ class PlgAuthenticationGMail extends JPlugin
 				}
 				else
 				{
-					// The username is black listed
-					$message = JText::_('JGLOBAL_AUTH_USER_BLACKLISTED');
+					// the username is black listed
+					$message = 'User is blacklisted';
 				}
 			}
 			else
@@ -107,7 +105,7 @@ class PlgAuthenticationGMail extends JPlugin
 		}
 		else
 		{
-			$message = JText::_('JGLOBAL_AUTH_CURL_NOT_INSTALLED');
+			$message = 'curl isn\'t insalled';
 		}
 
 		$response->type = 'GMail';
@@ -121,22 +119,21 @@ class PlgAuthenticationGMail extends JPlugin
 			{
 				if ($suffix)
 				{
-					// If there is a suffix then we want to apply it
+					// if there is a suffix then we want to apply it
 					$response->email = $credentials['username'] . '@' . $suffix;
 				}
 				else
 				{
-					// If there isn't a suffix just use the default gmail one
+					// if there isn't a suffix just use the default gmail one
 					$response->email = $credentials['username'] . '@gmail.com';
 				}
 			}
 			else
 			{
-				// The username looks like an email address (probably is) so use that
+				// the username looks like an email address (probably is) so use that
 				$response->email = $credentials['username'];
 			}
-
-			// Reset the username to what we ended up using
+			// reset the username to what we ended up using
 			$response->username = $credentials['username'];
 			$response->fullname = $credentials['username'];
 		}

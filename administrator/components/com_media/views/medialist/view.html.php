@@ -20,19 +20,24 @@ class MediaViewMediaList extends JViewLegacy
 {
 	public function display($tpl = null)
 	{
-		$app = JFactory::getApplication();
-
-		if (!$app->isAdmin())
-		{
-			return $app->enqueueMessage(JText::_('JERROR_ALERTNOAUTHOR'), 'warning');
-		}
-
 		// Do not allow cache
-		$app->allowCache(false);
+		JResponse::allowCache(false);
+
+		$app	= JFactory::getApplication();
+		$style = $app->getUserStateFromRequest('media.list.layout', 'layout', 'thumbs', 'word');
+
+		$lang	= JFactory::getLanguage();
 
 		JHtml::_('behavior.framework', true);
 
-		JFactory::getDocument()->addScriptDeclaration("
+		$document = JFactory::getDocument();
+		/*
+		$document->addStyleSheet('../media/media/css/medialist-'.$style.'.css');
+		if ($lang->isRTL()) :
+			$document->addStyleSheet('../media/media/css/medialist-'.$style.'_rtl.css');
+		endif;
+		*/
+		$document->addScriptDeclaration("
 		window.addEvent('domready', function()
 		{
 			window.parent.document.updateUploader();
@@ -40,8 +45,8 @@ class MediaViewMediaList extends JViewLegacy
 			{
 				el.addEvent('click', function(e)
 				{
+					new Event(e).stop();
 					window.top.document.preview.fromElement(el);
-					return false;
 				});
 			});
 		});");
@@ -51,16 +56,7 @@ class MediaViewMediaList extends JViewLegacy
 		$folders = $this->get('folders');
 		$state = $this->get('state');
 
-		// Check for invalid folder name
-		if (empty($state->folder)) {
-			$dirname = JRequest::getVar('folder', '', '', 'string');
-			if (!empty($dirname)) {
-				$dirname = htmlspecialchars($dirname, ENT_COMPAT, 'UTF-8');
-				JError::raiseWarning(100, JText::sprintf('COM_MEDIA_ERROR_UNABLE_TO_BROWSE_FOLDER_WARNDIRNAME', $dirname));
-			}
-		}
-
-		$this->baseURL = JUri::root();
+		$this->baseURL = JURI::root();
 		$this->images = &$images;
 		$this->documents = &$documents;
 		$this->folders = &$folders;

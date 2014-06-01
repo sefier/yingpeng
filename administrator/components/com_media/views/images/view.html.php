@@ -21,7 +21,9 @@ class MediaViewImages extends JViewLegacy
 	public function display($tpl = null)
 	{
 		$config = JComponentHelper::getParams('com_media');
+		$app	= JFactory::getApplication();
 		$lang	= JFactory::getLanguage();
+		$append = '';
 
 		JHtml::_('behavior.framework', true);
 		JHtml::_('script', 'media/popup-imagemanager.js', true, true);

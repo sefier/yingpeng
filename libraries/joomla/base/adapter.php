@@ -113,7 +113,6 @@ class JAdapter extends JObject
 			require_once $fullpath;
 
 			$class = $this->_classprefix . ucfirst($name);
-
 			if (!class_exists($class))
 			{
 				return false;

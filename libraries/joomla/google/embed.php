@@ -26,7 +26,7 @@ abstract class JGoogleEmbed
 	protected $options;
 
 	/**
-	 * @var    JUri  URI of the page being rendered.
+	 * @var    JURI  URI of the page being rendered.
 	 * @since  12.3
 	 */
 	protected $uri;
@@ -35,14 +35,14 @@ abstract class JGoogleEmbed
 	 * Constructor.
 	 *
 	 * @param   JRegistry  $options  Google options object
-	 * @param   JUri       $uri      URL of the page being rendered
+	 * @param   JURI       $uri      URL of the page being rendered
 	 *
 	 * @since   12.3
 	 */
-	public function __construct(JRegistry $options = null, JUri $uri = null)
+	public function __construct(JRegistry $options = null, JURI $uri = null)
 	{
 		$this->options = $options ? $options : new JRegistry;
-		$this->uri = $uri ? $uri : new JUri;
+		$this->uri = $uri ? $uri : new JURI;
 	}
 
 	/**

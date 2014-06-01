@@ -174,6 +174,7 @@ class MenusModelMenu extends JModelForm
 	public function save($data)
 	{
 		$id = (!empty($data['id'])) ? $data['id'] : (int) $this->getState('menu.id');
+		$isNew = true;
 
 		// Get a row instance.
 		$table = $this->getTable();
@@ -182,6 +183,7 @@ class MenusModelMenu extends JModelForm
 		if ($id > 0)
 		{
 			$table->load($id);
+			$isNew = false;
 		}
 
 		// Bind the data.

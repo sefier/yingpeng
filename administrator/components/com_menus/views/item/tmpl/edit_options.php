@@ -14,9 +14,8 @@ defined('_JEXEC') or die;
 	$fieldSets = $this->form->getFieldsets('params');
 	$i = 0;
 
-	foreach ($fieldSets as $name => $fieldSet) :
-		if (!(($this->item->link == 'index.php?option=com_wrapper&view=wrapper') && $fieldSet->name == 'request')
-				&& !($this->item->link == 'index.php?Itemid=' && $fieldSet->name == 'aliasoptions')) :
+	foreach ($fieldSets as $name => $fieldSet):
+		if (!(($this->item->link == 'index.php?option=com_wrapper&view=wrapper' || $this->item->type == 'alias') && $fieldSet->name == 'request')):
 			$label = !empty($fieldSet->label) ? $fieldSet->label : 'COM_MENUS_'.$name.'_FIELDSET_LABEL';
 			echo JHtml::_('bootstrap.addSlide', 'menuOptions', JText::_($label), 'collapse' . $i++);
 				if (isset($fieldSet->description) && trim($fieldSet->description)) :

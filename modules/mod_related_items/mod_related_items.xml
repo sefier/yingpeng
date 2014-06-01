@@ -30,18 +30,15 @@
 				<field
 					name="showDate"
 					type="radio"
-					class="btn-group btn-group-yesno"
+					class="btn-group"
 					default="0"
 					label="MOD_RELATED_FIELD_SHOWDATE_LABEL"
 					description="MOD_RELATED_FIELD_SHOWDATE_DESC">
-					<option value="1">JYES</option>
-					<option value="0">JNO</option>
+					<option
+						value="0">JHIDE</option>
+					<option
+						value="1">JSHOW</option>
 				</field>
-				<field name="maximum"
-					type="text"
-					default="5"
-					label="MOD_RELATED_FIELD_MAX_LABEL"
-					description="MOD_RELATED_FIELD_MAX_DESC" />
 			</fieldset>
 			<fieldset
 				name="advanced">

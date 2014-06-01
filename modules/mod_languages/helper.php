@@ -38,7 +38,7 @@ abstract class ModLanguagesHelper
 		}
 
 		// Load associations
-		$assoc = JLanguageAssociations::isEnabled();
+		$assoc = isset($app->item_associations) ? $app->item_associations : 0;
 		if ($assoc)
 		{
 			$active = $menu->getActive();

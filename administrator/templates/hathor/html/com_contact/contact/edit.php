@@ -11,15 +11,13 @@ defined('_JEXEC') or die;
 
 // Include the component HTML helpers.
 JHtml::addIncludePath(JPATH_COMPONENT.'/helpers/html');
-
+JHtml::_('behavior.tooltip');
 JHtml::_('behavior.formvalidation');
 
 $app = JFactory::getApplication();
 $input = $app->input;
 
-$saveHistory = $this->state->get('params')->get('save_history', 0);
-
-$assoc = JLanguageAssociations::isEnabled();
+$assoc = isset($app->item_associations) ? $app->item_associations : 0;
 
 ?>
 <script type="text/javascript">
@@ -66,16 +64,14 @@ $assoc = JLanguageAssociations::isEnabled();
 				<?php echo $this->form->getInput('language'); ?></li>
 
 				<!-- Tag field -->
-				<li><?php echo $this->form->getLabel('tags'); ?>
-					<div class="is-tagbox">
-						<?php echo $this->form->getInput('tags'); ?>
-					</div>
-				</li>
-
-				<?php if ($saveHistory) : ?>
-					<li><?php echo $this->form->getLabel('version_note'); ?>
-					<?php echo $this->form->getInput('version_note'); ?></li>
-				<?php endif; ?>
+				<?php foreach ($this->get('form')->getFieldset('jmetadata') as $field) : ?>
+					<?php if ($field->name == 'jform[metadata][tags][]') :?>
+						<li>
+							<?php echo $field->label; ?>
+							<?php echo $field->input; ?>
+						</li>
+					<?php endif; ?>
+				<?php endforeach; ?>
 
 				<li><?php echo $this->form->getLabel('id'); ?>
 				<?php echo $this->form->getInput('id'); ?></li>
@@ -182,7 +178,6 @@ $assoc = JLanguageAssociations::isEnabled();
 			</fieldset>
 
 			<?php if ($assoc) : ?>
-				<?php echo JHtml::_('sliders.panel', JText::_('COM_CONTACT_ITEM_ASSOCIATIONS_FIELDSET_LABEL'), '-options');?>
 				<?php echo $this->loadTemplate('associations'); ?>
 			<?php endif; ?>
 

@@ -10,7 +10,7 @@
 defined('_JEXEC') or die;
 
 JHtml::addIncludePath(JPATH_COMPONENT.'/helpers/html');
-
+JHtml::_('behavior.tooltip');
 JHtml::_('behavior.formvalidation');
 JHtml::_('formbehavior.chosen', 'select');
 
@@ -27,13 +27,20 @@ $canDo = LanguagesHelper::getActions();
 </script>
 
 <form action="<?php echo JRoute::_('index.php?option=com_languages&layout=edit&lang_id='.(int) $this->item->lang_id); ?>" method="post" name="adminForm" id="language-form" class="form-validate form-horizontal">
-
-	<?php echo JLayoutHelper::render('joomla.edit.item_title', $this); ?>
-
 	<fieldset>
 	<?php echo JHtml::_('bootstrap.startTabSet', 'myTab', array('active' => 'details')); ?>
 
 		<?php echo JHtml::_('bootstrap.addTab', 'myTab', 'details', JText::_('JDETAILS', true)); ?>
+			<div class="control-group">
+				<div class="controls">
+					<?php if ($this->item->lang_id) : ?>
+						<?php echo JText::sprintf('JGLOBAL_RECORD_NUMBER', $this->item->lang_id); ?>
+					<?php else : ?>
+						<?php echo JText::_('COM_LANGUAGES_VIEW_LANGUAGE_EDIT_NEW_TITLE'); ?>
+					<?php endif; ?>
+				</div>
+			</div>
+
 			<div class="control-group">
 					<div class="control-label">
 						<?php echo $this->form->getLabel('title'); ?>
@@ -64,9 +71,6 @@ $canDo = LanguagesHelper::getActions();
 					</div>
 					<div class="controls">
 						<?php echo $this->form->getInput('image'); ?>
-						<span id="flag">
-							<?php echo JHtml::_('image', 'mod_languages/' . $this->form->getValue('image') . '.gif', $this->form->getValue('image'), array('title' => $this->form->getValue('image')), true); ?>
-						</span>
 					</div>
 			</div>
 			<div class="control-group">
@@ -149,19 +153,3 @@ $canDo = LanguagesHelper::getActions();
 	<input type="hidden" name="task" value="" />
 	<?php echo JHtml::_('form.token'); ?>
 </form>
-<script type="text/javascript">
-	jQuery('#jform_image').on('change', function() {
-		var flag = this.value;
-		if (!jQuery('#flag img').attr('src'))
-		{
-			jQuery('#flag img').attr('src', '<?php echo JUri::root(true);?>' + '/media/mod_languages/images/' + flag + '.gif');
-		}
-		else
-		{
-			jQuery('#flag img').attr('src', function(index, attr) {
-				return attr.replace(jQuery('#flag img').attr('title') + '.gif', flag + '.gif')
-			})
-		}
-		jQuery('#flag img').attr('title', flag).attr('alt', flag);
-	});
-</script>

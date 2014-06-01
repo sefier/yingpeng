@@ -44,8 +44,7 @@ class JHtmlNewsfeed
 			// Get the associated newsfeed items
 			$db = JFactory::getDbo();
 			$query = $db->getQuery(true)
-				->select('c.id, c.name as title')
-				->select('l.sef as lang_sef')
+				->select('c.*')
 				->from('#__newsfeeds as c')
 				->select('cat.title as category_title')
 				->join('LEFT', '#__categories as cat ON cat.id=c.catid')
@@ -59,31 +58,31 @@ class JHtmlNewsfeed
 			{
 				$items = $db->loadObjectList('id');
 			}
-			catch (RuntimeException $e)
+			catch (runtimeException $e)
 			{
 				throw new Exception($e->getMessage(), 500);
+
+				return false;
 			}
 
-			if ($items)
+			$tags = array();
+
+			// Construct html
+			foreach ($associations as $tag => $associated)
 			{
-				foreach ($items as &$item)
+				if ($associated != $newsfeedid)
 				{
-					$text = strtoupper($item->lang_sef);
-					$url = JRoute::_('index.php?option=com_newsfeeds&task=newsfeed.edit&id=' . (int) $item->id);
-					$tooltipParts = array(
-						JHtml::_('image', 'mod_languages/' . $item->image . '.gif',
-							$item->language_title,
-							array('title' => $item->language_title),
+					$tags[] = JText::sprintf('COM_NEWSFEEDS_TIP_ASSOCIATED_LANGUAGE',
+						JHtml::_('image', 'mod_languages/' . $items[$associated]->image . '.gif',
+							$items[$associated]->language_title,
+							array('title' => $items[$associated]->language_title),
 							true
 						),
-						$item->title,
-						'(' . $item->category_title . ')'
+						$items[$associated]->name, $items[$associated]->category_title
 					);
-					$item->link = JHtml::_('tooltip', implode(' ', $tooltipParts), null, null, $text, $url, null, 'hasTooltip label label-association label-' . $item->lang_sef);
 				}
 			}
-
-			$html = JLayoutHelper::render('joomla.content.associations', $items);
+			$html = JHtml::_('tooltip', implode('<br />', $tags), JText::_('COM_NEWSFEEDS_TIP_ASSOCIATION'), 'admin/icon-16-links.png');
 		}
 
 		return $html;

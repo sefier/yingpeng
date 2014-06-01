@@ -18,30 +18,17 @@ defined('_JEXEC') or die;
  */
 class WeblinksModelWeblink extends JModelAdmin
 {
-
 	/**
-	 * The type alias for this content type.
-	 *
-	 * @var      string
-	 * @since    3.2
-	 */
-	public $typeAlias = 'com_weblinks.weblink';
-
-	/**
-	 * The prefix to use with controller messages.
-	 *
-	 * @var    string
-	 * @since  1.6
+	 * @var		string	The prefix to use with controller messages.
+	 * @since   1.6
 	 */
 	protected $text_prefix = 'COM_WEBLINKS';
 
 	/**
 	 * Method to test whether a record can be deleted.
 	 *
-	 * @param   object  $record  A record object.
-	 *
-	 * @return  boolean  True if allowed to delete the record. Defaults to the permission for the component.
-	 *
+	 * @param   object	A record object.
+	 * @return  boolean  True if allowed to delete the record. Defaults to the permission set in the component.
 	 * @since   1.6
 	 */
 	protected function canDelete($record)
@@ -66,12 +53,10 @@ class WeblinksModelWeblink extends JModelAdmin
 	}
 
 	/**
-	 * Method to test whether a record can be deleted.
+	 * Method to test whether a record can have its state changed.
 	 *
-	 * @param   object  $record  A record object.
-	 *
-	 * @return  boolean  True if allowed to change the state of the record. Defaults to the permission for the component.
-	 *
+	 * @param   object	A record object.
+	 * @return  boolean  True if allowed to change the state of the record. Defaults to the permission set in the component.
 	 * @since   1.6
 	 */
 	protected function canEditState($record)
@@ -89,14 +74,12 @@ class WeblinksModelWeblink extends JModelAdmin
 	}
 
 	/**
-	 * Method to get a table object, load it if necessary.
+	 * Returns a reference to the a Table object, always creating it.
 	 *
-	 * @param   string  $type    The table name. Optional.
-	 * @param   string  $prefix  The class prefix. Optional.
-	 * @param   array   $config  Configuration array for model. Optional.
-	 *
-	 * @return  JTable  A JTable object
-	 *
+	 * @param   type	The table type to instantiate
+	 * @param   string	A prefix for the table class name. Optional.
+	 * @param   array  Configuration array for model. Optional.
+	 * @return  JTable	A database object
 	 * @since   1.6
 	 */
 	public function getTable($type = 'Weblink', $prefix = 'WeblinksTable', $config = array())
@@ -105,20 +88,19 @@ class WeblinksModelWeblink extends JModelAdmin
 	}
 
 	/**
-	 * Abstract method for getting the form from the model.
+	 * Method to get the record form.
 	 *
-	 * @param   array    $data      Data for the form.
-	 * @param   boolean  $loadData  True if the form is to load its own data (default case), false if not.
-	 *
-	 * @return  mixed  A JForm object on success, false on failure
-	 *
+	 * @param   array  $data		An optional array of data for the form to interogate.
+	 * @param   boolean	$loadData	True if the form is to load its own data (default case), false if not.
+	 * @return  JForm	A JForm object on success, false on failure
 	 * @since   1.6
 	 */
 	public function getForm($data = array(), $loadData = true)
 	{
+		$app = JFactory::getApplication();
+
 		// Get the form.
 		$form = $this->loadForm('com_weblinks.weblink', 'weblink', array('control' => 'jform', 'load_data' => $loadData));
-
 		if (empty($form))
 		{
 			return false;
@@ -159,8 +141,7 @@ class WeblinksModelWeblink extends JModelAdmin
 	/**
 	 * Method to get the data that should be injected in the form.
 	 *
-	 * @return  array  The default data is an empty array.
-	 *
+	 * @return  mixed  The data for the form.
 	 * @since   1.6
 	 */
 	protected function loadFormData()
@@ -188,10 +169,9 @@ class WeblinksModelWeblink extends JModelAdmin
 	/**
 	 * Method to get a single record.
 	 *
-	 * @param   integer  $pk  The id of the primary key.
+	 * @param   integer	The id of the primary key.
 	 *
 	 * @return  mixed  Object on success, false on failure.
-	 *
 	 * @since   1.6
 	 */
 	public function getItem($pk = null)
@@ -220,11 +200,7 @@ class WeblinksModelWeblink extends JModelAdmin
 	}
 
 	/**
-	 * Prepare and sanitise the table data prior to saving.
-	 *
-	 * @param   JTable  $table  A reference to a JTable object.
-	 *
-	 * @return  void
+	 * Prepare and sanitise the table prior to saving.
 	 *
 	 * @since   1.6
 	 */
@@ -233,8 +209,8 @@ class WeblinksModelWeblink extends JModelAdmin
 		$date = JFactory::getDate();
 		$user = JFactory::getUser();
 
-		$table->title = htmlspecialchars_decode($table->title, ENT_QUOTES);
-		$table->alias = JApplication::stringURLSafe($table->alias);
+		$table->title		= htmlspecialchars_decode($table->title, ENT_QUOTES);
+		$table->alias		= JApplication::stringURLSafe($table->alias);
 
 		if (empty($table->alias))
 		{
@@ -257,29 +233,25 @@ class WeblinksModelWeblink extends JModelAdmin
 			else
 			{
 				// Set the values
-				$table->modified    = $date->toSql();
-				$table->modified_by = $user->get('id');
+				$table->modified	= $date->toSql();
+				$table->modified_by	= $user->get('id');
 			}
+
+			// Increment the content version number.
+			$table->version++;
 		}
-
-		// Increment the weblink version number.
-		$table->version++;
 	}
-
 	/**
 	 * A protected method to get a set of ordering conditions.
 	 *
-	 * @param   JTable  $table  A JTable object.
-	 *
-	 * @return  array  An array of conditions to add to ordering queries.
-	 *
+	 * @param   object	A record object.
+	 * @return  array  An array of conditions to add to add to ordering queries.
 	 * @since   1.6
 	 */
 	protected function getReorderConditions($table)
 	{
 		$condition = array();
-		$condition[] = 'catid = ' . (int) $table->catid;
-
+		$condition[] = 'catid = '.(int) $table->catid;
 		return $condition;
 	}
 
@@ -304,8 +276,9 @@ class WeblinksModelWeblink extends JModelAdmin
 			$data['alias']	= $alias;
 			$data['state']	= 0;
 		}
+		$return = parent::save($data);
 
-		return parent::save($data);
+		return $return;
 	}
 
 	/**
@@ -330,7 +303,6 @@ class WeblinksModelWeblink extends JModelAdmin
 			{
 				$name = JString::increment($name);
 			}
-
 			$alias = JString::increment($alias, 'dash');
 		}
 

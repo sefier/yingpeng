@@ -18,12 +18,6 @@ defined('JPATH_PLATFORM') or die;
  */
 class JRegistryFormatINI extends JRegistryFormat
 {
-	/**
-	 * Cache of processed data
-	 *
-	 * @var    array
-	 * @since  11.1
-	 */
 	protected static $cache = array();
 
 	/**
@@ -86,7 +80,6 @@ class JRegistryFormatINI extends JRegistryFormat
 
 		// Check the memory cache for already processed strings.
 		$hash = md5($data . ':' . (int) $sections);
-
 		if (isset(self::$cache[$hash]))
 		{
 			return self::$cache[$hash];
@@ -150,7 +143,6 @@ class JRegistryFormatINI extends JRegistryFormat
 
 			// If the value is quoted then we assume it is a string.
 			$length = strlen($value);
-
 			if ($length && ($value[0] == '"') && ($value[$length - 1] == '"'))
 			{
 				// Strip the quotes and Convert the new line characters.

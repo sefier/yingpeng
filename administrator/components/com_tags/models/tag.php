@@ -25,12 +25,6 @@ class TagsModelTag extends JModelAdmin
 	protected $text_prefix = 'COM_TAGS';
 
 	/**
-	 * @var    string  The type alias for this content type.
-	 * @since  3.2
-	 */
-	public $typeAlias = 'com_tags.tag';
-
-	/**
 	 * Method to test whether a record can be deleted.
 	 *
 	 * @param   object  $record  A record object.
@@ -47,6 +41,8 @@ class TagsModelTag extends JModelAdmin
 			{
 				return;
 			}
+			$user = JFactory::getUser();
+
 			return parent::canDelete($record);
 		}
 	}
@@ -62,6 +58,8 @@ class TagsModelTag extends JModelAdmin
 	 */
 	protected function canEditState($record)
 	{
+		$user = JFactory::getUser();
+
 		return parent::canEditState($record);
 	}
 
@@ -182,6 +180,7 @@ class TagsModelTag extends JModelAdmin
 	 */
 	public function getForm($data = array(), $loadData = true)
 	{
+		$extension = $this->getState('tag');
 		$jinput = JFactory::getApplication()->input;
 
 		// Get the form.
@@ -232,8 +231,8 @@ class TagsModelTag extends JModelAdmin
 	/**
 	 * Method to preprocess the form.
 	 *
-	 * @param   JForm   $form   A JForm object.
-	 * @param   mixed   $data   The data expected for the form.
+	 * @param   JForm   $form    A JForm object.
+	 * @param   mixed   $data    The data expected for the form.
 	 * @param   string  $group  The name of the plugin group to import.
 	 *
 	 * @return  void

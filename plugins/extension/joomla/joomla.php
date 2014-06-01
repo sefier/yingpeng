@@ -247,12 +247,12 @@ class PlgExtensionJoomla extends JPlugin
 			foreach ($children as $child)
 			{
 				$attrs = $child->attributes();
-				$this->addUpdateSite($attrs['name'], $attrs['type'], trim($child), true);
+				$this->addUpdateSite($attrs['name'], $attrs['type'], $child, true);
 			}
 		}
 		else
 		{
-			$data = trim((string) $updateservers);
+			$data = (string) $updateservers;
 
 			if (strlen($data))
 			{

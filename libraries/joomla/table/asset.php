@@ -74,13 +74,15 @@ class JTableAsset extends JTableNested
 	 */
 	public function loadByName($name)
 	{
-		$query = $this->_db->getQuery(true)
-			->select($this->_db->quoteName('id'))
+		// Get the JDatabaseQuery object
+		$query = $this->_db->getQuery(true);
+
+		// Get the asset id for the asset.
+		$query->select($this->_db->quoteName('id'))
 			->from($this->_db->quoteName('#__assets'))
 			->where($this->_db->quoteName('name') . ' = ' . $this->_db->quote($name));
 		$this->_db->setQuery($query);
 		$assetId = (int) $this->_db->loadResult();
-
 		if (empty($assetId))
 		{
 			return false;
@@ -110,7 +112,6 @@ class JTableAsset extends JTableNested
 				->from($this->_db->quoteName($this->_tbl))
 				->where($this->_db->quoteName('id') . ' = ' . $this->parent_id);
 			$this->_db->setQuery($query);
-
 			if ($this->_db->loadResult())
 			{
 				return true;
@@ -118,7 +119,6 @@ class JTableAsset extends JTableNested
 			else
 			{
 				$this->setError('Invalid Parent ID');
-
 				return false;
 			}
 		}

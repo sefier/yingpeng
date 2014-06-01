@@ -13,7 +13,7 @@ $canEdit = $displayData['params']->get('access-edit');
 
 ?>
 
-<div class="icons">
+<div id="icons">
 	<?php if (empty($displayData['print'])) : ?>
 
 		<?php if ($canEdit || $displayData['params']->get('show_print_icon') || $displayData['params']->get('show_email_icon')) : ?>

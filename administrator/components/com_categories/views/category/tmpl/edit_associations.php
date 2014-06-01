@@ -9,4 +9,16 @@
 
 defined('_JEXEC') or die;
 
-echo JLayoutHelper::render('joomla.edit.associations', $this);
+$fields = $this->form->getFieldset('item_associations');
+
+foreach ($fields as $field) :
+?>
+<div class="control-group">
+	<div class="control-label">
+		<?php echo $field->label ?>
+	</div>
+	<div class="controls">
+		<?php echo $field->input; ?>
+	</div>
+</div>
+<?php endforeach; ?>

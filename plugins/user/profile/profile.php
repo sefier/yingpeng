@@ -127,9 +127,7 @@ class PlgUserProfile extends JPlugin
 		}
 		else
 		{
-			// Convert website url to utf8 for display
-			$value = JStringPunycode::urlToUTF8(htmlspecialchars($value));
-
+			$value = htmlspecialchars($value);
 			if (substr($value, 0, 4) == "http")
 			{
 				return '<a href="' . $value . '">' . $value . '</a>';
@@ -312,9 +310,6 @@ class PlgUserProfile extends JPlugin
 		{
 			try
 			{
-				// Convert website url to punycode
-				$data['profile']['website'] = JStringPunycode::urlToPunycode($data['profile']['website']);
-
 				$date = new JDate($data['profile']['dob']);
 				$this->_date = $date->format('Y-m-d');
 			}
@@ -342,7 +337,7 @@ class PlgUserProfile extends JPlugin
 				$db = JFactory::getDbo();
 				$query = $db->getQuery(true)
 					->delete($db->quoteName('#__user_profiles'))
-					->where($db->quoteName('user_id') . ' = ' . (int) $userId)
+					->where($db->quoteName('userid') . ' = ' . (int) $userId)
 					->where($db->quoteName('profile_key') . ' LIKE ' . $db->quote('profile.%'));
 				$db->setQuery($query);
 				$db->execute();

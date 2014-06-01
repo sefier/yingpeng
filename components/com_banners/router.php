@@ -64,6 +64,7 @@ function BannersParseRoute($segments)
 
 	if ($count)
 	{
+		$count--;
 		$segment = array_shift($segments);
 		if (is_numeric($segment))
 		{

@@ -26,46 +26,44 @@ class JInstallerAdapterPlugin extends JAdapterInstance
 	 *
 	 * @var    string
 	 * @since  3.1
-	 */
+	 * */
 	protected $route = 'install';
 
 	/**
 	 * The installation manifest XML object
 	 *
-	 * @var    SimpleXMLElement
+	 * @var
 	 * @since  3.1
-	 */
+	 * */
 	protected $manifest = null;
 
 	/**
 	 * A path to the PHP file that the scriptfile declaration in
 	 * the manifest refers to.
 	 *
-	 * @var    string
+	 * @var
 	 * @since  3.1
-	 */
+	 * */
 	protected $manifest_script = null;
 
 	/**
 	 * Name of the extension
 	 *
-	 * @var    string
+	 * @var
 	 * @since  3.1
-	 */
+	 * */
 	protected $name = null;
 
 	/**
-	 * <scriptfile> element of the extension manifest
 	 *
-	 * @var    object
+	 *
+	 * @var
 	 * @since  3.1
-	 */
+	 * */
 	protected $scriptElement = null;
 
 	/**
-	 * <files> element of the old extension manifest
-	 *
-	 * @var    object
+	 * @var
 	 * @since  3.1
 	 */
 	protected $oldFiles = null;
@@ -117,8 +115,10 @@ class JInstallerAdapterPlugin extends JAdapterInstance
 				{
 					$source = "$path/$folder";
 				}
-				$lang->load($extension . '.sys', $source, null, false, true)
-					|| $lang->load($extension . '.sys', JPATH_ADMINISTRATOR, null, false, true);
+				$lang->load($extension . '.sys', $source, null, false, false)
+					|| $lang->load($extension . '.sys', JPATH_ADMINISTRATOR, null, false, false)
+					|| $lang->load($extension . '.sys', $source, $lang->getDefault(), false, false)
+					|| $lang->load($extension . '.sys', JPATH_ADMINISTRATOR, $lang->getDefault(), false, false);
 			}
 		}
 	}

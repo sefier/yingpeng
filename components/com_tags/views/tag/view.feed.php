@@ -25,6 +25,7 @@ class TagsViewTag extends JViewLegacy
 		$document->link = JRoute::_(TagsHelperRoute::getTagRoute($app->input->getInt('id')));
 
 		$app->input->set('limit', $app->getCfg('feed_limit'));
+		$params = $app->getParams();
 		$siteEmail = $app->getCfg('mailfrom');
 		$fromName  = $app->getCfg('fromname');
 		$feedEmail = $app->getCfg('feed_email', 'author');
@@ -36,6 +37,7 @@ class TagsViewTag extends JViewLegacy
 
 		// Get some data from the model
 		$items    = $this->get('Items');
+		$tag = $this->get('Item');
 		foreach ($items as $item)
 		{
 			// Strip HTML from feed item title
@@ -66,7 +68,7 @@ class TagsViewTag extends JViewLegacy
 			}
 			elseif ($feedEmail === 'author')
 			{
-				$item->authorEmail = $item->author_email;
+				$item->authorEmail = $row->author_email;
 			}
 
 			// Loads item info into RSS array

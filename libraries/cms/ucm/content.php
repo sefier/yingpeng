@@ -27,6 +27,22 @@ class JUcmContent extends JUcmBase
 	protected $table;
 
 	/**
+	 * The UCM type object
+	 *
+	 * @var    JUcmType
+	 * @since  3.1
+	 */
+	public $type;
+
+	/**
+	 * The alias for the content table
+	 *
+	 * @var    string
+	 * @since  3.1
+	 */
+	protected $alias;
+
+	/**
 	 * The UCM data array
 	 *
 	 * @var    array
@@ -37,9 +53,9 @@ class JUcmContent extends JUcmBase
 	/**
 	 * Instantiate JUcmContent.
 	 *
-	 * @param   JTable    $table  The table object
-	 * @param   sring     $alias  The type alias
-	 * @param   JUcmType  $type   The type object
+	 * @param   JTable    $table   The table object
+	 * @param   sring     $alias   The type alias
+	 * @param   JUcmType  $type    The type object
 	 *
 	 * @since   3.1
 	 */
@@ -84,7 +100,7 @@ class JUcmContent extends JUcmBase
 		if (isset($ucmData['special']))
 		{
 			$table = $this->table;
-			$this->store($ucmData['special'], $table, '');
+			$this->store($ucmData['special'], $table,'');
 		}
 
 		return true;
@@ -135,13 +151,11 @@ class JUcmContent extends JUcmBase
 	{
 		$contentType = isset($type) ? $type : $this->type;
 
-		$fields = json_decode($contentType->type->field_mappings);
+		$fields = json_decode($contentType->type->field_mappings, true);
 
 		$ucmData = array();
 
-		$common = (is_object($fields->common)) ? $fields->common : $fields->common[0];
-
-		foreach ($common as $i => $field)
+		foreach ($fields['common'][0] as $i => $field)
 		{
 			if ($field && $field != 'null' && array_key_exists($field, $original))
 			{
@@ -151,9 +165,7 @@ class JUcmContent extends JUcmBase
 
 		if (array_key_exists('special', $ucmData))
 		{
-			$special = (is_object($fields->special)) ? $fields->special : $fields->special[0];
-
-			foreach ($special as $i => $field)
+			foreach ($fields['special'][0] as $i => $field)
 			{
 				if ($field && $field != 'null' && array_key_exists($field, $original))
 				{
@@ -182,7 +194,7 @@ class JUcmContent extends JUcmBase
 	 * @param   JTable   $table       JTable Object
 	 * @param   boolean  $primaryKey  Flag that is true for data that are using #__ucm_content as their primary table
 	 *
-	 * @return  boolean  true on success
+	 * @return  Boolean  true on success
 	 *
 	 * @since   3.1
 	 */
@@ -203,7 +215,7 @@ class JUcmContent extends JUcmBase
 
 			if (parent::store($baseData))
 			{
-				$primaryKey = $this->getPrimaryKey($typeId, $data['core_content_item_id']);
+				$primaryKey = $this->getPrimaryKey($typeId,$data['core_content_item_id']);
 			}
 		}
 
@@ -213,7 +225,7 @@ class JUcmContent extends JUcmBase
 	/**
 	 * Get the value of the primary key from #__ucm_base
 	 *
-	 * @param   string   $typeId         The ID for the type
+	 * @param   string   $typeId	     The ID for the type
 	 * @param   integer  $contentItemId  Value of the primary key in the legacy or secondary table
 	 *
 	 * @return  integer  The integer of the primary key

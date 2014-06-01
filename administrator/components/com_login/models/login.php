@@ -29,8 +29,7 @@ class LoginModelLogin extends JModelLegacy
 	{
 		$credentials = array(
 			'username' => JRequest::getVar('username', '', 'method', 'username'),
-			'password' => JRequest::getVar('passwd', '', 'post', 'string', JREQUEST_ALLOWRAW),
-			'secretkey' => JRequest::getVar('secretkey', '', 'post', 'string', JREQUEST_ALLOWRAW),
+			'password' => JRequest::getVar('passwd', '', 'post', 'string', JREQUEST_ALLOWRAW)
 		);
 		$this->setState('credentials', $credentials);
 
@@ -38,7 +37,7 @@ class LoginModelLogin extends JModelLegacy
 		if ($return = JRequest::getVar('return', '', 'method', 'base64'))
 		{
 			$return = base64_decode($return);
-			if (!JUri::isInternal($return))
+			if (!JURI::isInternal($return))
 			{
 				$return = '';
 			}

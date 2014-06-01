@@ -41,12 +41,6 @@ class ContactViewContact extends JViewLegacy
 			return false;
 		}
 
-		if ($this->getLayout() == 'modal')
-		{
-			$this->form->setFieldAttribute('language', 'readonly', 'true');
-			$this->form->setFieldAttribute('catid', 'readonly', 'true');
-		}
-
 		$this->addToolbar();
 		parent::display($tpl);
 	}
@@ -65,9 +59,9 @@ class ContactViewContact extends JViewLegacy
 		$isNew		= ($this->item->id == 0);
 		$checkedOut	= !($this->item->checked_out == 0 || $this->item->checked_out == $userId);
 		// Since we don't track these assets at the item level, use the category id.
-		$canDo		= JHelperContent::getActions($this->item->catid, 0, 'com_contact');
+		$canDo		= ContactHelper::getActions($this->item->catid, 0);
 
-		JToolbarHelper::title(JText::_('COM_CONTACT_MANAGER_CONTACT'), 'address contact');
+		JToolbarHelper::title(JText::_('COM_CONTACT_MANAGER_CONTACT'), 'contact.png');
 
 		// Build the actions for new and existing records.
 		if ($isNew)
@@ -105,11 +99,6 @@ class ContactViewContact extends JViewLegacy
 			if ($canDo->get('core.create'))
 			{
 				JToolbarHelper::save2copy('contact.save2copy');
-			}
-
-			if ($this->state->params->get('save_history', 0) && $user->authorise('core.edit'))
-			{
-				JToolbarHelper::versions('com_contact.contact', $this->item->id);
 			}
 
 			JToolbarHelper::cancel('contact.cancel', 'JTOOLBAR_CLOSE');

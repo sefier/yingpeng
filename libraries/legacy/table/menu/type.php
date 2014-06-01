@@ -25,7 +25,7 @@ class JTableMenuType extends JTable
 	 *
 	 * @since  11.1
 	 */
-	public function __construct(JDatabaseDriver $db)
+	public function __construct($db)
 	{
 		parent::__construct('#__menu_types', 'id', $db);
 	}
@@ -35,17 +35,15 @@ class JTableMenuType extends JTable
 	 *
 	 * @return  boolean  True on success, false on failure
 	 *
-	 * @see     JTable::check()
+	 * @see     JTable::check
 	 * @since   11.1
 	 */
 	public function check()
 	{
 		$this->menutype = JApplication::stringURLSafe($this->menutype);
-
 		if (empty($this->menutype))
 		{
 			$this->setError(JText::_('JLIB_DATABASE_ERROR_MENUTYPE_EMPTY'));
-
 			return false;
 		}
 
@@ -66,7 +64,6 @@ class JTableMenuType extends JTable
 		if ($this->_db->loadResult())
 		{
 			$this->setError(JText::sprintf('JLIB_DATABASE_ERROR_MENUTYPE_EXISTS', $this->menutype));
-
 			return false;
 		}
 
@@ -106,18 +103,16 @@ class JTableMenuType extends JTable
 				->where('checked_out !=' . (int) $userId)
 				->where('checked_out !=0');
 			$this->_db->setQuery($query);
-
 			if ($this->_db->loadRowList())
 			{
 				$this->setError(
 					JText::sprintf('JLIB_DATABASE_ERROR_STORE_FAILED', get_class($this), JText::_('JLIB_DATABASE_ERROR_MENUTYPE_CHECKOUT'))
 				);
-
 				return false;
 			}
 
 			// Verify that no module for this menu are checked out
-			$query->clear()
+			$query = $this->_db->getQuery(true)
 				->select('id')
 				->from('#__modules')
 				->where('module=' . $this->_db->quote('mod_menu'))
@@ -125,18 +120,16 @@ class JTableMenuType extends JTable
 				->where('checked_out !=' . (int) $userId)
 				->where('checked_out !=0');
 			$this->_db->setQuery($query);
-
 			if ($this->_db->loadRowList())
 			{
 				$this->setError(
 					JText::sprintf('JLIB_DATABASE_ERROR_STORE_FAILED', get_class($this), JText::_('JLIB_DATABASE_ERROR_MENUTYPE_CHECKOUT'))
 				);
-
 				return false;
 			}
 
 			// Update the menu items
-			$query->clear()
+			$query = $this->_db->getQuery(true)
 				->update('#__menu')
 				->set('menutype=' . $this->_db->quote($this->menutype))
 				->where('menutype=' . $this->_db->quote($table->menutype));
@@ -144,7 +137,7 @@ class JTableMenuType extends JTable
 			$this->_db->execute();
 
 			// Update the module items
-			$query->clear()
+			$query = $this->_db->getQuery(true)
 				->update('#__modules')
 				->set(
 				'params=REPLACE(params,' . $this->_db->quote('"menutype":' . json_encode($table->menutype)) . ',' .
@@ -155,12 +148,11 @@ class JTableMenuType extends JTable
 			$this->_db->setQuery($query);
 			$this->_db->execute();
 		}
-
 		return parent::store($updateNulls);
 	}
 
 	/**
-	 * Method to delete a row from the database table by primary key value.
+	 * Override parent delete method to delete tags information.
 	 *
 	 * @param   mixed  $pk  An optional primary key value to delete.  If not set the instance property value is used.
 	 *
@@ -192,16 +184,14 @@ class JTableMenuType extends JTable
 				->where('client_id=0')
 				->where('(checked_out NOT IN (0,' . (int) $userId . ') OR home=1 AND language=' . $this->_db->quote('*') . ')');
 			$this->_db->setQuery($query);
-
 			if ($this->_db->loadRowList())
 			{
 				$this->setError(JText::sprintf('JLIB_DATABASE_ERROR_DELETE_FAILED', get_class($this), JText::_('JLIB_DATABASE_ERROR_MENUTYPE')));
-
 				return false;
 			}
 
 			// Verify that no module for this menu are checked out
-			$query->clear()
+			$query = $this->_db->getQuery(true)
 				->select('id')
 				->from('#__modules')
 				->where('module=' . $this->_db->quote('mod_menu'))
@@ -209,16 +199,14 @@ class JTableMenuType extends JTable
 				->where('checked_out !=' . (int) $userId)
 				->where('checked_out !=0');
 			$this->_db->setQuery($query);
-
 			if ($this->_db->loadRowList())
 			{
 				$this->setError(JText::sprintf('JLIB_DATABASE_ERROR_DELETE_FAILED', get_class($this), JText::_('JLIB_DATABASE_ERROR_MENUTYPE')));
-
 				return false;
 			}
 
 			// Delete the menu items
-			$query->clear()
+			$query = $this->_db->getQuery(true)
 				->delete('#__menu')
 				->where('menutype=' . $this->_db->quote($table->menutype))
 				->where('client_id=0');
@@ -226,14 +214,13 @@ class JTableMenuType extends JTable
 			$this->_db->execute();
 
 			// Update the module items
-			$query->clear()
+			$query = $this->_db->getQuery(true)
 				->delete('#__modules')
 				->where('module=' . $this->_db->quote('mod_menu'))
 				->where('params LIKE ' . $this->_db->quote('%"menutype":' . json_encode($table->menutype) . '%'));
 			$this->_db->setQuery($query);
 			$this->_db->execute();
 		}
-
 		return parent::delete($pk);
 	}
 }

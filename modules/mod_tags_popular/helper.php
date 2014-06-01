@@ -18,24 +18,13 @@ defined('_JEXEC') or die;
  */
 abstract class ModTagsPopularHelper
 {
-	public static function getList(&$params)
+	public static function getList($params)
 	{
-		$db				= JFactory::getDbo();
-		$user     		= JFactory::getUser();
-		$groups 		= implode(',', $user->getAuthorisedViewLevels());
-		$timeframe		= $params->get('timeframe', 'alltime');
-		$maximum		= $params->get('maximum', 5);
-		$order_value	= $params->get('order_value', 'count');
-
-		if ($order_value == 'rand()')
-		{
-			$order_direction	= '';
-		}
-		else
-		{
-			$order_value		= $db->quoteName($order_value);
-			$order_direction	= $params->get('order_direction', 1) ? 'DESC' : 'ASC';
-		}
+		$db        = JFactory::getDbo();
+		$user      = JFactory::getUser();
+		$groups    = implode(',', $user->getAuthorisedViewLevels());
+		$timeframe = $params->get('timeframe', 'alltime');
+		$maximum   = $params->get('maximum', 5);
 
 		$query = $db->getQuery(true)
 			->select(
@@ -72,7 +61,7 @@ abstract class ModTagsPopularHelper
 		}
 
 		$query->join('INNER', $db->quoteName('#__tags', 't') . ' ON ' . $db->quoteName('tag_id') . ' = t.id')
-			->order($order_value . ' ' . $order_direction);
+			->order('count DESC');
 		$db->setQuery($query, 0, $maximum);
 		$results = $db->loadObjectList();
 

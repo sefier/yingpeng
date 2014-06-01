@@ -43,7 +43,6 @@ class JTableUsergroup extends JTable
 		if ((trim($this->title)) == '')
 		{
 			$this->setError(JText::_('JLIB_DATABASE_ERROR_USERGROUP_TITLE'));
-
 			return false;
 		}
 
@@ -61,7 +60,6 @@ class JTableUsergroup extends JTable
 		if ($db->loadResult() > 0)
 		{
 			$this->setError(JText::_('JLIB_DATABASE_ERROR_USERGROUP_TITLE_EXISTS'));
-
 			return false;
 		}
 
@@ -154,17 +152,14 @@ class JTableUsergroup extends JTable
 		{
 			$this->load($oid);
 		}
-
 		if ($this->id == 0)
 		{
 			throw new UnexpectedValueException('Global Category not found');
 		}
-
 		if ($this->parent_id == 0)
 		{
 			throw new UnexpectedValueException('Root categories cannot be deleted.');
 		}
-
 		if ($this->lft == 0 || $this->rgt == 0)
 		{
 			throw new UnexpectedValueException('Left-Right data inconsistency. Cannot delete usergroup.');
@@ -180,7 +175,6 @@ class JTableUsergroup extends JTable
 			->where($db->quoteName('c.rgt') . ' <= ' . (int) $this->rgt);
 		$db->setQuery($query);
 		$ids = $db->loadColumn();
-
 		if (empty($ids))
 		{
 			throw new UnexpectedValueException('Left-Right data inconsistency. Cannot delete usergroup.');
@@ -198,7 +192,6 @@ class JTableUsergroup extends JTable
 
 		// Delete the usergroup in view levels
 		$replace = array();
-
 		foreach ($ids as $id)
 		{
 			$replace[] = ',' . $db->quote("[$id,") . ',' . $db->quote("[") . ')';
@@ -207,6 +200,7 @@ class JTableUsergroup extends JTable
 			$replace[] = ',' . $db->quote("[$id]") . ',' . $db->quote("[]") . ')';
 		}
 
+		// SQLSsrv change. Alternative for regexp
 		$query->clear()
 			->select('id, rules')
 			->from('#__viewlevels');
@@ -214,7 +208,6 @@ class JTableUsergroup extends JTable
 		$rules = $db->loadObjectList();
 
 		$match_ids = array();
-
 		foreach ($rules as $rule)
 		{
 			foreach ($ids as $id)
@@ -228,7 +221,7 @@ class JTableUsergroup extends JTable
 
 		if (!empty($match_ids))
 		{
-			$query->clear()
+			$query = $db->getQuery(true)
 				->set('rules=' . str_repeat('replace(', 4 * count($ids)) . 'rules' . implode('', $replace))
 				->update('#__viewlevels')
 				->where('id IN (' . implode(',', $match_ids) . ')');

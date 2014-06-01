@@ -8,20 +8,10 @@
  */
 
 defined('_JEXEC') or die;
-JHtml::_('behavior.tabstate');
 
-$app  = JFactory::getApplication();
-$user = JFactory::getUser();
-
-// ACL for hardening the access to the template manager.
-if (!$user->authorise('core.manage', 'com_templates')
-	|| !$user->authorise('core.edit', 'com_templates')
-	|| !$user->authorise('core.create', 'com_templates')
-	|| !$user->authorise('core.admin', 'com_templates'))
+if (!JFactory::getUser()->authorise('core.manage', 'com_templates'))
 {
-	$app->enqueueMessage(JText::_('JERROR_ALERTNOAUTHOR'), 'error');
-
-	return false;
+	return JError::raiseWarning(404, JText::_('JERROR_ALERTNOAUTHOR'));
 }
 
 JLoader::register('TemplatesHelper', __DIR__ . '/helpers/templates.php');

@@ -1,0 +1,19 @@
+/*------------------------------------------------------------------------
+# JF_CALLA-EXTERIORS! - JOOMFREAK.COM JOOMLA 2.5 TEMPLATE 
+# June 2013
+# ------------------------------------------------------------------------
+# COPYRIGHT: (C) 2013 JOOMFREAK.COM / KREATIF MULTIMEDIA GMBH
+# LICENSE: Creative Commons Attribution
+# AUTHOR: JOOMFREAK.COM
+# WEBSITE: http://www.joomfreak.com - http://www.kreatif-multimedia.com
+# EMAIL: info@joomfreak.com
+-------------------------------------------------------------------------*/
+
+#jf-footer .copyright {
+	filter: progid:DXImageTransform.Microsoft.BasicImage(rotation=0);
+	position: static !important;
+}
+
+.home #jf-header.transparent {
+	background: url(../images/header-bg.png) repeat-x;
+}

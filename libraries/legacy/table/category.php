@@ -18,6 +18,15 @@ defined('JPATH_PLATFORM') or die;
  */
 class JTableCategory extends JTableNested
 {
+
+	/**
+	 * Helper object for storing and deleting tag information.
+	 *
+	 * @var    JHelperTags
+	 * @since  3.1
+	 */
+	protected $tagsHelper = null;
+
 	/**
 	 * Constructor
 	 *
@@ -25,11 +34,12 @@ class JTableCategory extends JTableNested
 	 *
 	 * @since   11.1
 	 */
-	public function __construct(JDatabaseDriver $db)
+	public function __construct($db)
 	{
 		parent::__construct('#__categories', 'id', $db);
 
 		$this->access = (int) JFactory::getConfig()->get('access');
+		$this->tagsHelper = new JHelperTags();
 	}
 
 	/**
@@ -44,7 +54,6 @@ class JTableCategory extends JTableNested
 	protected function _getAssetName()
 	{
 		$k = $this->_tbl_key;
-
 		return $this->extension . '.category.' . (int) $this->$k;
 	}
 
@@ -70,7 +79,7 @@ class JTableCategory extends JTableNested
 	 *
 	 * @since   11.1
 	 */
-	protected function _getAssetParentId(JTable $table = null, $id = null)
+	protected function _getAssetParentId($table = null, $id = null)
 	{
 		$assetId = null;
 
@@ -85,7 +94,6 @@ class JTableCategory extends JTableNested
 
 			// Get the asset id from the database.
 			$this->_db->setQuery($query);
-
 			if ($result = $this->_db->loadResult())
 			{
 				$assetId = (int) $result;
@@ -102,7 +110,6 @@ class JTableCategory extends JTableNested
 
 			// Get the asset id from the database.
 			$this->_db->setQuery($query);
-
 			if ($result = $this->_db->loadResult())
 			{
 				$assetId = (int) $result;
@@ -125,7 +132,7 @@ class JTableCategory extends JTableNested
 	 *
 	 * @return  boolean
 	 *
-	 * @see     JTable::check()
+	 * @see     JTable::check
 	 * @since   11.1
 	 */
 	public function check()
@@ -134,19 +141,15 @@ class JTableCategory extends JTableNested
 		if (trim($this->title) == '')
 		{
 			$this->setError(JText::_('JLIB_DATABASE_ERROR_MUSTCONTAIN_A_TITLE_CATEGORY'));
-
 			return false;
 		}
-
 		$this->alias = trim($this->alias);
-
 		if (empty($this->alias))
 		{
 			$this->alias = $this->title;
 		}
 
 		$this->alias = JApplication::stringURLSafe($this->alias);
-
 		if (trim(str_replace('-', '', $this->alias)) == '')
 		{
 			$this->alias = JFactory::getDate()->format('Y-m-d-H-i-s');
@@ -164,7 +167,7 @@ class JTableCategory extends JTableNested
 	 *
 	 * @return  mixed   Null if operation was satisfactory, otherwise returns an error
 	 *
-	 * @see     JTable::bind()
+	 * @see     JTable::bind
 	 * @since   11.1
 	 */
 	public function bind($array, $ignore = '')
@@ -191,6 +194,24 @@ class JTableCategory extends JTableNested
 		}
 
 		return parent::bind($array, $ignore);
+	}
+
+	/**
+	 * Override parent delete method to process tags
+	 *
+	 * @param   integer  $pk        The primary key of the node to delete.
+	 * @param   boolean  $children  True to delete child nodes, false to move them up a level.
+	 *
+	 * @return  boolean  True on success.
+	 *
+	 * @since   3.1
+	 * @throws  UnexpectedValueException
+	 */
+	public function delete($pk = null, $children = true)
+	{
+		$result = parent::delete($pk);
+		$this->tagsHelper->typeAlias = $this->extension . '.category';
+		return $result && $this->tagsHelper->deleteTagData($this, $pk);
 	}
 
 	/**
@@ -222,15 +243,17 @@ class JTableCategory extends JTableNested
 
 		// Verify that the alias is unique
 		$table = JTable::getInstance('Category', 'JTable', array('dbo' => $this->getDbo()));
-
 		if ($table->load(array('alias' => $this->alias, 'parent_id' => $this->parent_id, 'extension' => $this->extension))
 			&& ($table->id != $this->id || $this->id == 0))
 		{
-			$this->setError(JText::_('JLIB_DATABASE_ERROR_CATEGORY_UNIQUE_ALIAS'));
 
+			$this->setError(JText::_('JLIB_DATABASE_ERROR_CATEGORY_UNIQUE_ALIAS'));
 			return false;
 		}
 
-		return parent::store($updateNulls);
+		$this->tagsHelper->typeAlias = $this->extension . '.category';
+		$this->tagsHelper->preStoreProcess($this);
+		$result = parent::store($updateNulls);
+		return $result && $this->tagsHelper->postStoreProcess($this);
 	}
 }

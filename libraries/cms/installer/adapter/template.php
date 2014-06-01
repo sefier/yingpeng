@@ -89,8 +89,10 @@ class JInstallerAdapterTemplate extends JAdapterInstance
 		$extension = "tpl_$name";
 		$lang = JFactory::getLanguage();
 		$source = $path ? $path : ($this->parent->extension->client_id ? JPATH_ADMINISTRATOR : JPATH_SITE) . '/templates/' . $name;
-		$lang->load($extension . '.sys', $source, null, false, true)
-			|| $lang->load($extension . '.sys', constant('JPATH_' . strtoupper($client)), null, false, true);
+		$lang->load($extension . '.sys', $source, null, false, false)
+			|| $lang->load($extension . '.sys', constant('JPATH_' . strtoupper($client)), null, false, false)
+			|| $lang->load($extension . '.sys', $source, $lang->getDefault(), false, false)
+			|| $lang->load($extension . '.sys', constant('JPATH_' . strtoupper($client)), $lang->getDefault(), false, false);
 	}
 
 	/**
@@ -126,6 +128,7 @@ class JInstallerAdapterTemplate extends JAdapterInstance
 		else
 		{
 			// No client attribute was found so we assume the site as the client
+			$cname = 'site';
 			$basePath = JPATH_SITE;
 			$clientId = 0;
 		}
@@ -330,7 +333,7 @@ class JInstallerAdapterTemplate extends JAdapterInstance
 			$lang->setDebug($debug);
 
 			// Insert record in #__template_styles
-			$query->clear()
+			$query = $db->getQuery(true)
 				->insert($db->quoteName('#__template_styles'))
 				->columns($columns)
 				->values(implode(',', $values));
@@ -369,6 +372,8 @@ class JInstallerAdapterTemplate extends JAdapterInstance
 	 */
 	public function uninstall($id)
 	{
+		$retval = true;
+
 		// First order of business will be to load the template object table from the database.
 		// This should give us the necessary information to proceed.
 		$row = JTable::getInstance('extension');

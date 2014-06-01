@@ -33,7 +33,7 @@ class JFormRuleUrl extends JFormRule
 	 *
 	 * @since   11.1
 	 * @link    http://www.w3.org/Addressing/URL/url-spec.txt
-	 * @see	    JString
+	 * @see	    Jstring
 	 */
 	public function test(SimpleXMLElement $element, $value, $group = null, JRegistry $input = null, JForm $form = null)
 	{

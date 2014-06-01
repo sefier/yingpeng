@@ -21,14 +21,16 @@ class MediaViewImagesList extends JViewLegacy
 	public function display($tpl = null)
 	{
 		// Do not allow cache
-		JFactory::getApplication()->allowCache(false);
+		JResponse::allowCache(false);
+
+		$app = JFactory::getApplication();
 
 		$lang	= JFactory::getLanguage();
 
 		JHtml::_('stylesheet', 'media/popup-imagelist.css', array(), true);
-		if ($lang->isRTL()) {
+		if ($lang->isRTL()) :
 			JHtml::_('stylesheet', 'media/popup-imagelist_rtl.css', array(), true);
-		}
+		endif;
 
 		$document = JFactory::getDocument();
 		$document->addScriptDeclaration("var ImageManager = window.parent.ImageManager;");

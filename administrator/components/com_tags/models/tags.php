@@ -21,10 +21,9 @@ class TagsModelTags extends JModelList
 	/**
 	 * Constructor.
 	 *
-	 * @param    array  $config  An optional associative array of configuration settings.
-	 *
-	 * @see    JController
-	 * @since  3.0.3
+	 * @param    array    An optional associative array of configuration settings.
+	 * @see        JController
+	 * @since      3.0.3
 	 */
 	public function __construct($config = array())
 	{
@@ -64,6 +63,7 @@ class TagsModelTags extends JModelList
 	 */
 	protected function populateState($ordering = null, $direction = null)
 	{
+		$app = JFactory::getApplication();
 		$context = $this->context;
 
 		$search = $this->getUserStateFromRequest($context . '.search', 'filter_search');
@@ -124,6 +124,7 @@ class TagsModelTags extends JModelList
 		$db = $this->getDbo();
 		$query = $db->getQuery(true);
 		$user = JFactory::getUser();
+		$app = JFactory::getApplication();
 
 		// Select the required fields from the table.
 		$query->select(
@@ -151,7 +152,7 @@ class TagsModelTags extends JModelList
 			->join('LEFT', '#__users AS ua ON ua.id = a.created_user_id')
 
 			->select('ug.title AS access_title')
-			->join('LEFT', '#__viewlevels AS ug on ug.id = a.access');
+			->join('LEFT', '#__usergroups AS ug on ug.id = a.access');
 
 		// Filter on the level.
 		if ($level = $this->getState('filter.level'))

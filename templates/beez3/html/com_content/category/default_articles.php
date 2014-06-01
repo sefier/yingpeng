@@ -13,6 +13,7 @@ $app = JFactory::getApplication();
 
 
 JHtml::addIncludePath(JPATH_COMPONENT.'/helpers/html');
+JHtml::_('behavior.tooltip');
 JHtml::_('behavior.framework');
 
 $n = count($this->items);
@@ -148,7 +149,7 @@ $listDirn	= $this->escape($this->state->get('list.direction'));
 						$itemId		= $active->id;
 						$link = JRoute::_('index.php?option=com_users&view=login&Itemid='.$itemId);
 						$returnURL = JRoute::_(ContentHelperRoute::getArticleRoute($article->slug));
-						$fullURL = new JUri($link);
+						$fullURL = new JURI($link);
 						$fullURL->setVar('return', base64_encode($returnURL));
 					?>
 					<a href="<?php echo $fullURL; ?>" class="register">

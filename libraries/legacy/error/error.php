@@ -31,7 +31,7 @@ const JERROR_ILLEGAL_MODE = 3;
  * @package     Joomla.Legacy
  * @subpackage  Error
  * @since       11.1
- * @deprecated  12.1 (Platform) & 4.0 (CMS) - Use PHP Exception
+ * @deprecated  12.1   Use PHP Exception
  */
 abstract class JError
 {
@@ -53,23 +53,12 @@ abstract class JError
 	 */
 	protected static $levels = array(E_NOTICE => 'Notice', E_WARNING => 'Warning', E_ERROR => 'Error');
 
-	/**
-	 * Array of message handlers
-	 * @var    array
-	 * @since  11.1
-	 */
 	protected static $handlers = array(
 		E_NOTICE => array('mode' => 'ignore'),
 		E_WARNING => array('mode' => 'ignore'),
 		E_ERROR => array('mode' => 'ignore')
 	);
 
-	/**
-	 * Array containing the error stack
-	 *
-	 * @var    array
-	 * @since  11.1
-	 */
 	protected static $stack = array();
 
 	/**
@@ -243,7 +232,7 @@ abstract class JError
 	 * @return  object  $error  The configured JError object
 	 *
 	 * @deprecated   12.1       Use PHP Exception
-	 * @see        JError::raise()
+	 * @see        raise()
 	 * @since   11.1
 	 */
 	public static function raiseError($code, $msg, $info = null)
@@ -266,7 +255,8 @@ abstract class JError
 	 * @return  object  The configured JError object
 	 *
 	 * @deprecated  12.1  Use PHP Exception
-	 * @see        JError::raise()
+	 * @see        JError
+	 * @see        raise()
 	 * @since      11.1
 	 */
 	public static function raiseWarning($code, $msg, $info = null)
@@ -503,7 +493,7 @@ abstract class JError
 	 * @return  object   The exception object
 	 *
 	 * @deprecated  12.1
-	 * @see     JError::raise()
+	 * @see     raise()
 	 * @since   11.1
 	 */
 	public static function handleIgnore(&$error, $options)
@@ -523,7 +513,7 @@ abstract class JError
 	 * @return  object  The exception object
 	 *
 	 * @deprecated  12.1
-	 * @see         JError::raise()
+	 * @see         raise()
 	 * @since       11.1
 	 */
 	public static function handleEcho(&$error, $options)
@@ -596,7 +586,7 @@ abstract class JError
 	 * @return  object  The exception object
 	 *
 	 * @deprecated  12.1
-	 * @see         JError::raise()
+	 * @see         raise()
 	 * @since       11.1
 	 */
 	public static function handleVerbose(&$error, $options)
@@ -642,7 +632,7 @@ abstract class JError
 	 * @return  object  The exception object
 	 *
 	 * @deprecated  12.1
-	 * @see         JError::raise()
+	 * @see         raise()
 	 * @since       11.1
 	 */
 	public static function handleDie(&$error, $options)
@@ -683,7 +673,7 @@ abstract class JError
 	 * @return  object  The exception object
 	 *
 	 * @deprecated  12.1
-	 * @see         JError::raise()
+	 * @see         raise()
 	 * @since       11.1
 	 */
 	public static function handleMessage(&$error, $options)
@@ -707,7 +697,7 @@ abstract class JError
 	 * @return  object  The exception object
 	 *
 	 * @deprecated  12.1
-	 * @see         JError::raise()
+	 * @see         raise()
 	 * @since       11.1
 	 */
 	public static function handleLog(&$error, $options)
@@ -744,7 +734,7 @@ abstract class JError
 	 * @return  object  The exception object
 	 *
 	 * @deprecated  12.1
-	 * @see         JError::raise()
+	 * @see         raise()
 	 * @since       11.1
 	 */
 	public static function handleCallback(&$error, $options)
@@ -780,14 +770,8 @@ abstract class JError
 			// Push the error object into the document
 			$document->setError($error);
 
-			// If site is offline and it's a 404 error, just go to index (to see offline message, instead of 404)
-			if ($error->getCode() == '404' && JFactory::getConfig()->get('offline') == 1)
-			{
-				JFactory::getApplication()->redirect('index.php');
-			}
-
 			@ob_end_clean();
-			$document->setTitle(JText::_('Error') . ': ' . $error->getCode());
+			$document->setTitle(JText::_('Error') . ': ' . $error->get('code'));
 			$data = $document->render(false, array('template' => $template, 'directory' => JPATH_THEMES, 'debug' => $config->get('debug')));
 
 			// Failsafe to get the error displayed.
@@ -798,10 +782,10 @@ abstract class JError
 			else
 			{
 				// Do not allow cache
-				$app->allowCache(false);
+				JResponse::allowCache(false);
 
-				$app->setBody($data);
-				echo $app->toString();
+				JResponse::setBody($data);
+				echo JResponse::toString();
 			}
 		}
 		else

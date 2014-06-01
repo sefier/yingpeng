@@ -83,6 +83,7 @@ class MessagesTableMessage extends JTable
 
 		// Sanitize input.
 		JArrayHelper::toInteger($pks);
+		$userId = (int) $userId;
 		$state  = (int) $state;
 
 		// If there are no primary keys set check to see if the instance key is set.

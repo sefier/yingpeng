@@ -19,6 +19,22 @@ defined('_JEXEC') or die;
 class LanguagesControllerStrings extends JControllerAdmin
 {
 	/**
+	 * Constructor
+	 *
+	 * @param   	array	An optional associative array of configuration settings
+	 *
+	 * @return  void
+	 *
+	 * @since		2.5
+	 */
+	public function __construct($config = array())
+	{
+		parent::__construct($config);
+
+		require_once JPATH_COMPONENT . '/helpers/jsonresponse.php';
+	}
+
+	/**
 	 * Method for refreshing the cache in the database with the known language strings
 	 *
 	 * @return  void
@@ -27,7 +43,7 @@ class LanguagesControllerStrings extends JControllerAdmin
 	 */
 	public function refresh()
 	{
-		echo new JResponseJson($this->getModel('strings')->refresh());
+		echo new JJsonResponse($this->getModel('strings')->refresh());
 	}
 
 	/**
@@ -39,6 +55,6 @@ class LanguagesControllerStrings extends JControllerAdmin
 	 */
 	public function search()
 	{
-		echo new JResponseJson($this->getModel('strings')->search());
+		echo new JJsonResponse($this->getModel('strings')->search());
 	}
 }

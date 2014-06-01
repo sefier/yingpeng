@@ -179,7 +179,6 @@ class JClientHelper
 			$session = JFactory::getSession();
 			$user = $session->get($client . '.user', null, 'JClientHelper');
 			$pass = $session->get($client . '.pass', null, 'JClientHelper');
-
 			if ($user != '' && $pass != '')
 			{
 				$return = true;
@@ -209,7 +208,6 @@ class JClientHelper
 		$input = JFactory::getApplication()->input;
 		$user = $input->post->getString('username', null);
 		$pass = $input->post->getString('password', null);
-
 		if ($user != '' && $pass != '')
 		{
 			// Add credentials to the session

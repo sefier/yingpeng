@@ -212,6 +212,7 @@ class JDatabaseDriverOracle extends JDatabaseDriverPdo
 		$query = $this->getQuery(true)
 			->select('dbms_metadata.get_ddl(:type, :tableName)')
 			->from('dual')
+
 			->bind(':type', 'TABLE');
 
 		// Sanitize input to an array and iterate over the list.
@@ -251,9 +252,9 @@ class JDatabaseDriverOracle extends JDatabaseDriverPdo
 
 		$table = strtoupper($table);
 
-		$query->select('*');
-		$query->from('ALL_TAB_COLUMNS');
-		$query->where('table_name = :tableName');
+		$query->select('*')
+			->from('ALL_TAB_COLUMNS')
+			->where('table_name = :tableName');
 
 		$prefixedTable = str_replace('#__', strtoupper($this->tablePrefix), $table);
 		$query->bind(':tableName', $prefixedTable);
@@ -305,6 +306,7 @@ class JDatabaseDriverOracle extends JDatabaseDriverPdo
 		$query->select('*')
 			->from('ALL_CONSTRAINTS')
 			->where('table_name = :tableName')
+
 			->bind(':tableName', $table);
 
 		$this->setQuery($query);
@@ -332,6 +334,8 @@ class JDatabaseDriverOracle extends JDatabaseDriverPdo
 
 		$query = $this->getQuery(true);
 
+		$tables = array();
+
 		if ($includeDatabaseName)
 		{
 			$query->select('owner, table_name');
@@ -358,7 +362,7 @@ class JDatabaseDriverOracle extends JDatabaseDriverPdo
 		}
 		else
 		{
-			$tables = $this->loadColumn();
+			$tables = $this->loadResultArray();
 		}
 
 		return $tables;
@@ -376,7 +380,6 @@ class JDatabaseDriverOracle extends JDatabaseDriverPdo
 		$this->connect();
 
 		$this->setQuery("select value from nls_database_parameters where parameter = 'NLS_RDBMS_VERSION'");
-
 		return $this->loadResult();
 	}
 
@@ -416,12 +419,6 @@ class JDatabaseDriverOracle extends JDatabaseDriverPdo
 		$this->connect();
 
 		$this->setQuery("ALTER SESSION SET NLS_DATE_FORMAT = '$dateFormat'");
-
-		if (!$this->execute())
-		{
-			return false;
-		}
-
 		$this->setQuery("ALTER SESSION SET NLS_TIMESTAMP_FORMAT = '$dateFormat'");
 		if (!$this->execute())
 		{
@@ -526,6 +523,7 @@ class JDatabaseDriverOracle extends JDatabaseDriverPdo
 	 */
 	public function replacePrefix($query, $prefix = '#__')
 	{
+		$escaped = false;
 		$startPos = 0;
 		$quoteChar = "'";
 		$literal = '';
@@ -594,87 +592,5 @@ class JDatabaseDriverOracle extends JDatabaseDriverPdo
 		}
 
 		return $literal;
-	}
-
-	/**
-	 * Method to commit a transaction.
-	 *
-	 * @param   boolean  $toSavepoint  If true, commit to the last savepoint.
-	 *
-	 * @return  void
-	 *
-	 * @since   12.3
-	 * @throws  RuntimeException
-	 */
-	public function transactionCommit($toSavepoint = false)
-	{
-		$this->connect();
-
-		if (!$toSavepoint || $this->transactionDepth <= 1)
-		{
-			parent::transactionCommit($toSavepoint);
-		}
-		else
-		{
-			$this->transactionDepth--;
-		}
-	}
-
-	/**
-	 * Method to roll back a transaction.
-	 *
-	 * @param   boolean  $toSavepoint  If true, rollback to the last savepoint.
-	 *
-	 * @return  void
-	 *
-	 * @since   12.3
-	 * @throws  RuntimeException
-	 */
-	public function transactionRollback($toSavepoint = false)
-	{
-		$this->connect();
-
-		if (!$toSavepoint || $this->transactionDepth <= 1)
-		{
-			parent::transactionRollback($toSavepoint);
-		}
-		else
-		{
-			$savepoint = 'SP_' . ($this->transactionDepth - 1);
-			$this->setQuery('ROLLBACK TO SAVEPOINT ' . $this->quoteName($savepoint));
-
-			if ($this->execute())
-			{
-				$this->transactionDepth--;
-			}
-		}
-	}
-
-	/**
-	 * Method to initialize a transaction.
-	 *
-	 * @param   boolean  $asSavepoint  If true and a transaction is already active, a savepoint will be created.
-	 *
-	 * @return  void
-	 *
-	 * @since   12.3
-	 * @throws  RuntimeException
-	 */
-	public function transactionStart($asSavepoint = false)
-	{
-		$this->connect();
-
-		if (!$asSavepoint || !$this->transactionDepth)
-		{
-			return parent::transactionStart($asSavepoint);
-		}
-
-		$savepoint = 'SP_' . $this->transactionDepth;
-		$this->setQuery('SAVEPOINT ' . $this->quoteName($savepoint));
-
-		if ($this->execute())
-		{
-			$this->transactionDepth++;
-		}
 	}
 }

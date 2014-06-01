@@ -36,8 +36,8 @@ class SearchHelper
 	 */
 	public static function getActions()
 	{
-		$user	   = JFactory::getUser();
-		$result	   = new JObject;
+		$user	= JFactory::getUser();
+		$result	= new JObject;
 		$assetName = 'com_search';
 
 		$actions = JAccess::getActions($assetName);
@@ -54,28 +54,28 @@ class SearchHelper
 	{
 		$ignored = false;
 
-		$lang          = JFactory::getLanguage();
-		$tag           = $lang->getTag();
-		$search_ignore = $lang->getIgnoredSearchWords();
+		$lang = JFactory::getLanguage();
+
+		$tag			= $lang->getTag();
+		$search_ignore	= $lang->getIgnoredSearchWords();
 
 		// Deprecated in 1.6 use $lang->getIgnoredSearchWords instead
-		$ignoreFile = $lang->getLanguagePath() . '/' . $tag . '/' . $tag . '.ignore.php';
-
+		$ignoreFile		= $lang->getLanguagePath() . '/' . $tag . '/' . $tag.'.ignore.php';
 		if (file_exists($ignoreFile))
 		{
 			include $ignoreFile;
 		}
 
-		// Check for words to ignore
+		// check for words to ignore
 		$aterms = explode(' ', JString::strtolower($searchword));
 
-		// First case is single ignored word
+		// first case is single ignored word
 		if (count($aterms) == 1 && in_array(JString::strtolower($searchword), $search_ignore))
 		{
 			$ignored = true;
 		}
 
-		// Filter out search terms that are too small
+		// filter out search terms that are too small
 		$lower_limit = $lang->getLowerLimitSearchWord();
 
 		foreach ($aterms as $aterm)
@@ -86,10 +86,10 @@ class SearchHelper
 			}
 		}
 
-		// Next is to remove ignored words from type 'all' or 'any' (not exact) searches with multiple words
+		// next is to remove ignored words from type 'all' or 'any' (not exact) searches with multiple words
 		if (count($aterms) > 1 && $searchphrase != 'exact')
 		{
-			$pruned     = array_diff($aterms, $search_ignore);
+			$pruned = array_diff($aterms, $search_ignore);
 			$searchword = implode(' ', $pruned);
 		}
 
@@ -105,20 +105,19 @@ class SearchHelper
 
 		$lang = JFactory::getLanguage();
 
-		// Limit searchword to a maximum of characters
+		// limit searchword to a maximum of characters
 		$upper_limit = $lang->getUpperLimitSearchWord();
-
 		if (JString::strlen($searchword) > $upper_limit)
 		{
-			$searchword  = JString::substr($searchword, 0, $upper_limit - 1);
-			$restriction = true;
+			$searchword		= JString::substr($searchword, 0, $upper_limit - 1);
+			$restriction	= true;
 		}
 
-		// Searchword must contain a minimum of characters
+		// searchword must contain a minimum of characters
 		if ($searchword && JString::strlen($searchword) < $lang->getLowerLimitSearchWord())
 		{
-			$searchword  = '';
-			$restriction = true;
+			$searchword		= '';
+			$restriction	= true;
 		}
 
 		return $restriction;
@@ -144,22 +143,19 @@ class SearchHelper
 	/**
 	 * Prepares results from search for display
 	 *
-	 * @param   string  $text        The source string
-	 * @param   string  $searchword  The searchword to select around
-	 *
+	 * @param string The source string
+	 * @param string The searchword to select around
 	 * @return  string
 	 *
-	 * @since   1.5
+	 * @since  1.5
 	 */
 	public static function prepareSearchContent($text, $searchword)
 	{
-		// Strips tags won't remove the actual jscript
+		// strips tags won't remove the actual jscript
 		$text = preg_replace("'<script[^>]*>.*?</script>'si", "", $text);
 		$text = preg_replace('/{.+?}/', '', $text);
-
-		// $text = preg_replace('/<a\s+.*?href="([^"]+)"[^>]*>([^<]+)<\/a>/is','\2', $text);
-
-		// Replace line breaking tags with whitespace
+		//$text = preg_replace('/<a\s+.*?href="([^"]+)"[^>]*>([^<]+)<\/a>/is','\2', $text);
+		// replace line breaking tags with whitespace
 		$text = preg_replace("'<(br[^/>]*?/|hr[^/>]*?/|/(div|h[1-6]|li|p|td))>'si", ' ', $text);
 
 		return self::_smartSubstr(strip_tags($text), $searchword);
@@ -168,22 +164,20 @@ class SearchHelper
 	/**
 	 * Checks an object for search terms (after stripping fields of HTML)
 	 *
-	 * @param   object  $object      The object to check
-	 * @param   string  $searchTerm  Search words to check for
-	 * @param   array   $fields      List of object variables to check against
-	 *
-	 * @return  boolean True if searchTerm is in object, false otherwise
+	 * @param object The object to check
+	 * @param string Search words to check for
+	 * @param array List of object variables to check against
+	 * @returns boolean True if searchTerm is in object, false otherwise
 	 */
 	public static function checkNoHtml($object, $searchTerm, $fields)
 	{
 		$searchRegex = array(
-			'#<script[^>]*>.*?</script>#si',
-			'#<style[^>]*>.*?</style>#si',
-			'#<!.*?(--|]])>#si',
-			'#<[^>]*>#i'
-		);
+				'#<script[^>]*>.*?</script>#si',
+				'#<style[^>]*>.*?</style>#si',
+				'#<!.*?(--|]])>#si',
+				'#<[^>]*>#i'
+				);
 		$terms = explode(' ', $searchTerm);
-
 		if (empty($fields))
 		{
 			return false;
@@ -195,8 +189,7 @@ class SearchHelper
 			{
 				continue;
 			}
-
-			$text = self::remove_accents($object->$field);
+			$text = $object->$field;
 
 			foreach ($searchRegex as $regex)
 			{
@@ -205,69 +198,43 @@ class SearchHelper
 
 			foreach ($terms as $term)
 			{
-				$term = self::remove_accents($term);
-
 				if (JString::stristr($text, $term) !== false)
 				{
 					return true;
 				}
 			}
 		}
-
 		return false;
-	}
-
-	/**
-	 * Transliterates given text to ASCII
-	 *
-	 * @param   string  $str  String to remove accents from
-	 *
-	 * @return  string
-	 *
-	 * @since   3.2
-	 */
-	public static function remove_accents($str)
-	{
-		$str = JLanguageTransliterate::utf8_latin_to_ascii($str);
-
-		//TODO: remove other prefixes as well?
-		return preg_replace("/[\"'^]([a-z])/ui", '\1', $str);
 	}
 
 	/**
 	 * returns substring of characters around a searchword
 	 *
-	 * @param   string   $text        The source string
-	 * @param   integer  $searchword  Number of chars to return
-	 *
+	 * @param string The source string
+	 * @param int Number of chars to return
+	 * @param string The searchword to select around
 	 * @return  string
 	 *
-	 * @since   1.5
+	 * @since  1.5
 	 */
 	public static function _smartSubstr($text, $searchword)
 	{
-		$lang        = JFactory::getLanguage();
-		$length      = $lang->getSearchDisplayedCharactersNumber();
-		$ltext       = self::remove_accents($text);
-		$textlen     = JString::strlen($ltext);
-		$lsearchword = JString::strtolower(self::remove_accents($searchword));
-		$wordfound   = false;
-		$pos         = 0;
-
+		$lang = JFactory::getLanguage();
+		$length = $lang->getSearchDisplayedCharactersNumber();
+		$textlen = JString::strlen($text);
+		$lsearchword = JString::strtolower($searchword);
+		$wordfound = false;
+		$pos = 0;
 		while ($wordfound === false && $pos < $textlen)
 		{
-			if (($wordpos = @JString::strpos($ltext, ' ', $pos + $length)) !== false)
+			if (($wordpos = @JString::strpos($text, ' ', $pos + $length)) !== false)
 			{
 				$chunk_size = $wordpos - $pos;
-			}
-			else
-			{
+			} else {
 				$chunk_size = $length;
 			}
-
-			$chunk     = JString::substr($ltext, $pos, $chunk_size);
+			$chunk = JString::substr($text, $pos, $chunk_size);
 			$wordfound = JString::strpos(JString::strtolower($chunk), $lsearchword);
-
 			if ($wordfound === false)
 			{
 				$pos += $chunk_size + 1;
@@ -276,16 +243,14 @@ class SearchHelper
 
 		if ($wordfound !== false)
 		{
-			return (($pos > 0) ? '...&#160;' : '') . JString::substr($text, $pos, $chunk_size) . '&#160;...';
+			return (($pos > 0) ? '...&#160;' : '') . $chunk . '&#160;...';
 		}
 		else
 		{
 			if (($wordpos = @JString::strpos($text, ' ', $length)) !== false)
 			{
 				return JString::substr($text, 0, $wordpos) . '&#160;...';
-			}
-			else
-			{
+			} else {
 				return JString::substr($text, 0, $length);
 			}
 		}

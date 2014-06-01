@@ -16,7 +16,7 @@ defined('JPATH_PLATFORM') or die;
  * @subpackage  Crypt
  * @since       12.1
  */
-class JCryptCipher3Des extends JCryptCipherMcrypt
+class JCryptCipher3DES extends JCryptCipherMcrypt
 {
 	/**
 	 * @var    integer  The mcrypt cipher constant.

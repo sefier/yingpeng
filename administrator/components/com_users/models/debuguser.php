@@ -58,10 +58,10 @@ class UsersModelDebugUser extends JModelList
 					$level = $action[1];
 
 					// Check that we check this action for the level of the asset.
-					if ($level === null || $level >= $asset->level)
+					if ($action[1] === null || $action[1] >= $asset->level)
 					{
 						// We need to test this action.
-						$asset->checks[$name] = JAccess::check($userId, $name, $asset->name);
+						$asset->checks[$name] = JAccess::check($userId, $action[0], $asset->name);
 					}
 					else
 					{

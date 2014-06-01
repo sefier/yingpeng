@@ -557,7 +557,6 @@ class MenusModelItem extends JModelAdmin
 
 		// Get the form.
 		$form = $this->loadForm('com_menus.item', 'item', array('control' => 'jform', 'load_data' => $loadData), true);
-
 		if (empty($form))
 		{
 			return false;
@@ -689,12 +688,13 @@ class MenusModelItem extends JModelAdmin
 				{
 					// Load the language file for the component.
 					$lang = JFactory::getLanguage();
-					$lang->load($args['option'], JPATH_ADMINISTRATOR, null, false, true)
-						|| $lang->load($args['option'], JPATH_ADMINISTRATOR . '/components/' . $args['option'], null, false, true);
+					$lang->load($args['option'], JPATH_ADMINISTRATOR, null, false, false)
+						|| $lang->load($args['option'], JPATH_ADMINISTRATOR . '/components/' . $args['option'], null, false, false)
+						|| $lang->load($args['option'], JPATH_ADMINISTRATOR, $lang->getDefault(), false, false)
+						|| $lang->load($args['option'], JPATH_ADMINISTRATOR . '/components/' . $args['option'], $lang->getDefault(), false, false);
 
 					// Determine the component id.
 					$component = JComponentHelper::getComponent($args['option']);
-
 					if (isset($component->id))
 					{
 						$table->component_id = $component->id;
@@ -741,7 +741,7 @@ class MenusModelItem extends JModelAdmin
 
 		// Load associated menu items
 		$app = JFactory::getApplication();
-		$assoc = JLanguageAssociations::isEnabled();
+		$assoc = isset($app->item_associations) ? $app->item_associations : 0;
 		if ($assoc)
 		{
 			if ($pk != null)
@@ -928,18 +928,13 @@ class MenusModelItem extends JModelAdmin
 				$formFile = false;
 
 				// Check for the layout XML file. Use standard xml file if it exists.
-				$tplFolders = array(
-						$base . '/views/' . $view . '/tmpl',
-						$base . '/view/' . $view . '/tmpl'
-				);
-				$path = JPath::find($tplFolders, $layout . '.xml');
-
+				$path = JPath::clean($base . '/views/' . $view . '/tmpl/' . $layout . '.xml');
 				if (is_file($path))
 				{
 					$formFile = $path;
 				}
 
-				// If custom layout, get the xml file from the template folder
+				// if custom layout, get the xml file from the template folder
 				// template folder is first part of file name -- template:folder
 				if (!$formFile && (strpos($layout, ':') > 0))
 				{
@@ -952,25 +947,16 @@ class MenusModelItem extends JModelAdmin
 				}
 			}
 
-			// Now check for a view manifest file
+			//Now check for a view manifest file
 			if (!$formFile)
 			{
-				if (isset($view))
+				if (isset($view) && is_file($path = JPath::clean($base . '/views/' . $view . '/metadata.xml')))
 				{
-					$metadataFolders = array(
-							$base . '/view/' . $view,
-							$base . '/views/' . $view
-					);
-					$metaPath = JPath::find($metadataFolders, 'metadata.xml');
-
-					if (is_file($path = JPath::clean($metaPath)))
-					{
-						$formFile = $path;
-					}
+					$formFile = $path;
 				}
 				else
 				{
-					// Now check for a component manifest file
+					//Now check for a component manifest file
 					$path = JPath::clean($base . '/metadata.xml');
 					if (is_file($path))
 					{
@@ -1053,8 +1039,7 @@ class MenusModelItem extends JModelAdmin
 
 		// Association menu items
 		$app = JFactory::getApplication();
-		$assoc = JLanguageAssociations::isEnabled();
-
+		$assoc = isset($app->item_associations) ? $app->item_associations : 0;
 		if ($assoc)
 		{
 			$languages = JLanguageHelper::getLanguages('lang_code');
@@ -1101,7 +1086,6 @@ class MenusModelItem extends JModelAdmin
 	{
 		// Initialiase variables.
 		$db = $this->getDbo();
-		$query = $db->getQuery(true);
 		$table = $this->getTable();
 
 		if (!$table->rebuild())
@@ -1110,11 +1094,13 @@ class MenusModelItem extends JModelAdmin
 			return false;
 		}
 
-		$query->select('id, params')
-			->from('#__menu')
-			->where('params NOT LIKE ' . $db->quote('{%'))
-			->where('params <> ' . $db->quote(''));
-		$db->setQuery($query);
+		// Convert the parameters not in JSON format.
+		$db->setQuery(
+			'SELECT id, params' .
+				' FROM #__menu' .
+				' WHERE params NOT LIKE ' . $db->quote('{%') .
+				'  AND params <> ' . $db->quote('')
+		);
 
 		try
 		{
@@ -1122,7 +1108,8 @@ class MenusModelItem extends JModelAdmin
 		}
 		catch (RuntimeException $e)
 		{
-			return JError::raiseWarning(500, $e->getMessage());
+			$this->setError($e->getMessage());
+			return false;
 		}
 
 		foreach ($items as &$item)
@@ -1131,18 +1118,15 @@ class MenusModelItem extends JModelAdmin
 			$registry->loadString($item->params);
 			$params = (string) $registry;
 
-			$query->clear();
-			$query->update('#__menu')
-				->set('params = ' . $db->quote($params))
-				->where('id = ' . $item->id);
-
-			try
+			$db->setQuery(
+				'UPDATE #__menu' .
+					' SET params = ' . $db->quote($params) .
+					' WHERE id = ' . (int) $item->id
+			);
+			if (!$db->execute())
 			{
-				$db->setQuery($query)->execute();
-			}
-			catch (RuntimeException $e)
-			{
-				return JError::raiseWarning(500, $e->getMessage());
+				$this->setError($error);
+				return false;
 			}
 
 			unset($registry);
@@ -1174,7 +1158,7 @@ class MenusModelItem extends JModelAdmin
 			$table->load($pk);
 			$isNew = false;
 		}
-		if (!$isNew)
+		if (!$isNew && $table->menutype == $data['menutype'])
 		{
 			if ($table->parent_id == $data['parent_id'])
 			{
@@ -1208,9 +1192,15 @@ class MenusModelItem extends JModelAdmin
 			}
 		}
 		// We have a new item, so it is not a change.
-		else
+		elseif ($isNew)
 		{
 			$table->setLocation($data['parent_id'], 'last-child');
+		}
+		// The menu type has changed so we need to just put this at the bottom
+		// of the root level.
+		else
+		{
+			$table->setLocation(1, 'last-child');
 		}
 
 		// Bind the data.
@@ -1256,7 +1246,7 @@ class MenusModelItem extends JModelAdmin
 
 		// Load associated menu items
 		$app = JFactory::getApplication();
-		$assoc = JLanguageAssociations::isEnabled();
+		$assoc = isset($app->item_associations) ? $app->item_associations : 0;
 		if ($assoc)
 		{
 			// Adding self to the association
@@ -1302,7 +1292,7 @@ class MenusModelItem extends JModelAdmin
 				$key = md5(json_encode($associations));
 				$query->clear()
 					->insert('#__associations');
-				foreach ($associations as $id)
+				foreach ($associations as $tag => $id)
 				{
 					$query->values($id . ',' . $db->quote('com_menus.item') . ',' . $db->quote($key));
 				}
@@ -1325,8 +1315,8 @@ class MenusModelItem extends JModelAdmin
 
 		if (isset($data['link']))
 		{
-			$base = JUri::base();
-			$juri = JUri::getInstance($base . $data['link']);
+			$base = JURI::base();
+			$juri = JURI::getInstance($base . $data['link']);
 			$option = $juri->getVar('option');
 
 			// Clean the cache
@@ -1377,6 +1367,7 @@ class MenusModelItem extends JModelAdmin
 	{
 		$table = $this->getTable();
 		$pks = (array) $pks;
+		$user = JFactory::getUser();
 
 		$languages = array();
 		$onehome = false;

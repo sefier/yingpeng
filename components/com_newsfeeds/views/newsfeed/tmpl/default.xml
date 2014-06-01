@@ -15,12 +15,10 @@
 			addfieldpath="/administrator/components/com_newsfeeds/models/fields"
 		 >
 
-			<field name="id" type="modal_newsfeed"
+			<field name="id" type="modal_newsfeeds"
 				description="COM_NEWSFEEDS_FIELD_SELECT_FEED_DESC"
 				label="COM_NEWSFEEDS_FIELD_SELECT_FEED_LABEL"
 				required="true"
-				edit="true"
-				clear="false"
 			/>
 		</fieldset>
 	</fields>

@@ -277,7 +277,7 @@ class FinderIndexerQuery
 		}
 
 		// Get the base URI.
-		$uri = JUri::getInstance($base);
+		$uri = JURI::getInstance($base);
 
 		// Add the static taxonomy filter if present.
 		if (!empty($this->filter))
@@ -374,7 +374,8 @@ class FinderIndexerQuery
 		}
 
 		// Sanitize the terms.
-		$results = array_unique($results);
+		//@TODO: Should toInteger use $return?
+		$return = array_unique($results);
 		JArrayHelper::toInteger($results);
 
 		return $results;
@@ -914,12 +915,10 @@ class FinderIndexerQuery
 							// pieces are available to use.
 							switch ($c - $i)
 							{
-								/*
-								 * If only one word is left, we can break from
-								 * the switch and loop because the last word
-								 * was already used at the end of the last
-								 * chunk.
-								 */
+								// If only one word is left, we can break from
+								// the switch and loop because the last word
+								// was already used at the end of the last
+								// chunk.
 								case 1:
 									break 2;
 
@@ -1316,7 +1315,7 @@ class FinderIndexerQuery
 		if (empty($token->matches))
 		{
 			// Create a database query to get the similar terms.
-			// TODO: PostgreSQL doesn't support SOUNDEX out of the box
+			//@TODO: PostgreSQL doesn't support SOUNDEX out of the box
 			$query->clear()
 				->select('DISTINCT t.term_id AS id, t.term AS term')
 				->from('#__finder_terms AS t')

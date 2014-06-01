@@ -42,7 +42,6 @@ class PlgSearchNewsfeeds extends JPlugin
 	 *
 	 * The sql must return the following fields that are used in a common display
 	 * routine: href, title, section, created, text, browsernav
-	 *
 	 * @param string Target search string
 	 * @param string mathcing option, exact|any|all
 	 * @param string ordering option, newest|oldest|popular|alpha|category
@@ -74,11 +73,6 @@ class PlgSearchNewsfeeds extends JPlugin
 		if ($sArchived)
 		{
 			$state[] = 2;
-		}
-
-		if (empty($state))
-		{
-			return array();
 		}
 
 		$text = trim($text);
@@ -133,48 +127,52 @@ class PlgSearchNewsfeeds extends JPlugin
 
 		$searchNewsfeeds = JText::_('PLG_SEARCH_NEWSFEEDS_NEWSFEEDS');
 
-		$query = $db->getQuery(true);
-		//sqlsrv changes
-		$case_when = ' CASE WHEN ';
-		$case_when .= $query->charLength('a.alias', '!=', '0');
-		$case_when .= ' THEN ';
-		$a_id = $query->castAsChar('a.id');
-		$case_when .= $query->concatenate(array($a_id, 'a.alias'), ':');
-		$case_when .= ' ELSE ';
-		$case_when .= $a_id . ' END as slug';
-
-		$case_when1 = ' CASE WHEN ';
-		$case_when1 .= $query->charLength('c.alias', '!=', '0');
-		$case_when1 .= ' THEN ';
-		$c_id = $query->castAsChar('c.id');
-		$case_when1 .= $query->concatenate(array($c_id, 'c.alias'), ':');
-		$case_when1 .= ' ELSE ';
-		$case_when1 .= $c_id . ' END as catslug';
-
-		$query->select('a.name AS title, \'\' AS created, a.link AS text, ' . $case_when . "," . $case_when1)
-			->select($query->concatenate(array($db->quote($searchNewsfeeds), 'c.title'), " / ") . ' AS section')
-			->select('\'1\' AS browsernav')
-			->from('#__newsfeeds AS a')
-			->join('INNER', '#__categories as c ON c.id = a.catid')
-			->where('(' . $where . ') AND a.published IN (' . implode(',', $state) . ') AND c.published = 1 AND c.access IN (' . $groups . ')')
-			->order($order);
-
-		// Filter by language
-		if ($app->isSite() && JLanguageMultilang::isEnabled())
+		$rows = array();
+		if (!empty($state))
 		{
-			$tag = JFactory::getLanguage()->getTag();
-			$query->where('a.language in (' . $db->quote($tag) . ',' . $db->quote('*') . ')')
-				->where('c.language in (' . $db->quote($tag) . ',' . $db->quote('*') . ')');
-		}
+			$query = $db->getQuery(true);
+			//sqlsrv changes
+			$case_when = ' CASE WHEN ';
+			$case_when .= $query->charLength('a.alias', '!=', '0');
+			$case_when .= ' THEN ';
+			$a_id = $query->castAsChar('a.id');
+			$case_when .= $query->concatenate(array($a_id, 'a.alias'), ':');
+			$case_when .= ' ELSE ';
+			$case_when .= $a_id . ' END as slug';
 
-		$db->setQuery($query, 0, $limit);
-		$rows = $db->loadObjectList();
+			$case_when1 = ' CASE WHEN ';
+			$case_when1 .= $query->charLength('c.alias', '!=', '0');
+			$case_when1 .= ' THEN ';
+			$c_id = $query->castAsChar('c.id');
+			$case_when1 .= $query->concatenate(array($c_id, 'c.alias'), ':');
+			$case_when1 .= ' ELSE ';
+			$case_when1 .= $c_id . ' END as catslug';
 
-		if ($rows)
-		{
-			foreach ($rows as $key => $row)
+			$query->select('a.name AS title, \'\' AS created, a.link AS text, ' . $case_when . "," . $case_when1)
+				->select($query->concatenate(array($db->quote($searchNewsfeeds), 'c.title'), " / ") . ' AS section')
+				->select('\'1\' AS browsernav')
+				->from('#__newsfeeds AS a')
+				->join('INNER', '#__categories as c ON c.id = a.catid')
+				->where('(' . $where . ')AND a.published IN (' . implode(',', $state) . ') AND c.published = 1 AND c.access IN (' . $groups . ')')
+				->order($order);
+
+			// Filter by language
+			if ($app->isSite() && JLanguageMultilang::isEnabled())
 			{
-				$rows[$key]->href = 'index.php?option=com_newsfeeds&view=newsfeed&catid=' . $row->catslug . '&id=' . $row->slug;
+				$tag = JFactory::getLanguage()->getTag();
+				$query->where('a.language in (' . $db->quote($tag) . ',' . $db->quote('*') . ')')
+					->where('c.language in (' . $db->quote($tag) . ',' . $db->quote('*') . ')');
+			}
+
+			$db->setQuery($query, 0, $limit);
+			$rows = $db->loadObjectList();
+
+			if ($rows)
+			{
+				foreach ($rows as $key => $row)
+				{
+					$rows[$key]->href = 'index.php?option=com_newsfeeds&view=newsfeed&catid=' . $row->catslug . '&id=' . $row->slug;
+				}
 			}
 		}
 		return $rows;

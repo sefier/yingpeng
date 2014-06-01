@@ -59,6 +59,7 @@ class InstallerViewDefault extends JViewLegacy
 		$this->showMessage = $showMessage;
 		$this->state = &$state;
 
+		JHtml::_('behavior.tooltip');
 		$this->addToolbar();
 		parent::display($tpl);
 	}
@@ -73,7 +74,7 @@ class InstallerViewDefault extends JViewLegacy
 	protected function addToolbar()
 	{
 		$canDo	= InstallerHelper::getActions();
-		JToolbarHelper::title(JText::_('COM_INSTALLER_HEADER_' . $this->getName()), 'puzzle install');
+		JToolbarHelper::title(JText::_('COM_INSTALLER_HEADER_' . $this->getName()), 'install.png');
 
 		if ($canDo->get('core.admin'))
 		{

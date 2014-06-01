@@ -98,7 +98,7 @@ class InstallerControllerManage extends JControllerLegacy
 		$model = $this->getModel('manage');
 
 		JArrayHelper::toInteger($eid, array());
-		$model->remove($eid);
+		$result = $model->remove($eid);
 		$this->setRedirect(JRoute::_('index.php?option=com_installer&view=manage', false));
 	}
 
@@ -120,7 +120,7 @@ class InstallerControllerManage extends JControllerLegacy
 		$model = $this->getModel('manage');
 
 		JArrayHelper::toInteger($uid, array());
-		$model->refresh($uid);
+		$result = $model->refresh($uid);
 		$this->setRedirect(JRoute::_('index.php?option=com_installer&view=manage', false));
 	}
 }

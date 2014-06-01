@@ -18,15 +18,6 @@ defined('_JEXEC') or die;
  */
 class ModWrapperHelper
 {
-	/**
-	 * Gets the parameters for the wrapper
-	 *
-	 * @param   mixed  &$params  The parameters set in the administrator section
-	 *
-	 * @return  mixed  &params  The modified parameters
-	 *
-	 * @since   1.5
-	 */
 	public static function getParams(&$params)
 	{
 		$params->def('url', '');
@@ -41,23 +32,22 @@ class ModWrapperHelper
 
 		if ($params->get('add'))
 		{
-			// Adds 'http://' if none is set
+			// adds 'http://' if none is set
 			if (substr($url, 0, 1) == '/')
 			{
-				// Relative url in component. use server http_host.
-				$url = 'http://' . $_SERVER['HTTP_HOST'] . $url;
+				// relative url in component. use server http_host.
+				$url = 'http://'.$_SERVER['HTTP_HOST'].$url;
 			}
 			elseif (!strstr($url, 'http') && !strstr($url, 'https'))
 			{
-				$url = 'http://' . $url;
+				$url = 'http://'.$url;
 			}
-			else
-			{
+			else {
 				$url = $url;
 			}
 		}
 
-		// Auto height control
+		// auto height control
 		if ($params->def('height_auto'))
 		{
 			$load = 'onload="iFrameHeight()"';

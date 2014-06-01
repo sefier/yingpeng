@@ -42,6 +42,7 @@ class ContentViewFeatured extends JViewLegacy
 	public function display($tpl = null)
 	{
 		$user = JFactory::getUser();
+		$app = JFactory::getApplication();
 
 		$state 		= $this->get('State');
 		$items 		= $this->get('Items');
@@ -59,12 +60,12 @@ class ContentViewFeatured extends JViewLegacy
 		// PREPARE THE DATA
 
 		// Get the metrics for the structural page layout.
-		$numLeading	= (int) $params->def('num_leading_articles', 1);
-		$numIntro	= (int) $params->def('num_intro_articles', 4);
-		$numLinks	= (int) $params->def('num_links', 4);
+		$numLeading = $params->def('num_leading_articles', 1);
+		$numIntro = $params->def('num_intro_articles', 4);
+		$numLinks = $params->def('num_links', 4);
 
 		// Compute the article slugs and prepare introtext (runs content plugins).
-		foreach ($items as &$item)
+		foreach ($items as $i => & $item)
 		{
 			$item->slug = $item->alias ? ($item->id . ':' . $item->alias) : $item->id;
 			$item->catslug = ($item->category_alias) ? ($item->catid . ':' . $item->category_alias) : $item->catid;
@@ -86,7 +87,7 @@ class ContentViewFeatured extends JViewLegacy
 				$item->text = $item->introtext;
 			}
 			JPluginHelper::importPlugin('content');
-			$dispatcher->trigger('onContentPrepare', array ('com_content.featured', &$item, &$this->params, 0));
+			$results = $dispatcher->trigger('onContentPrepare', array ('com_content.featured', &$item, &$this->params, 0));
 
 			// Old plugins: Use processed text as introtext
 			$item->introtext = $item->text;

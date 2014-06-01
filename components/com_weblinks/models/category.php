@@ -92,7 +92,7 @@ class WeblinksModelCategory extends JModelList
 			}
 			// Get the tags
 			$item->tags = new JHelperTags;
-			$item->tags->getItemTags('com_weblinks.weblink', $item->id);
+			$item->tags->getItemTags('com_weblinks.category', $item->id);
 		}
 
 		return $items;
@@ -229,7 +229,7 @@ class WeblinksModelCategory extends JModelList
 			$this->setState('filter.publish_date', true);
 		}
 
-		$this->setState('filter.language', JLanguageMultilang::isEnabled());
+		$this->setState('filter.language', $app->getLanguageFilter());
 
 		// Load the parameters.
 		$this->setState('params', $params);
@@ -335,31 +335,5 @@ class WeblinksModelCategory extends JModelList
 			$this->getCategory();
 		}
 		return $this->_children;
-	}
-
-	/**
-	 * Increment the hit counter for the category.
-	 *
-	 * @param   int  $pk  Optional primary key of the category to increment.
-	 *
-	 * @return  boolean True if successful; false otherwise and internal error set.
-	 *
-	 * @since   3.2
-	 */
-	public function hit($pk = 0)
-	{
-		$input = JFactory::getApplication()->input;
-		$hitcount = $input->getInt('hitcount', 1);
-
-		if ($hitcount)
-		{
-			$pk = (!empty($pk)) ? $pk : (int) $this->getState('category.id');
-
-			$table = JTable::getInstance('Category', 'JTable');
-			$table->load($pk);
-			$table->hit($pk);
-		}
-
-		return true;
 	}
 }

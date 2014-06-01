@@ -24,16 +24,18 @@
 	<help key="JHELP_EXTENSIONS_MODULE_MANAGER_ADMIN_CUSTOM" />
 	<config>
 		<fields name="params">
-			<fieldset name="options" label="COM_MODULES_BASIC_FIELDSET_LABEL">
+			<fieldset name="basic">
 				<field
 					name="prepare_content"
 					type="radio"
 					label="MOD_CUSTOM_FIELD_PREPARE_CONTENT_LABEL"
-					class="btn-group btn-group-yesno"
+					class="btn-group"
 					description="MOD_CUSTOM_FIELD_PREPARE_CONTENT_DESC"
 					default="1">
-					<option value="1">JYES</option>
-					<option value="0">JNO</option>
+					<option
+						value="0">JNO</option>
+					<option
+						value="1">JYES</option>
 				</field>
 			</fieldset>
 			<fieldset

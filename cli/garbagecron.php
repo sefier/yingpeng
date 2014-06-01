@@ -30,7 +30,7 @@ require_once JPATH_LIBRARIES . '/cms.php';
 /**
  * Cron job to trash expired cache data
  *
- * @package  Joomla.Cli
+ * @package  Joomla.CLI
  * @since    2.5
  */
 class GarbageCron extends JApplicationCli

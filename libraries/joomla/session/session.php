@@ -28,7 +28,7 @@ class JSession implements IteratorAggregate
 	 * One of 'inactive'|'active'|'expired'|'destroyed'|'error'
 	 *
 	 * @var    string
-	 * @see    JSession::getState()
+	 * @see    getState()
 	 * @since  11.1
 	 */
 	protected $_state = 'inactive';
@@ -57,7 +57,7 @@ class JSession implements IteratorAggregate
 	 * - fix_browser
 	 * - fix_adress
 	 *
-	 * @var    array
+	 * @var array
 	 * @since  11.1
 	 */
 	protected $_security = array('fix_browser');
@@ -72,16 +72,12 @@ class JSession implements IteratorAggregate
 	protected $_force_ssl = false;
 
 	/**
-	 * JSession instances container.
-	 *
-	 * @var    JSession
+	 * @var    JSession  JSession instances container.
 	 * @since  11.3
 	 */
 	protected static $instance;
 
 	/**
-	 * The type of storage for the session.
-	 *
 	 * @var    string
 	 * @since  12.2
 	 */
@@ -324,8 +320,8 @@ class JSession implements IteratorAggregate
 			if ($session->isNew())
 			{
 				// Redirect to login screen.
-				$app->enqueueMessage(JText::_('JLIB_ENVIRONMENT_SESSION_EXPIRED'), 'warning');
-				$app->redirect(JRoute::_('index.php'));
+				$app->redirect(JRoute::_('index.php'), JText::_('JLIB_ENVIRONMENT_SESSION_EXPIRED'));
+				$app->close();
 			}
 			else
 			{
@@ -706,7 +702,7 @@ class JSession implements IteratorAggregate
 	 *
 	 * @return  boolean  True on success
 	 *
-	 * @see     JSession::destroy()
+	 * @see     destroy
 	 * @since   11.1
 	 */
 	public function restart()
@@ -748,6 +744,9 @@ class JSession implements IteratorAggregate
 			// @TODO :: generated error here
 			return false;
 		}
+
+		// Save values
+		$values = $_SESSION;
 
 		// Keep session config
 		$cookie = session_get_cookie_params();

@@ -16,7 +16,7 @@ defined('_JEXEC') or die;
  * @subpackage  com_users
  * @since       1.6
  */
-class UsersViewDebuguser extends JViewLegacy
+class UsersViewDebugUser extends JViewLegacy
 {
 	protected $actions;
 
@@ -64,7 +64,7 @@ class UsersViewDebuguser extends JViewLegacy
 	 */
 	protected function addToolbar()
 	{
-		JToolbarHelper::title(JText::sprintf('COM_USERS_VIEW_DEBUG_USER_TITLE', $this->user->id, $this->user->name), 'users user');
+		JToolbarHelper::title(JText::sprintf('COM_USERS_VIEW_DEBUG_USER_TITLE', $this->user->id, $this->user->name), 'user');
 
 		JToolbarHelper::help('JHELP_USERS_DEBUG_USERS');
 

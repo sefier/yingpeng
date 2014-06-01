@@ -61,7 +61,6 @@ abstract class JLanguageStemmer
 		}
 
 		self::$instances[$adapter] = new $class;
-
 		return self::$instances[$adapter];
 	}
 

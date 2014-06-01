@@ -11,7 +11,6 @@ defined('_JEXEC') or die;
 
 /**
  * Helper for standard content style extensions.
- * This class mainly simplifies static helper methods often repeated in individual components
  *
  * @package     Joomla.Libraries
  * @subpackage  Helper
@@ -49,29 +48,13 @@ class JHelperContent
 		$user	= JFactory::getUser();
 		$result	= new JObject;
 
-		$path = JPATH_ADMINISTRATOR . '/components/' . $assetName . '/access.xml';
-
-		if (empty($id) && empty($categoryId))
-		{
-			$section = 'component';
-		}
-		elseif (empty($id))
-		{
-			$section = 'category';
-			$assetName .= '.category.' . (int) $categoryId;
-		}
-		else
-		{
-			// Used only in com_content
-			$section = 'article';
-			$assetName .= '.article.' . (int) $id;
-		}
-
-		$actions = JAccess::getActionsFromFile($path, "/access/section[@name='" . $section . "']/");
+		$actions = array(
+			'core.admin', 'core.manage', 'core.create', 'core.edit', 'core.edit.own', 'core.edit.state', 'core.delete'
+		);
 
 		foreach ($actions as $action)
 		{
-			$result->set($action->name, $user->authorise($action->name, $assetName));
+			$result->set($action, $user->authorise($action, $assetName));
 		}
 
 		return $result;
@@ -85,12 +68,11 @@ class JHelperContent
 	 * @return  string  The language string
 	 *
 	 * @since   3.1
-	 * @note    JHelper::getCurrentLanguage is the preferred method
 	 */
 	public static function getCurrentLanguage($detectBrowser = true)
 	{
 		$app = JFactory::getApplication();
-		$langCode = $app->input->cookie->getString(JApplicationHelper::getHash('language'));
+		$langCode = $app->input->cookie->getString(JApplication::getHash('language'));
 
 		// No cookie - let's try to detect browser language or use site default
 		if (!$langCode)
@@ -116,7 +98,6 @@ class JHelperContent
 	* @return  integer  The language ID
 	*
 	* @since   3.1
-	* @note    JHelper::getLanguage() is the preferred method.
 	*/
 	public static function getLanguageId($langCode)
 	{
@@ -141,10 +122,18 @@ class JHelperContent
 	 *
 	 * @since   3.1
 	 */
-	public function getRowData(JTable $table)
+	public function getRowData($table)
 	{
-		$data = new JHelper;
+		$fields = $table->getFields();
+		$data = array();
 
-		return $data->getRowData($table);
+		foreach ($fields as &$field)
+		{
+			$columnName = $field->Field;
+			$value = $table->$columnName;
+			$data[$columnName] = $value;
+		}
+
+		return $data;
 	}
 }

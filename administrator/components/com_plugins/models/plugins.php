@@ -61,6 +61,8 @@ class PluginsModelPlugins extends JModelList
 	 */
 	protected function populateState($ordering = null, $direction = null)
 	{
+		$app = JFactory::getApplication('administrator');
+
 		// Load the filter state.
 		$search = $this->getUserStateFromRequest($this->context . '.filter.search', 'filter_search');
 		$this->setState('filter.search', $search);
@@ -136,8 +138,9 @@ class PluginsModelPlugins extends JModelList
 				}
 			}
 
+			$lang = JFactory::getLanguage();
 			$direction = ($this->getState('list.direction') == 'desc') ? -1 : 1;
-			JArrayHelper::sortObjects($result, $ordering, $direction, true, true);
+			JArrayHelper::sortObjects($result, $ordering, $direction, true, $lang->getLocale());
 
 			$total = count($result);
 			$this->cache[$this->getStoreId('getTotal')] = $total;
@@ -181,8 +184,10 @@ class PluginsModelPlugins extends JModelList
 		{
 			$source = JPATH_PLUGINS . '/' . $item->folder . '/' . $item->element;
 			$extension = 'plg_' . $item->folder . '_' . $item->element;
-			$lang->load($extension . '.sys', JPATH_ADMINISTRATOR, null, false, true)
-				|| $lang->load($extension . '.sys', $source, null, false, true);
+			$lang->load($extension . '.sys', JPATH_ADMINISTRATOR, null, false, false)
+				|| $lang->load($extension . '.sys', $source, null, false, false)
+				|| $lang->load($extension . '.sys', JPATH_ADMINISTRATOR, $lang->getDefault(), false, false)
+				|| $lang->load($extension . '.sys', $source, $lang->getDefault(), false, false);
 			$item->name = JText::_($item->name);
 		}
 	}
@@ -243,14 +248,11 @@ class PluginsModelPlugins extends JModelList
 			$query->where('a.folder = ' . $db->quote($folder));
 		}
 
-		// Filter by search in name or id
+		// Filter by search in id
 		$search = $this->getState('filter.search');
-		if (!empty($search))
+		if (!empty($search) && stripos($search, 'id:') === 0)
 		{
-			if (stripos($search, 'id:') === 0)
-			{
-				$query->where('a.extension_id = ' . (int) substr($search, 3));
-			}
+			$query->where('a.extension_id = ' . (int) substr($search, 3));
 		}
 
 		return $query;

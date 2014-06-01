@@ -42,7 +42,6 @@ class JTableLanguage extends JTable
 		if (trim($this->title) == '')
 		{
 			$this->setError(JText::_('JLIB_DATABASE_ERROR_LANGUAGE_NO_TITLE'));
-
 			return false;
 		}
 
@@ -62,11 +61,9 @@ class JTableLanguage extends JTable
 	{
 		// Verify that the sef field is unique
 		$table = JTable::getInstance('Language', 'JTable');
-
 		if ($table->load(array('sef' => $this->sef)) && ($table->lang_id != $this->lang_id || $this->lang_id == 0))
 		{
 			$this->setError(JText::_('JLIB_DATABASE_ERROR_LANGUAGE_UNIQUE_SEF'));
-
 			return false;
 		}
 
@@ -74,7 +71,6 @@ class JTableLanguage extends JTable
 		if ($table->load(array('image' => $this->image)) && ($table->lang_id != $this->lang_id || $this->lang_id == 0))
 		{
 			$this->setError(JText::_('JLIB_DATABASE_ERROR_LANGUAGE_UNIQUE_IMAGE'));
-
 			return false;
 		}
 
@@ -82,10 +78,8 @@ class JTableLanguage extends JTable
 		if ($table->load(array('lang_code' => $this->lang_code)) && ($table->lang_id != $this->lang_id || $this->lang_id == 0))
 		{
 			$this->setError(JText::_('JLIB_DATABASE_ERROR_LANGUAGE_UNIQUE_LANG_CODE'));
-
 			return false;
 		}
-
 		return parent::store($updateNulls);
 	}
 }

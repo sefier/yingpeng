@@ -74,13 +74,12 @@ class TagsViewTags extends JViewLegacy
 	protected function addToolbar()
 	{
 		$state	= $this->get('State');
-		$canDo	= JHelperContent::getActions(null, null, 'com_tags');
+		$canDo	= TagsHelper::getActions($state->get('filter.parent_id'));
 		$user	= JFactory::getUser();
-
 		// Get the toolbar object instance
 		$bar = JToolBar::getInstance('toolbar');
 
-		JToolbarHelper::title(JText::_('COM_TAGS_MANAGER_TAGS'), 'tags');
+		JToolbarHelper::title(JText::_('COM_TAGS_MANAGER_TAGS'), 'modules.png');
 
 		if ($canDo->get('core.create'))
 		{
@@ -111,15 +110,13 @@ class TagsViewTags extends JViewLegacy
 			JToolbarHelper::trash('tags.trash');
 		}
 		// Add a batch button
-		if ($user->authorise('core.create', 'com_tags') && $user->authorise('core.edit', 'com_tags') && $user->authorise('core.edit.state', 'com_tags'))
+		if ($user->authorise('core.edit'))
 		{
 			JHtml::_('bootstrap.modal', 'collapseModal');
 			$title = JText::_('JTOOLBAR_BATCH');
-
-			// Instantiate a new JLayoutFile instance and render the batch button
-			$layout = new JLayoutFile('joomla.toolbar.batch');
-
-			$dhtml = $layout->render(array('title' => $title));
+			$dhtml = "<button data-toggle=\"modal\" data-target=\"#collapseModal\" class=\"btn btn-small\">
+						<i class=\"icon-checkbox-partial\" title=\"$title\"></i>
+						$title</button>";
 			$bar->appendButton('Custom', $dhtml, 'batch');
 		}
 		if ($canDo->get('core.admin'))

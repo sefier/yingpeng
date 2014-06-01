@@ -69,10 +69,10 @@ class JErrorPage
 			else
 			{
 				// Do not allow cache
-				$app->allowCache(false);
+				JResponse::allowCache(false);
 
-				$app->setBody($data);
-				echo $app->toString();
+				JResponse::setBody($data);
+				echo JResponse::toString();
 			}
 		}
 		catch (Exception $e)

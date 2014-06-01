@@ -74,6 +74,7 @@ class PlgSearchContent extends JPlugin
 			return array();
 		}
 
+		$wheres = array();
 		switch ($phrase)
 		{
 			case 'exact':
@@ -107,6 +108,7 @@ class PlgSearchContent extends JPlugin
 				break;
 		}
 
+		$morder = '';
 		switch ($ordering)
 		{
 			case 'oldest':
@@ -123,6 +125,7 @@ class PlgSearchContent extends JPlugin
 
 			case 'category':
 				$order = 'c.title ASC, a.title ASC';
+				$morder = 'a.title ASC';
 				break;
 
 			case 'newest':
@@ -162,12 +165,12 @@ class PlgSearchContent extends JPlugin
 				->from('#__content AS a')
 				->join('INNER', '#__categories AS c ON c.id=a.catid')
 				->where(
-					'(' . $where . ') AND a.state=1 AND c.published = 1 AND a.access IN (' . $groups . ') '
+					'(' . $where . ')AND a.state=1 AND c.published = 1 AND a.access IN (' . $groups . ') '
 						. 'AND c.access IN (' . $groups . ') '
 						. 'AND (a.publish_up = ' . $db->quote($nullDate) . ' OR a.publish_up <= ' . $db->quote($now) . ') '
 						. 'AND (a.publish_down = ' . $db->quote($nullDate) . ' OR a.publish_down >= ' . $db->quote($now) . ')'
-				)
-				->group('a.id, a.title, a.metadesc, a.metakey, a.created, a.introtext, a.fulltext, c.title, a.alias, c.alias, c.id')
+				);
+			$query->group('a.id, a.title, a.metadesc, a.metakey, a.created, a.introtext, a.fulltext, c.title, a.alias, c.alias, c.id')
 				->order($order);
 
 			// Filter by language
@@ -226,8 +229,8 @@ class PlgSearchContent extends JPlugin
 						. ') AND c.access IN (' . $groups . ') '
 						. 'AND (a.publish_up = ' . $db->quote($nullDate) . ' OR a.publish_up <= ' . $db->quote($now) . ') '
 						. 'AND (a.publish_down = ' . $db->quote($nullDate) . ' OR a.publish_down >= ' . $db->quote($now) . ')'
-				)
-				->order($order);
+				);
+			$query->order($order);
 
 			// Filter by language
 			if ($app->isSite() && JLanguageMultilang::isEnabled())
@@ -265,9 +268,9 @@ class PlgSearchContent extends JPlugin
 			foreach ($rows as $row)
 			{
 				$new_row = array();
-				foreach ($row as $article)
+				foreach ($row as $key => $article)
 				{
-					if (SearchHelper::checkNoHTML($article, $searchText, array('text', 'title', 'metadesc', 'metakey')))
+					if (searchHelper::checkNoHTML($article, $searchText, array('text', 'title', 'metadesc', 'metakey')))
 					{
 						$new_row[] = $article;
 					}

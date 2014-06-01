@@ -1,8 +1,5 @@
 <?php
 /**
- * Bootstrap file for the Joomla Platform.  Including this file into your application will make Joomla
- * Platform libraries available for use.
- *
  * @package    Joomla.Platform
  *
  * @copyright  Copyright (C) 2005 - 2013 Open Source Matters, Inc. All rights reserved.
@@ -17,7 +14,6 @@ if (!defined('JPATH_PLATFORM'))
 
 // Detect the native operating system type.
 $os = strtoupper(substr(PHP_OS, 0, 3));
-
 if (!defined('IS_WIN'))
 {
 	define('IS_WIN', ($os === 'WIN') ? true : false);
@@ -39,11 +35,7 @@ if (!class_exists('JLoader'))
 	require_once JPATH_PLATFORM . '/loader.php';
 }
 
-// Make sure that the Joomla Platform has been successfully loaded.
-if (!class_exists('JLoader'))
-{
-	throw new RuntimeException('Joomla Platform not loaded.');
-}
+class_exists('JLoader') or die;
 
 // Setup the autoloaders.
 JLoader::setup();
@@ -60,6 +52,3 @@ if (version_compare(PHP_VERSION, '5.4.0', '<'))
 // Register classes that don't follow one file per class naming conventions.
 JLoader::register('JText', JPATH_PLATFORM . '/joomla/language/text.php');
 JLoader::register('JRoute', JPATH_PLATFORM . '/joomla/application/route.php');
-
-// Register the PasswordHash lib
-JLoader::register('PasswordHash', JPATH_PLATFORM . '/phpass/PasswordHash.php');

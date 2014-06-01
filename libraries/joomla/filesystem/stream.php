@@ -19,7 +19,8 @@ defined('JPATH_PLATFORM') or die;
  * @package     Joomla.Platform
  * @subpackage  FileSystem
  *
- * @note        This class adheres to the stream wrapper operations:
+ * This class adheres to the stream wrapper operations:
+ *
  * @see         http://php.net/manual/en/function.stream-get-wrappers.php
  * @see         http://php.net/manual/en/intro.stream.php PHP Stream Manual
  * @see         http://php.net/manual/en/wrappers.php Stream Wrappers
@@ -29,25 +30,23 @@ defined('JPATH_PLATFORM') or die;
  */
 class JStream extends JObject
 {
+	// Publicly settable vars (protected to let our parent read them)
 	/**
 	 * File Mode
-	 *
 	 * @var    integer
 	 * @since  11.1
-	 */
+	 * */
 	protected $filemode = 0644;
 
 	/**
 	 * Directory Mode
-	 *
-	 * @var    integer
+	 * @var   integer
 	 * @since  11.1
-	 */
+	 * */
 	protected $dirmode = 0755;
 
 	/**
 	 * Default Chunk Size
-	 *
 	 * @var    integer
 	 * @since  11.1
 	 */
@@ -55,7 +54,6 @@ class JStream extends JObject
 
 	/**
 	 * Filename
-	 *
 	 * @var    string
 	 * @since  11.1
 	 */
@@ -63,7 +61,6 @@ class JStream extends JObject
 
 	/**
 	 * Prefix of the connection for writing
-	 *
 	 * @var    string
 	 * @since  11.1
 	 */
@@ -71,15 +68,15 @@ class JStream extends JObject
 
 	/**
 	 * Prefix of the connection for reading
-	 *
 	 * @var    string
 	 * @since  11.1
 	 */
 	protected $readprefix;
 
 	/**
-	 * Read Processing method
-	 * @var    string  gz, bz, f
+	 *
+	 *Read Processing method
+	 * @var   string  gz, bz, f
 	 * If a scheme is detected, fopen will be defaulted
 	 * To use compression with a network stream use a filter
 	 * @since  11.1
@@ -88,7 +85,6 @@ class JStream extends JObject
 
 	/**
 	 * Filters applied to the current stream
-	 *
 	 * @var    array
 	 * @since  11.1
 	 */
@@ -96,7 +92,6 @@ class JStream extends JObject
 
 	/**
 	 * File Handle
-	 *
 	 * @var    array
 	 * @since  12.1
 	 */
@@ -104,32 +99,28 @@ class JStream extends JObject
 
 	/**
 	 * File size
-	 *
 	 * @var    integer
 	 * @since  12.1
 	 */
 	protected $filesize;
 
 	/**
-	 * Context to use when opening the connection
-	 *
-	 * @var    resource
+	 *Context to use when opening the connection
+	 * @var
 	 * @since  12.1
 	 */
 	protected $context = null;
 
 	/**
 	 * Context options; used to rebuild the context
-	 *
-	 * @var    array
+	 * @var
 	 * @since  12.1
 	 */
 	protected $contextOptions;
 
 	/**
 	 * The mode under which the file was opened
-	 *
-	 * @var    string
+	 * @var
 	 * @since  12.1
 	 */
 	protected $openmode;
@@ -191,7 +182,6 @@ class JStream extends JObject
 		if (!$filename)
 		{
 			$this->setError(JText::_('JLIB_FILESYSTEM_ERROR_STREAMS_FILENAME'));
-
 			return false;
 		}
 
@@ -272,7 +262,6 @@ class JStream extends JObject
 				{
 					$this->fh = fopen($filename, $mode, $use_include_path);
 				}
-
 				break;
 		}
 
@@ -307,7 +296,6 @@ class JStream extends JObject
 		if (!$this->fh)
 		{
 			$this->setError(JText::_('JLIB_FILESYSTEM_ERROR_STREAMS_FILE_NOT_OPEN'));
-
 			return true;
 		}
 
@@ -639,7 +627,7 @@ class JStream extends JObject
 	 *
 	 * @return  boolean  True on success, false on failure
 	 *
-	 * @see     http://php.net/manual/en/function.fseek.php
+	 * @see http://php.net/manual/en/function.fseek.php
 	 * @since   11.1
 	 */
 	public function seek($offset, $whence = SEEK_SET)
@@ -703,6 +691,8 @@ class JStream extends JObject
 
 			return false;
 		}
+
+		$res = false;
 
 		// Capture PHP errors
 		$php_errormsg = '';
@@ -939,7 +929,7 @@ class JStream extends JObject
 	 *
 	 * @return  void
 	 *
-	 * @see     http://php.net/stream_context_create
+	 * @see       http://php.net/stream_context_create
 	 * @since   11.1
 	 */
 	public function setContextOptions($context)
@@ -1132,6 +1122,8 @@ class JStream extends JObject
 	 */
 	public function removeFilter(&$resource, $byindex = false)
 	{
+		$res = false;
+
 		// Capture PHP errors
 		$php_errormsg = '';
 		$track_errors = ini_get('track_errors');
@@ -1172,6 +1164,8 @@ class JStream extends JObject
 	 */
 	public function copy($src, $dest, $context = null, $use_prefix = true, $relative = false)
 	{
+		$res = false;
+
 		// Capture PHP errors
 		$php_errormsg = '';
 		$track_errors = ini_get('track_errors');
@@ -1230,6 +1224,8 @@ class JStream extends JObject
 	 */
 	public function move($src, $dest, $context = null, $use_prefix = true, $relative = false)
 	{
+		$res = false;
+
 		// Capture PHP errors
 		$php_errormsg = '';
 		$track_errors = ini_get('track_errors');
@@ -1281,6 +1277,8 @@ class JStream extends JObject
 	 */
 	public function delete($filename, $context = null, $use_prefix = true, $relative = false)
 	{
+		$res = false;
+
 		// Capture PHP errors
 		$php_errormsg = '';
 		$track_errors = ini_get('track_errors');

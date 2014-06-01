@@ -10,9 +10,7 @@
 defined('_JEXEC') or die;
 
 JHtml::addIncludePath(JPATH_COMPONENT.'/helpers/html');
-
-$saveHistory = $this->state->get('params')->get('save_history', 0);
-
+JHtml::_('behavior.tooltip');
 JHtml::_('behavior.formvalidation');
 ?>
 <script type="text/javascript">
@@ -49,11 +47,6 @@ JHtml::_('behavior.formvalidation');
 
 				<li><?php echo $this->form->getLabel('language'); ?>
 				<?php echo $this->form->getInput('language'); ?></li>
-
-				<?php if ($saveHistory) : ?>
-					<li><?php echo $this->form->getLabel('version_note'); ?>
-					<?php echo $this->form->getInput('version_note'); ?></li>
-				<?php endif; ?>
 
 				<li><?php echo $this->form->getLabel('id'); ?>
 				<?php echo $this->form->getInput('id'); ?></li>

@@ -76,7 +76,7 @@ class JApplicationWebRouterBase extends JApplicationWebRouter
 				$vars[] = substr($segment, 1);
 				$regex[] = '([^/]*)';
 			}
-			// Match a segment with an escaped variable character prefix.
+			// Match a semgent with an escaped variable character prefix.
 			elseif ($segment[0] == '\\' && $segment[1] == ':')
 			{
 				$regex[] = preg_quote(substr($segment, 1));

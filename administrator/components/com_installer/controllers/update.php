@@ -76,8 +76,10 @@ class InstallerControllerUpdate extends JControllerLegacy
 
 		// Find updates
 		$model	= $this->getModel('update');
-		$model->findUpdates(0, $cache_timeout);
+		$result = $model->findUpdates(0, $cache_timeout);
 		$this->setRedirect(JRoute::_('index.php?option=com_installer&view=update', false));
+
+		// $view->display();
 	}
 
 	/**
@@ -126,7 +128,7 @@ class InstallerControllerUpdate extends JControllerLegacy
 		}
 
 		$model = $this->getModel('update');
-		$model->findUpdates($eid, $cache_timeout);
+		$result = $model->findUpdates($eid, $cache_timeout);
 
 		$model->setState('list.start', 0);
 		$model->setState('list.limit', 0);

@@ -82,13 +82,22 @@ class JFormFieldDirectories extends JFormFieldList
 		}
 
 		// Convert the values to options.
-		foreach ($values as $value)
+		for ($i = 0, $c = count($values); $i < $c; $i++)
 		{
-			$options[] = JHtml::_('select.option', str_replace(JPATH_SITE . '/', '', $value), str_replace(JPATH_SITE . '/', '', $values));
+			$options[] = JHtml::_('select.option', str_replace(JPATH_SITE . '/', '', $values[$i]), str_replace(JPATH_SITE . '/', '', $values[$i]));
 		}
 
 		// Add a null option.
 		array_unshift($options, JHtml::_('select.option', '', '- ' . JText::_('JNONE') . ' -'));
+
+		// Handle default values of value1|value2|value3
+		if (is_string($value) && strpos($value, '|') && preg_match('#(?<!\\\)\|#', $value))
+		{
+			// Explode the value if it is serialized as an array of value1|value2|value3
+			$value = preg_split('/(?<!\\\)\|/', $value);
+			$value = str_replace('\|', '|', $value);
+			$value = str_replace('\n', "\n", $value);
+		}
 
 		return $options;
 	}

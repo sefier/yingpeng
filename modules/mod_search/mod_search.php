@@ -20,13 +20,13 @@ if ($params->get('opensearch', 1))
 	$doc = JFactory::getDocument();
 
 	$ostitle = $params->get('opensearch_title', JText::_('MOD_SEARCH_SEARCHBUTTON_TEXT').' '.$app->getCfg('sitename'));
-	$doc->addHeadLink(JUri::getInstance()->toString(array('scheme', 'host', 'port')).JRoute::_('&option=com_search&format=opensearch'), 'search', 'rel', array('title' => htmlspecialchars($ostitle), 'type' => 'application/opensearchdescription+xml'));
+	$doc->addHeadLink(JURI::getInstance()->toString(array('scheme', 'host', 'port')).JRoute::_('&option=com_search&format=opensearch'), 'search', 'rel', array('title' => htmlspecialchars($ostitle), 'type' => 'application/opensearchdescription+xml'));
 }
 
 $upper_limit = $lang->getUpperLimitSearchWord();
 
-$button			= $params->get('button', 0);
-$imagebutton	= $params->get('imagebutton', 0);
+$button			= $params->get('button', '');
+$imagebutton	= $params->get('imagebutton', '');
 $button_pos		= $params->get('button_pos', 'left');
 $button_text	= htmlspecialchars($params->get('button_text', JText::_('MOD_SEARCH_SEARCHBUTTON_TEXT')));
 $width			= (int) $params->get('width', 20);

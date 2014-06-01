@@ -19,7 +19,7 @@ $input  = JFactory::getApplication()->input;
 $query	= $db->getQuery(true)
 	->select('COUNT(*)')
 	->from('#__messages')
-	->where('state = 0 AND user_id_to = ' . (int) $user->get('id'));
+	->where('state = 0 AND user_id_to = '.(int) $user->get('id'));
 
 $db->setQuery($query);
 $unread = (int) $db->loadResult();
@@ -31,7 +31,7 @@ $query->clear()
 	->where('guest = 0 AND client_id = 1');
 
 $db->setQuery($query);
-$count = (int) $db->loadResult();
+$count = '<span class="badge">' . (int) $db->loadResult() . '</span>';
 
 // Set the inbox link.
 if ($input->getBool('hidemainmenu'))
@@ -47,9 +47,7 @@ else
 if ($unread)
 {
 	$inboxClass = 'unread-messages';
-}
-else
-{
+} else {
 	$inboxClass = 'no-unread-messages';
 }
 
@@ -60,6 +58,6 @@ $query->clear()
 	->where('guest = 0 AND client_id = 0');
 
 $db->setQuery($query);
-$online_num = (int) $db->loadResult();
+$online_num = '<span class="badge">' . (int) $db->loadResult() . '</span>';
 
 require JModuleHelper::getLayoutPath('mod_status', $params->get('layout', 'default'));

@@ -32,6 +32,9 @@ $clientId	= $this->state->get('filter.client_id', 0);
 	<table class="adminlist">
 		<thead>
 			<tr>
+				<th class="row-number-col">
+					<?php echo JText::_('COM_LANGUAGES_HEADING_NUM'); ?>
+				</th>
 				<th class="checkmark-col">
 					&#160;
 				</th>
@@ -69,6 +72,9 @@ $clientId	= $this->state->get('filter.client_id', 0);
 			$canChange = $user->authorise('core.edit.state', 'com_languages');
 		?>
 			<tr class="row<?php echo $i % 2; ?>">
+				<th>
+					<?php echo $this->pagination->getRowOffset($i); ?>
+				</th>
 				<td>
 					<?php echo JHtml::_('languages.id', $i, $row->language);?>
 				</td>

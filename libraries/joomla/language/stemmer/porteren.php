@@ -368,15 +368,12 @@ class JLanguageStemmerPorteren extends JLanguageStemmer
 		if (substr($str, $len) == $check)
 		{
 			$substr = substr($str, 0, $len);
-
 			if (is_null($m) or self::_m($substr) > $m)
 			{
 				$str = $substr . $repl;
 			}
-
 			return true;
 		}
-
 		return false;
 	}
 

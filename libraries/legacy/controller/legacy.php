@@ -256,7 +256,6 @@ class JControllerLegacy extends JObject
 			// Define the controller filename and path.
 			$file = self::createFileName('controller', array('name' => $type, 'format' => $format));
 			$path = $basePath . '/controllers/' . $file;
-			$backuppath = $basePath . '/controller/' . $file;
 
 			// Reset the task without the controller context.
 			$input->set('task', $task);
@@ -265,6 +264,7 @@ class JControllerLegacy extends JObject
 		{
 			// Base controller.
 			$type = null;
+			$task = $command;
 
 			// Define the controller filename and path.
 			$file       = self::createFileName('controller', array('name' => 'controller', 'format' => $format));
@@ -635,7 +635,7 @@ class JControllerLegacy extends JObject
 		$document = JFactory::getDocument();
 		$viewType = $document->getType();
 		$viewName = $this->input->get('view', $this->default_view);
-		$viewLayout = $this->input->get('layout', 'default', 'string');
+		$viewLayout = $this->input->get('layout', 'default');
 
 		$view = $this->getView($viewName, $viewType, '', array('base_path' => $this->basePath, 'layout' => $viewLayout));
 
@@ -915,12 +915,7 @@ class JControllerLegacy extends JObject
 		if ($this->redirect)
 		{
 			$app = JFactory::getApplication();
-
-			// Enqueue the redirect message
-			$app->enqueueMessage($this->message, $this->messageType);
-
-			// Execute the redirect
-			$app->redirect($this->redirect);
+			$app->redirect($this->redirect, $this->message, $this->messageType);
 		}
 
 		return false;

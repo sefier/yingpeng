@@ -20,16 +20,6 @@
 			validate="contactemail"
 			required="true"
 		/>
-		<field name="contact_subject"
-			type="text"
-			id="contact-emailmsg"
-			size="60"
-			description="COM_CONTACT_CONTACT_MESSAGE_SUBJECT_DESC"
-			label="COM_CONTACT_CONTACT_MESSAGE_SUBJECT_LABEL"
-			filter="string"
-			validate="contactemailsubject"
-			required="true"
-		/>
 		<field name="contact_message"
 			type="textarea"
 			cols="50"

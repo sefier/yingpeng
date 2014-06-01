@@ -26,8 +26,8 @@ class JObject
 	 *
 	 * @var    array
 	 * @since  11.1
-	 * @see    JError
-	 * @deprecated  12.3  JError has been deprecated
+	 * @see     JError
+	 * @deprecated 12.3  JError has been deprecated
 	 */
 	protected $_errors = array();
 
@@ -86,7 +86,7 @@ class JObject
 	 *
 	 * @since   11.1
 	 *
-	 * @see     JObject::getProperties()
+	 * @see     getProperties()
 	 */
 	public function get($property, $default = null)
 	{
@@ -106,7 +106,7 @@ class JObject
 	 *
 	 * @since   11.1
 	 *
-	 * @see     JObject::get()
+	 * @see     get()
 	 */
 	public function getProperties($public = true)
 	{
@@ -204,7 +204,7 @@ class JObject
 	 *
 	 * @since   11.1
 	 *
-	 * @see     JObject::set()
+	 * @see     set()
 	 */
 	public function setProperties($properties)
 	{

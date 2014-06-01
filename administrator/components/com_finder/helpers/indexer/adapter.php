@@ -323,9 +323,6 @@ abstract class FinderIndexerAdapter extends JPlugin
 		// Run the setup method.
 		$this->setup();
 
-		// Remove the old item.
-		$this->remove($id);
-
 		// Get the item.
 		$item = $this->getItem($id);
 
@@ -425,11 +422,9 @@ abstract class FinderIndexerAdapter extends JPlugin
 	 */
 	protected function categoryStateChange($pks, $value)
 	{
-		/*
-		 * The item's published state is tied to the category
-		 * published state so we need to look up all published states
-		 * before we change anything.
-		 */
+		// The item's published state is tied to the category
+		// published state so we need to look up all published states
+		// before we change anything.
 		foreach ($pks as $pk)
 		{
 			$query = clone($this->getStateQuery());
@@ -663,13 +658,10 @@ abstract class FinderIndexerAdapter extends JPlugin
 	protected function getStateQuery()
 	{
 		$query = $this->db->getQuery(true);
-
 		// Item ID
 		$query->select('a.id');
-
 		// Item and category published state
 		$query->select('a.' . $this->state_field . ' AS state, c.published AS cat_state');
-
 		// Item and category access levels
 		$query->select('a.access, c.access AS cat_access')
 			->from($this->table . ' AS a')
@@ -838,11 +830,9 @@ abstract class FinderIndexerAdapter extends JPlugin
 	 */
 	protected function itemStateChange($pks, $value)
 	{
-		/*
-		 * The item's published state is tied to the category
-		 * published state so we need to look up all published states
-		 * before we change anything.
-		 */
+		// The item's published state is tied to the category
+		// published state so we need to look up all published states
+		// before we change anything.
 		foreach ($pks as $pk)
 		{
 			$query = clone($this->getStateQuery());

@@ -9,6 +9,10 @@
 
 defined('_JEXEC') or die;
 
+/* @var $this UsersViewNotes */
+
+JHtml::_('behavior.tooltip');
+
 $user = JFactory::getUser();
 $listOrder = $this->escape($this->state->get('list.ordering'));
 $listDirn = $this->escape($this->state->get('list.direction'));
@@ -33,7 +37,7 @@ $canEdit = $user->authorise('core.edit', 'com_users');
 		</div>
 
 		<div class="filter-select">
-			<span class="faux-label"><?php echo JText::_('COM_USERS_FILTER_LABEL'); ?></span>
+			<span class="faux-label")><?php echo JText::_('COM_USERS_FILTER_LABEL'); ?></span>
 
 			<label class="selectlabel" for="filter_category_id">
 				<?php echo JText::_('JOPTION_SELECT_CATEGORY'); ?>

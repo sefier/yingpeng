@@ -3,7 +3,7 @@
  * @package     Joomla.Platform
  * @subpackage  Openstreetmap
  *
- * @copyright   Copyright (C) 2005 - 2013 Open Source Matters, Inc. All rights reserved.
+ * @copyright   Copyright (C) 2005 - 2012 Open Source Matters, Inc. All rights reserved.
  * @license     GNU General Public License version 2 or later; see LICENSE
  */
 
@@ -14,70 +14,55 @@ defined('JPATH_PLATFORM') or die();
  *
  * @package     Joomla.Platform
  * @subpackage  Openstreetmap
+ *
  * @since       13.1
  */
 class JOpenstreetmap
 {
 	/**
-	 * Options for the Openstreetmap object.
-	 *
-	 * @var    JRegistry
+	 * @var    JRegistry  Options for the Openstreetmap object.
 	 * @since  13.1
 	 */
 	protected $options;
 
 	/**
-	 * The HTTP client object to use in sending HTTP requests.
-	 *
-	 * @var    JHttp
+	 * @var    JHttp      The HTTP client object to use in sending HTTP requests.
 	 * @since  13.1
 	 */
 	protected $client;
 
 	/**
-	 * The OAuth client.
-	 *
-	 * @var   JOpenstreetmapOauth
+	 * @var   JOpenstreetmapOauth  The OAuth client.
 	 * @since 13.1
 	 */
 	protected $oauth;
 
 	/**
-	 * Openstreetmap API object for changesets.
-	 *
-	 * @var    JOpenstreetmapChangesets
+	 * @var    JOpenstreetmapChangesets  Openstreetmap API object for changesets.
 	 * @since  13.1
 	 */
 	protected $changesets;
 
 	/**
-	 * Openstreetmap API object for elements.
-	 *
-	 * @var    JOpenstreetmapElements
+	 * @var    JOpenstreetmapElements  Openstreetmap API object for elements.
 	 * @since  13.1
 	 */
 	protected $elements;
 
 	/**
-	 * Openstreetmap API object for GPS.
-	 *
-	 * @var   JOpenstreetmapGps
+	 * @var   JOpenstreetmapGps  Openstreetmap API object for gps.
 	 * @since  13.1
 	 */
 	protected $gps;
 
 	/**
-	 * Openstreetmap API object for info.
-	 *
-	 * @var    JOpenstreetmapInfo
+	 * @var    JOpenstreetmapInfo  Openstreetmap API object for info.
 	 * @since  13.1
 	 */
 	protected $info;
 
 	/**
-	 * Openstreetmap API object for user.
-	 *
-	 * @var    JOpenstreetmapUser
+	 * @var    JOpenstreetmapUser  Openstreetmap API object for user.
 	 * @since  13.1
 	 */
 	protected $user;
@@ -85,9 +70,9 @@ class JOpenstreetmap
 	/**
 	 * Constructor.
 	 *
-	 * @param   JOpenstreetmapOauth  $oauth    Openstreetmap oauth client
-	 * @param   JRegistry            $options  Openstreetmap options object
-	 * @param   JHttp                $client   The HTTP client object
+	 * @param   JOpenstreetmapOauth  $oauth    Openstreetmap oauth client.
+	 * @param   JRegistry            $options  Openstreetmap options object.
+	 * @param   JOpenstreetmapHttp   $client   The HTTP client object.
 	 *
 	 * @since   13.1
 	 */
@@ -103,31 +88,54 @@ class JOpenstreetmap
 		// $this->options->def('api.url', 'http://api06.dev.openstreetmap.org/api/0.6/');
 	}
 
-	/**
+	/**	
 	 * Method to get object instances
-	 *
+	 * 
 	 * @param   string  $name  Name of property to retrieve
 	 *
-	 * @return  JOpenstreetmapObject  Openstreetmap API object
+	 * @return  JOpenstreetmapObject  Openstreetmap API object .
 	 *
 	 * @since   13.1
-	 * @throws  InvalidArgumentException
 	 */
 	public function __get($name)
 	{
-		$class = 'JOpenstreetmap' . ucfirst($name);
-
-		if (class_exists($class))
+		switch ($name)
 		{
-			if (false == isset($this->$name))
-			{
-				$this->$name = new $class($this->options, $this->client, $this->oauth);
-			}
+			case 'changesets':
+				if ($this->changesets == null)
+				{
+					$this->changesets = new JOpenstreetmapChangesets($this->options, $this->client, $this->oauth);
+				}
+				return $this->changesets;
 
-			return $this->$name;
+			case 'elements':
+				if ($this->elements == null)
+				{
+					$this->elements = new JOpenstreetmapElements($this->options, $this->client, $this->oauth);
+				}
+				return $this->elements;
+
+			case 'gps':
+				if ($this->gps == null)
+				{
+					$this->gps = new JOpenstreetmapGps($this->options, $this->client, $this->oauth);
+				}
+				return $this->gps;
+
+			case 'info':
+				if ($this->info == null)
+				{
+					$this->info = new JOpenstreetmapInfo($this->options, $this->client, $this->oauth);
+				}
+				return $this->info;
+
+			case 'user':
+				if ($this->user == null)
+				{
+					$this->user = new JOpenstreetmapUser($this->options, $this->client, $this->oauth);
+				}
+				return $this->user;
 		}
-
-		throw new InvalidArgumentException(sprintf('Argument %s produced an invalid class name: %s', $name, $class));
 	}
 
 	/**

@@ -23,13 +23,9 @@ class PlgContentJoomla extends JPlugin
 	 * Article is passed by reference, but after the save, so no changes will be saved.
 	 * Method is called right after the content is saved
 	 *
-	 * @param   string   $context  The context of the content passed to the plugin (added in 1.6)
-	 * @param   object   $article  A JTableContent object
-	 * @param   boolean  $isNew    If the content is just about to be created
-	 *
-	 * @return  boolean   true if function not enabled, is in front-end or is new. Else true or
-	 *                    false depending on success of save function.
-	 *
+	 * @param   string        The context of the content passed to the plugin (added in 1.6)
+	 * @param   object        A JTableContent object
+	 * @param   bool          If the content is just about to be created
 	 * @since   1.6
 	 */
 	public function onContentAfterSave($context, $article, $isNew)
@@ -59,11 +55,7 @@ class PlgContentJoomla extends JPlugin
 		JTable::addIncludePath(JPATH_ADMINISTRATOR . '/components/com_messages/tables');
 
 		$db = JFactory::getDbo();
-		$query = $db->getQuery(true)
-		->select($db->quoteName('id'))
-		->from($db->quoteName('#__users'))
-		->where($db->quoteName('sendEmail') . ' = 1');
-		$db->setQuery($query);
+		$db->setQuery('SELECT id FROM #__users WHERE sendEmail = 1');
 		$users = (array) $db->loadColumn();
 
 		$default_language = JComponentHelper::getParams('com_languages')->get('administrator');
@@ -93,11 +85,9 @@ class PlgContentJoomla extends JPlugin
 	/**
 	 * Don't allow categories to be deleted if they contain items or subcategories with items
 	 *
-	 * @param   string  $context  The context for the content passed to the plugin.
-	 * @param   object  $data     The data relating to the content that was deleted.
-	 *
+	 * @param   string    The context for the content passed to the plugin.
+	 * @param   object    The data relating to the content that was deleted.
 	 * @return  boolean
-	 *
 	 * @since   1.6
 	 */
 	public function onContentBeforeDelete($context, $data)
@@ -132,10 +122,8 @@ class PlgContentJoomla extends JPlugin
 		{
 			// Get table name for known core extensions
 			$table = $tableInfo[$extension]['table_name'];
-
 			// See if this category has any content items
 			$count = $this->_countItemsInCategory($table, $data->get('id'));
-
 			// Return false if db error
 			if ($count === false)
 			{
@@ -151,12 +139,10 @@ class PlgContentJoomla extends JPlugin
 					JError::raiseWarning(403, $msg);
 					$result = false;
 				}
-
 				// Check for items in any child categories (if it is a leaf, there are no child categories)
 				if (!$data->isLeaf())
 				{
 					$count = $this->_countItemsInChildren($table, $data->get('id'), $data);
-
 					if ($count === false)
 					{
 						$result = false;
@@ -178,18 +164,15 @@ class PlgContentJoomla extends JPlugin
 	/**
 	 * Get count of items in a category
 	 *
-	 * @param   string   $table  table name of component table (column is catid)
-	 * @param   integer  $catid  id of the category to check
-	 *
+	 * @param   string    table name of component table (column is catid)
+	 * @param   integer   id of the category to check
 	 * @return  mixed  count of items found or false if db error
-	 *
 	 * @since   1.6
 	 */
 	private function _countItemsInCategory($table, $catid)
 	{
 		$db = JFactory::getDbo();
 		$query = $db->getQuery(true);
-
 		// Count the items in this category
 		$query->select('COUNT(id)')
 			->from($table)
@@ -203,7 +186,6 @@ class PlgContentJoomla extends JPlugin
 		catch (RuntimeException $e)
 		{
 			JError::raiseWarning(500, $e->getMessage());
-
 			return false;
 		}
 
@@ -213,25 +195,19 @@ class PlgContentJoomla extends JPlugin
 	/**
 	 * Get count of items in a category's child categories
 	 *
-	 * @param   string   $table  table name of component table (column is catid)
-	 * @param   integer  $catid  id of the category to check
-	 * @param   object   $data   The data relating to the content that was deleted.
-	 *
+	 * @param   string    table name of component table (column is catid)
+	 * @param   integer   id of the category to check
 	 * @return  mixed  count of items found or false if db error
-	 *
 	 * @since   1.6
 	 */
 	private function _countItemsInChildren($table, $catid, $data)
 	{
 		$db = JFactory::getDbo();
-
 		// Create subquery for list of child categories
 		$childCategoryTree = $data->getTree();
-
 		// First element in tree is the current category, so we can skip that one
 		unset($childCategoryTree[0]);
 		$childCategoryIds = array();
-
 		foreach ($childCategoryTree as $node)
 		{
 			$childCategoryIds[] = $node->id;
@@ -254,7 +230,6 @@ class PlgContentJoomla extends JPlugin
 			catch (RuntimeException $e)
 			{
 				JError::raiseWarning(500, $e->getMessage());
-
 				return false;
 			}
 

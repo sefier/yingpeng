@@ -93,11 +93,12 @@ function ContentBuildRoute(&$query)
 				if (strpos($query['id'], ':') === false)
 				{
 					$db = JFactory::getDbo();
-					$dbQuery = $db->getQuery(true)
-						->select('alias')
-						->from('#__content')
-						->where('id=' . (int) $query['id']);
-					$db->setQuery($dbQuery);
+					$aquery = $db->setQuery(
+						$db->getQuery(true)
+							->select('alias')
+							->from('#__content')
+							->where('id=' . (int) $query['id'])
+					);
 					$alias = $db->loadResult();
 					$query['id'] = $query['id'] . ':' . $alias;
 				}
@@ -205,16 +206,6 @@ function ContentBuildRoute(&$query)
 				unset($query['month']);
 			}
 		}
-	}
-
-	if ($view == 'featured')
-	{
-		if (!$menuItemGiven)
-		{
-			$segments[] = $view;
-		}
-
-		unset($query['view']);
 	}
 
 	// if the layout is specified and it is the same as the layout in the menu item, we

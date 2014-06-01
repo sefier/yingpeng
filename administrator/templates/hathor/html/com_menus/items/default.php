@@ -11,9 +11,8 @@ defined('_JEXEC') or die;
 
 // Include the component HTML helpers.
 JHtml::addIncludePath(JPATH_COMPONENT.'/helpers/html');
-
+JHtml::_('behavior.tooltip');
 JHtml::_('behavior.multiselect');
-JHtml::_('behavior.modal');
 
 $user		= JFactory::getUser();
 $app		= JFactory::getApplication();
@@ -23,7 +22,7 @@ $listDirn	= $this->escape($this->state->get('list.direction'));
 $ordering 	= ($listOrder == 'a.lft');
 $canOrder	= $user->authorise('core.edit.state',	'com_menus');
 $saveOrder 	= ($listOrder == 'a.lft' && $listDirn == 'asc');
-$assoc		= JLanguageAssociations::isEnabled();
+$assoc		= isset($app->item_associations) ? $app->item_associations : 0;
 ?>
 <?php //Set up the filter bar. ?>
 <form action="<?php echo JRoute::_('index.php?option=com_menus&view=items');?>" method="post" name="adminForm" id="adminForm">

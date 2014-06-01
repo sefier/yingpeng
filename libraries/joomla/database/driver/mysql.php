@@ -54,7 +54,10 @@ class JDatabaseDriverMysql extends JDatabaseDriverMysqli
 	 */
 	public function __destruct()
 	{
-		$this->disconnect();
+		if (is_resource($this->connection))
+		{
+			mysql_close($this->connection);
+		}
 	}
 
 	/**
@@ -95,12 +98,6 @@ class JDatabaseDriverMysql extends JDatabaseDriverMysqli
 
 		// Set charactersets (needed for MySQL 4.1.2+).
 		$this->setUTF();
-
-		// Turn MySQL profiling ON in debug mode:
-		if ($this->debug && $this->hasProfiling())
-		{
-			mysql_query("SET profiling = 1;", $this->connection);
-		}
 	}
 
 	/**
@@ -113,15 +110,7 @@ class JDatabaseDriverMysql extends JDatabaseDriverMysqli
 	public function disconnect()
 	{
 		// Close the connection.
-		if (is_resource($this->connection))
-		{
-			foreach ($this->disconnectHandlers as $h)
-			{
-				call_user_func_array($h, array( &$this));
-			}
-
-			mysql_close($this->connection);
-		}
+		mysql_close($this->connection);
 
 		$this->connection = null;
 	}
@@ -257,18 +246,13 @@ class JDatabaseDriverMysql extends JDatabaseDriverMysqli
 
 		// Take a local copy so that we don't modify the original query and cause issues later
 		$query = $this->replacePrefix((string) $this->sql);
-
-		if (!($this->sql instanceof JDatabaseQuery) && ($this->limit > 0 || $this->offset > 0))
+		if ($this->limit > 0 || $this->offset > 0)
 		{
 			$query .= ' LIMIT ' . $this->offset . ', ' . $this->limit;
 		}
 
 		// Increment the query counter.
 		$this->count++;
-
-		// Reset the error values.
-		$this->errorNum = 0;
-		$this->errorMsg = '';
 
 		// If debugging is enabled then let's log the query.
 		if ($this->debug)
@@ -277,26 +261,14 @@ class JDatabaseDriverMysql extends JDatabaseDriverMysqli
 			$this->log[] = $query;
 
 			JLog::add($query, JLog::DEBUG, 'databasequery');
-
-			$this->timings[] = microtime(true);
 		}
+
+		// Reset the error values.
+		$this->errorNum = 0;
+		$this->errorMsg = '';
 
 		// Execute the query. Error suppression is used here to prevent warnings/notices that the connection has been lost.
 		$this->cursor = @mysql_query($query, $this->connection);
-
-		if ($this->debug)
-		{
-			$this->timings[] = microtime(true);
-
-			if (defined('DEBUG_BACKTRACE_IGNORE_ARGS'))
-			{
-				$this->callStacks[] = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS);
-			}
-			else
-			{
-				$this->callStacks[] = debug_backtrace();
-			}
-		}
 
 		// If an error occurred handle it.
 		if (!$this->cursor)
@@ -437,27 +409,5 @@ class JDatabaseDriverMysql extends JDatabaseDriverMysqli
 	protected function freeResult($cursor = null)
 	{
 		mysql_free_result($cursor ? $cursor : $this->cursor);
-	}
-
-	/**
-	 * Internal function to check if profiling is available
-	 *
-	 * @return  boolean
-	 *
-	 * @since 3.1.3
-	 */
-	private function hasProfiling()
-	{
-		try
-		{
-			$res = mysql_query("SHOW VARIABLES LIKE 'have_profiling'", $this->connection);
-			$row = mysql_fetch_assoc($res);
-
-			return isset($row);
-		}
-		catch (Exception $e)
-		{
-			return false;
-		}
 	}
 }

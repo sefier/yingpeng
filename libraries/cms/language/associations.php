@@ -1,7 +1,7 @@
 <?php
 /**
  * @package     Joomla.Libraries
- * @subpackage  Language
+ * @subpackage  helper
  *
  * @copyright   Copyright (C) 2005 - 2013 Open Source Matters, Inc. All rights reserved.
  * @license     GNU General Public License version 2 or later; see LICENSE.txt
@@ -33,6 +33,7 @@ class JLanguageAssociations
 	 *
 	 * @since   3.1
 	 */
+
 	public static function getAssociations($extension, $tablename, $context, $id, $pk = 'id', $aliasField = 'alias', $catField = 'catid')
 	{
 		$associations = array();
@@ -74,7 +75,7 @@ class JLanguageAssociations
 				);
 		}
 
-		$query->where('c.' . $pk . ' = ' . (int) $id);
+		$query->where('c.id =' . (int) $id);
 
 		$db->setQuery($query);
 
@@ -82,54 +83,21 @@ class JLanguageAssociations
 		{
 			$items = $db->loadObjectList('language');
 		}
-		catch (RuntimeException $e)
+		catch (runtimeException $e)
 		{
 			throw new Exception($e->getMessage(), 500);
+
+			return false;
 		}
 
 		if ($items)
 		{
 			foreach ($items as $tag => $item)
 			{
-				// Do not return itself as result
-				if ((int) $item->{$pk} != $id)
-				{
-					$associations[$tag] = $item;
-				}
+				$associations[$tag] = $item;
 			}
 		}
 
 		return $associations;
-	}
-
-	/**
-	 * Method to determine if the language filter Items Associations parameter is enabled.
-	 * This works for both site and administrator.
-	 *
-	 * @return  boolean  True if the parameter is implemented; false otherwise.
-	 *
-	 * @since   3.2
-	 */
-	public static function isEnabled()
-	{
-		// Flag to avoid doing multiple database queries.
-		static $tested = false;
-
-		// Status of language filter parameter.
-		static $enabled = false;
-
-		if (JLanguageMultilang::isEnabled())
-		{
-			// If already tested, don't test again.
-			if (!$tested)
-			{
-				$params = new JRegistry(JPluginHelper::getPlugin('system', 'languagefilter')->params);
-
-				$enabled  = (boolean) $params->get('item_associations', true);
-				$tested = true;
-			}
-		}
-
-		return $enabled;
 	}
 }

@@ -32,24 +32,21 @@ class JToolbarButtonSeparator extends JToolbarButton
 	 *
 	 * @return  string  The HTML for the separator
 	 *
-	 * @see     JToolbarButton::render()
+	 * @see     JButton::render()
 	 * @since   3.0
 	 */
 	public function render(&$definition)
 	{
-		// Store all data to the options array for use with JLayout
-		$options = array();
+		$class = null;
+		$style = null;
 
 		// Separator class name
-		$options['class'] = (empty($definition[1])) ? '' : $definition[1];
+		$class = (empty($definition[1])) ? 'btn-group' : 'btn-group ' . $definition[1];
 
 		// Custom width
-		$options['style'] = (empty($definition[2])) ? '' : ' style="width:' . (int) $definition[2] . 'px;"';
+		$style = (empty($definition[2])) ? null : ' style="width:' . (int) $definition[2] . 'px;"';
 
-		// Instantiate a new JLayoutFile instance and render the layout
-		$layout = new JLayoutFile('joomla.toolbar.separator');
-
-		return $layout->render($options);
+		return '<div class="' . $class . '"' . $style . ">\n</div>\n";
 	}
 
 	/**

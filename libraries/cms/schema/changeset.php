@@ -187,7 +187,6 @@ class JSchemaChangeset
 	{
 		// Get the folder from the database name
 		$sqlFolder = $this->db->name;
-
 		if ($sqlFolder == 'mysqli')
 		{
 			$sqlFolder = 'mysql';
@@ -202,10 +201,8 @@ class JSchemaChangeset
 		{
 			$this->folder = JPATH_ADMINISTRATOR . '/components/com_admin/sql/updates/';
 		}
-
-		return JFolder::files(
-			$this->folder . '/' . $sqlFolder, '\.sql$', 1, true, array('.svn', 'CVS', '.DS_Store', '__MACOSX'), array('^\..*', '.*~'), true
-		);
+		return JFolder::files($this->folder . '/' . $sqlFolder, '\.sql$', 1, true, array('.svn', 'CVS', '.DS_Store', '__MACOSX'),
+		array('^\..*', '.*~'), true);
 	}
 
 	/**
@@ -231,46 +228,15 @@ class JSchemaChangeset
 			$queries = JDatabaseDriver::splitSql($buffer);
 			foreach ($queries as $query)
 			{
-				if ($trimmedQuery = $this->trimQuery($query))
+				if (trim($query))
 				{
 					$fileQueries = new stdClass;
 					$fileQueries->file = $file;
-					$fileQueries->updateQuery = $trimmedQuery;
+					$fileQueries->updateQuery = $query;
 					$result[] = $fileQueries;
 				}
 			}
 		}
 		return $result;
-	}
-
-	/**
-	 * Trim comment and blank lines out of a query string
-	 *
-	 * @param   string  $query  query string to be trimmed
-	 *
-	 * @return  string  String with leading comment lines removed
-	 *
-	 * @since   3.1
-	 */
-	private function trimQuery($query)
-	{
-		$query = trim($query);
-
-		while (substr($query, 0, 1) == '#' || substr($query, 0, 2) == '--' || substr($query, 0, 2) == '/*')
-		{
-			$endChars = (substr($query, 0, 1) == '#' || substr($query, 0, 2) == '--') ? "\n" : "*/";
-
-			if ($position = strpos($query, $endChars))
-			{
-				$query = trim(substr($query, $position + strlen($endChars)));
-			}
-			else
-			{
-				// If no newline, the rest of the file is a comment, so return an empty string.
-				return '';
-			}
-		}
-
-		return trim($query);
 	}
 }

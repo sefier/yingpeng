@@ -1,10 +1,9 @@
 <?php
 /**
- * @package     Joomla.Libraries
- * @subpackage  Version
+ * @package    Joomla.Site
  *
- * @copyright   Copyright (C) 2005 - 2013 Open Source Matters, Inc. All rights reserved.
- * @license     GNU General Public License version 2 or later; see LICENSE
+ * @copyright  Copyright (C) 2005 - 2013 Open Source Matters, Inc. All rights reserved.
+ * @license    GNU General Public License version 2 or later; see LICENSE
  */
 
 defined('_JEXEC') or die;
@@ -12,9 +11,8 @@ defined('_JEXEC') or die;
 /**
  * Version information class for the Joomla CMS.
  *
- * @package     Joomla.Libraries
- * @subpackage  Version
- * @since       1.0
+ * @package  Joomla.Site
+ * @since    1.0
  */
 final class JVersion
 {
@@ -22,7 +20,7 @@ final class JVersion
 	public $PRODUCT = 'Joomla!';
 
 	/** @var  string  Release version. */
-	public $RELEASE = '3.2';
+	public $RELEASE = '3.1';
 
 	/** @var  string  Maintenance version. */
 	public $DEV_LEVEL = '1';
@@ -37,10 +35,10 @@ final class JVersion
 	public $CODENAME = 'Ember';
 
 	/** @var  string  Release date. */
-	public $RELDATE = '18-December-2013';
+	public $RELDATE = '26-April-2013';
 
 	/** @var  string  Release time. */
-	public $RELTIME = '14:30';
+	public $RELTIME = '14:00';
 
 	/** @var  string  Release timezone. */
 	public $RELTZ = 'GMT';
@@ -100,8 +98,8 @@ final class JVersion
 	public function getLongVersion()
 	{
 		return $this->PRODUCT . ' ' . $this->RELEASE . '.' . $this->DEV_LEVEL . ' '
-			. $this->DEV_STATUS . ' [ ' . $this->CODENAME . ' ] ' . $this->RELDATE . ' '
-			. $this->RELTIME . ' ' . $this->RELTZ;
+				. $this->DEV_STATUS . ' [ ' . $this->CODENAME . ' ] ' . $this->RELDATE . ' '
+				. $this->RELTIME . ' ' . $this->RELTZ;
 	}
 
 	/**
@@ -136,100 +134,5 @@ final class JVersion
 		{
 			return $this->PRODUCT . '/' . $this->RELEASE . '.' . $this->DEV_LEVEL . ($component ? ' ' . $component : '');
 		}
-	}
-
-	/**
-	 * Generate a media version string for assets
-	 * Public to allow third party developers to use it
-	 *
-	 * @return  string
-	 *
-	 * @since	3.2
-	 */
-	public function generateMediaVersion()
-	{
-		$date   = new JDate;
-		$config = JFactory::getConfig();
-
-		return md5($this->getLongVersion() . $config->get('secret') . $date->toSql());
-	}
-
-	/**
-	 * Gets a media version which is used to append to Joomla core media files.
-	 *
-	 * This media version is used to append to Joomla core media in order to trick browsers into
-	 * reloading the CSS and JavaScript, because they think the files are renewed.
-	 * The media version is renewed after Joomla core update, install, discover_install and uninstallation.
-	 *
-	 * @return  string  The media version.
-	 *
-	 * @since	3.2
-	 */
-	public function getMediaVersion()
-	{
-		// Load the media version and cache it for future use
-		static $mediaVersion = null;
-
-		if ($mediaVersion === null)
-		{
-			$config = JFactory::getConfig();
-			$debugEnabled = $config->get('debug', 0);
-
-			// Get the joomla library params
-			$params = JLibraryHelper::getParams('joomla');
-
-			// Get the media version
-			$mediaVersion = $params->get('mediaversion', '');
-
-			// Refresh assets in debug mode or when the media version is not set
-			if ($debugEnabled || empty($mediaVersion))
-			{
-				$mediaVersion = $this->generateMediaVersion();
-
-				$this->setMediaVersion($mediaVersion);
-			}
-		}
-
-		return $mediaVersion;
-	}
-
-	/**
-	 * Function to refresh the media version
-	 *
-	 * @return  JVersion  Instance of $this to allow chaining.
-	 *
-	 * @since	3.2
-	 */
-	public function refreshMediaVersion()
-	{
-		$newMediaVersion = $this->generateMediaVersion();
-
-		return $this->setMediaVersion($newMediaVersion);
-	}
-
-	/**
-	 * Sets the media version which is used to append to Joomla core media files.
-	 *
-	 * @param   string  $mediaVersion  The media version.
-	 *
-	 * @return  JVersion  Instance of $this to allow chaining.
-	 *
-	 * @since	3.2
-	 */
-	public function setMediaVersion($mediaVersion)
-	{
-		// Do not allow empty media versions
-		if (!empty($mediaVersion))
-		{
-			// Get library parameters
-			$params = JLibraryHelper::getParams('joomla');
-
-			$params->set('mediaversion', $mediaVersion);
-
-			// Save modified params
-			JLibraryHelper::saveParams('joomla', $params);
-		}
-
-		return $this;
 	}
 }

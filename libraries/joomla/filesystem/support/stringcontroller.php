@@ -28,7 +28,6 @@ class JStringController
 	public function _getArray()
 	{
 		static $strings = array();
-
 		return $strings;
 	}
 
@@ -60,7 +59,6 @@ class JStringController
 	public function getRef($reference)
 	{
 		$ref = &self::_getArray();
-
 		if (isset($ref[$reference]))
 		{
 			return $ref[$reference];

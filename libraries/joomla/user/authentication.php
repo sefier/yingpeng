@@ -261,7 +261,7 @@ class JAuthentication extends JObject
 		$response = new JAuthenticationResponse;
 
 		/*
-		 * Loop through the plugins and check if the credentials can be used to authenticate
+		 * Loop through the plugins and check of the credentials can be used to authenticate
 		 * the user
 		 *
 		 * Any errors raised in the plugin should be returned via the JAuthenticationResponse
@@ -270,7 +270,6 @@ class JAuthentication extends JObject
 		foreach ($plugins as $plugin)
 		{
 			$className = 'plg' . $plugin->type . $plugin->name;
-
 			if (class_exists($className))
 			{
 				$plugin = new $className($this, (array) $plugin);
@@ -306,7 +305,7 @@ class JAuthentication extends JObject
 			$response->fullname = $credentials['username'];
 		}
 
-		if (empty($response->password) && isset($credentials['password']))
+		if (empty($response->password))
 		{
 			$response->password = $credentials['password'];
 		}
@@ -328,11 +327,9 @@ class JAuthentication extends JObject
 	{
 		// Get plugins in case they haven't been imported already
 		JPluginHelper::importPlugin('user');
-
 		JPluginHelper::importPlugin('authentication');
 		$dispatcher = JEventDispatcher::getInstance();
 		$results = $dispatcher->trigger('onUserAuthorisation', array($response, $options));
-
 		return $results;
 	}
 }

@@ -279,7 +279,6 @@ class JApplicationWebClient
 
 			// Attempt to find version strings in the user agent string.
 			$matches = array();
-
 			if (preg_match_all($pattern, $userAgent, $matches))
 			{
 				// Do we have both a Version and browser match?
@@ -297,12 +296,11 @@ class JApplicationWebClient
 				}
 				elseif (count($matches['browser']) > 2)
 				{
-					$key = array_search('Version', $matches['browser']);
-
-					if ($key)
-					{
-						$this->browserVersion = $matches['version'][$key];
-					}
+						$key = array_search('Version', $matches['browser']);
+						if ($key)
+						{
+							$this->browserVersion = $matches['version'][$key];
+						}
 				}
 				// We only have a Version or a browser so use what we have.
 				else

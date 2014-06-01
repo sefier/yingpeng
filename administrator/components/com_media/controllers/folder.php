@@ -59,7 +59,6 @@ class MediaControllerFolder extends JControllerLegacy
 		{
 			// User is not authorised to delete
 			JError::raiseWarning(403, JText::_('JLIB_APPLICATION_ERROR_DELETE_NOT_PERMITTED'));
-
 			return false;
 		}
 
@@ -127,7 +126,7 @@ class MediaControllerFolder extends JControllerLegacy
 					}
 					else
 					{
-						// This makes no sense...
+						//This makes no sense...
 						JError::raiseWarning(100, JText::sprintf('COM_MEDIA_ERROR_UNABLE_TO_DELETE_FOLDER_NOT_EMPTY', substr($object_file->filepath, strlen(COM_MEDIA_BASE))));
 					}
 				}
@@ -161,9 +160,8 @@ class MediaControllerFolder extends JControllerLegacy
 		{
 			if (!$user->authorise('core.create', 'com_media'))
 			{
-				// User is not authorised to create
+				// User is not authorised to delete
 				JError::raiseWarning(403, JText::_('JLIB_APPLICATION_ERROR_CREATE_NOT_PERMITTED'));
-
 				return false;
 			}
 
@@ -175,7 +173,6 @@ class MediaControllerFolder extends JControllerLegacy
 			if (($folderCheck !== null) && ($folder !== $folderCheck))
 			{
 				$this->setMessage(JText::_('COM_MEDIA_ERROR_UNABLE_TO_CREATE_FOLDER_WARNDIRNAME'));
-
 				return false;
 			}
 
@@ -187,35 +184,25 @@ class MediaControllerFolder extends JControllerLegacy
 				$object_file = new JObject(array('filepath' => $path));
 				JPluginHelper::importPlugin('content');
 				$dispatcher	= JEventDispatcher::getInstance();
-				$result = $dispatcher->trigger('onContentBeforeSave', array('com_media.folder', &$object_file, true));
+				$result = $dispatcher->trigger('onContentBeforeSave', array('com_media.folder', &$object_file));
 
 				if (in_array(false, $result, true))
 				{
 					// There are some errors in the plugins
 					JError::raiseWarning(100, JText::plural('COM_MEDIA_ERROR_BEFORE_SAVE', count($errors = $object_file->getErrors()), implode('<br />', $errors)));
-
 					return false;
 				}
 
-				if (JFolder::create($object_file->filepath))
-				{
-					$data = "<html>\n<body bgcolor=\"#FFFFFF\">\n</body>\n</html>";
-					JFile::write($object_file->filepath . "/index.html", $data);
+				JFolder::create($object_file->filepath);
+				$data = "<html>\n<body bgcolor=\"#FFFFFF\">\n</body>\n</html>";
+				JFile::write($object_file->filepath . "/index.html", $data);
 
-					// Trigger the onContentAfterSave event.
-					$dispatcher->trigger('onContentAfterSave', array('com_media.folder', &$object_file, true));
-					$this->setMessage(JText::sprintf('COM_MEDIA_CREATE_COMPLETE', substr($object_file->filepath, strlen(COM_MEDIA_BASE))));
-				}
+				// Trigger the onContentAfterSave event.
+				$dispatcher->trigger('onContentAfterSave', array('com_media.folder', &$object_file, true));
+				$this->setMessage(JText::sprintf('COM_MEDIA_CREATE_COMPLETE', substr($object_file->filepath, strlen(COM_MEDIA_BASE))));
 			}
 
-			$this->input->set('folder', ($parent) ? $parent . '/' . $folder : $folder);
-		}
-		else
-		{
-			// File name is of zero length (null).
-			JError::raiseWarning(100, JText::_('COM_MEDIA_ERROR_UNABLE_TO_CREATE_FOLDER_WARNDIRNAME'));
-
-			return false;
+			$this->input->set('folder', ($parent) ? $parent.'/'.$folder : $folder);
 		}
 
 		return true;

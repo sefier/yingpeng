@@ -36,7 +36,7 @@ class JTableExtension extends JTable
 	 *
 	 * @return  boolean  True if the object is ok
 	 *
-	 * @see     JTable::check()
+	 * @see     JTable::check
 	 * @since   11.1
 	 */
 	public function check()
@@ -45,7 +45,6 @@ class JTableExtension extends JTable
 		if (trim($this->name) == '' || trim($this->element) == '')
 		{
 			$this->setError(JText::_('JLIB_DATABASE_ERROR_MUSTCONTAIN_A_TITLE_EXTENSION'));
-
 			return false;
 		}
 		return true;
@@ -60,7 +59,7 @@ class JTableExtension extends JTable
 	 *
 	 * @return  mixed  Null if operation was satisfactory, otherwise returns an error
 	 *
-	 * @see     JTable::bind()
+	 * @see     JTable::bind
 	 * @since   11.1
 	 */
 	public function bind($array, $ignore = '')
@@ -104,7 +103,6 @@ class JTableExtension extends JTable
 		$query->select($this->_db->quoteName('extension_id'))
 			->from($this->_db->quoteName('#__extensions'));
 		$this->_db->setQuery($query);
-
 		return $this->_db->loadResult();
 	}
 
@@ -142,7 +140,6 @@ class JTableExtension extends JTable
 			else
 			{
 				$this->setError(JText::_('JLIB_DATABASE_ERROR_NO_ROWS_SELECTED'));
-
 				return false;
 			}
 		}
@@ -160,9 +157,11 @@ class JTableExtension extends JTable
 			$checkin = ' AND (checked_out = 0 OR checked_out = ' . (int) $userId . ')';
 		}
 
+		// Get the JDatabaseQuery object
+		$query = $this->_db->getQuery(true);
+
 		// Update the publishing state for rows with the given primary keys.
-		$query = $this->_db->getQuery(true)
-			->update($this->_db->quoteName($this->_tbl))
+		$query->update($this->_db->quoteName($this->_tbl))
 			->set($this->_db->quoteName('enabled') . ' = ' . (int) $state)
 			->where('(' . $where . ')' . $checkin);
 		$this->_db->setQuery($query);
@@ -185,7 +184,6 @@ class JTableExtension extends JTable
 		}
 
 		$this->setError('');
-
 		return true;
 	}
 }

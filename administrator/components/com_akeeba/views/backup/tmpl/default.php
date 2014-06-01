@@ -60,7 +60,7 @@ akeeba.jQuery(document).ready(function($){
 
 	// Setup the IFRAME mode
 	akeeba_use_iframe = <?php echo $this->useiframe ?>;
-
+	
 	// Publish the SRP info
 	akeeba_srp_info = JSON.parse('<?php echo json_encode($this->srpinfo) ?>');
 
@@ -70,7 +70,7 @@ akeeba.jQuery(document).ready(function($){
 	// Bind start button's click event
 	$('#backup-start').bind("click", function(e){
 		backup_start();
-	});
+	});	
 	<?php endif; ?>
 });
 </script>
@@ -119,7 +119,7 @@ akeeba.jQuery(document).ready(function($){
 		<?php echo $this->quirks; ?>
 	</div>
 	<?php endif; ?>
-
+	
 	<?php if($this->unwritableoutput): $formstyle="style=\"display: none;\"" ?>
 	<div id="akeeba-fatal-outputdirectory" class="alert alert-error">
 	<?php if($this->srpinfo['tag'] == 'restorepoint'): ?>
@@ -149,7 +149,7 @@ akeeba.jQuery(document).ready(function($){
 
 	<?php if(!$this->unwritableoutput):?>
 
-	<form action="index.php" method="post" name="flipForm" id="flipForm" class="well akeeba-formstyle-reset form-inline" autocomplete="off">
+	<form action="index.php" method="post" name="flipForm" id="flipForm" class="well akeeba-formstyle-reset form-inline">
 		<input type="hidden" name="option" value="com_akeeba" />
 		<input type="hidden" name="view" value="backup" />
 		<input type="hidden" name="returnurl" value="<?php htmlentities($this->returnurl, ENT_COMPAT, 'UTF-8', false) ?>" />
@@ -176,8 +176,7 @@ akeeba.jQuery(document).ready(function($){
 			</label>
 			<div class="controls">
 				<input type="text" name="description" value="<?php echo $this->description; ?>"
-					maxlength="255" size="80" id="backup-description" class="input-xxlarge" autocomplete="off" />
-				<span class="help-block"><?php echo JText::_('BACKUP_LABEL_DESCRIPTION_HELP'); ?></span>
+					maxlength="255" size="80" id="backup-description" class="input-xxlarge" />
 			</div>
 		</div>
 		<?php if($this->showjpskey): ?>
@@ -187,20 +186,7 @@ akeeba.jQuery(document).ready(function($){
 			</label>
 			<div class="controls">
 				<input type="password" name="jpskey" value="<?php echo htmlentities($this->jpskey, ENT_COMPAT, 'UTF-8', false) ?>"
-				size="50" id="jpskey" autocomplete="off" />
-				<span class="help-block"><?php echo JText::_('CONFIG_JPS_KEY_DESCRIPTION'); ?></span>
-			</div>
-		</div>
-		<?php endif; ?>
-		<?php if(AKEEBA_PRO && $this->showangiekey): ?>
-		<div class="control-group">
-			<label class="control-label" for="angiekey">
-				<?php echo JText::_('CONFIG_ANGIE_KEY_TITLE'); ?>
-			</label>
-			<div class="controls">
-				<input type="password" name="angiekey" value="<?php echo htmlentities($this->angiekey, ENT_COMPAT, 'UTF-8', false) ?>"
-				size="50" id="angiekey" autocomplete="off" />
-				<span class="help-block"><?php echo JText::_('CONFIG_ANGIE_KEY_DESCRIPTION'); ?></span>
+				size="50" id="jpskey" />
 			</div>
 		</div>
 		<?php endif; ?>
@@ -209,8 +195,7 @@ akeeba.jQuery(document).ready(function($){
 				<?php echo JText::_('BACKUP_LABEL_COMMENT'); ?>
 			</label>
 			<div class="controls">
-				<textarea id="comment" rows="5" cols="73" class="input-xxlarge" autocomplete="off"><?php echo $this->comment ?></textarea>
-				<span class="help-block"><?php echo JText::_('BACKUP_LABEL_COMMENT_HELP'); ?></span>
+				<textarea id="comment" rows="5" cols="73" class="input-xxlarge"><?php echo $this->comment ?></textarea>
 			</div>
 		</div>
 		<div class="form-actions">
@@ -259,7 +244,7 @@ akeeba.jQuery(document).ready(function($){
 				<?php echo JText::_('BACKUP_TEXT_PLEASEWAITFORREDIRECTION') ?>
 				<?php endif; ?>
 			</p>
-
+	
 			<?php if(empty($this->returnurl)): ?>
 			<button class="btn btn-primary btn-large" onclick="window.location='<?php echo JURI::base() ?>index.php?option=com_akeeba&view=buadmin'; return false;">
 				<i class="icon-inbox icon-white"></i>
@@ -272,8 +257,8 @@ akeeba.jQuery(document).ready(function($){
 			<?php endif; ?>
 		</div>
 	</div>
-
-
+		
+		
 </div>
 
 <div id="backup-warnings-panel" style="display:none">
@@ -291,59 +276,29 @@ akeeba.jQuery(document).ready(function($){
 			<p><?php echo JText::_('BACKUP_TEXT_BACKUPFAILED') ?></p>
 			<p id="backup-error-message">
 			</p>
-
-			<?php if(AKEEBA_PRO):?>
-			<p>
-				<?php echo JText::_('BACKUP_TEXT_READLOGFAILPRO') ?>
-			</p>
-			<?php else: ?>
 			<p>
 				<?php echo JText::_('BACKUP_TEXT_READLOGFAIL') ?>
 			</p>
-			<?php endif; ?>
-
+			
 			<div class="alert alert-block alert-info">
-				<p>
-					<?php if(AKEEBA_PRO):?>
-					<?php echo JText::_('BACKUP_TEXT_RTFMTOSOLVEPRO') ?>
-					<?php endif; ?>
-					<?php echo JText::sprintf('BACKUP_TEXT_RTFMTOSOLVE', 'https://www.akeebabackup.com/documentation/troubleshooter/abbackup.html?utm_source=akeeba_backup&utm_campaign=backuperrorlink') ?>
-				</p>
-				<p>
-					<?php if(AKEEBA_PRO):?>
-					<?php echo JText::sprintf('BACKUP_TEXT_SOLVEISSUE_PRO', 'https://www.akeebabackup.com/support.html?utm_source=akeeba_backup&utm_campaign=backuperrorpro') ?>
-					<?php else: ?>
-					<?php echo JText::sprintf('BACKUP_TEXT_SOLVEISSUE_CORE', 'https://www.akeebabackup.com/subscribe.html?utm_source=akeeba_backup&utm_campaign=backuperrorcore','https://www.akeebabackup.com/support.html?utm_source=akeeba_backup&utm_campaign=backuperrorcore') ?>
-					<?php endif; ?>
-					<?php echo JText::sprintf('BACKUP_TEXT_SOLVEISSUE_LOG', 'index.php?option=com_akeeba&view=log&tag=backend') ?>
-				</p>
+				<?php echo JText::sprintf('BACKUP_TEXT_RTFMTOSOLVE', 'https://www.akeebabackup.com/documentation/troubleshooter/abbackup.html?utm_source=akeeba_backup&utm_campaign=backuperrorlink') ?>
+				<?php if(AKEEBA_PRO):?>
+				<?php echo JText::sprintf('BACKUP_TEXT_SOLVEISSUE_PRO', 'https://www.akeebabackup.com/support.html?utm_source=akeeba_backup&utm_campaign=backuperrorpro') ?>
+				<?php else: ?>
+				<?php echo JText::sprintf('BACKUP_TEXT_SOLVEISSUE_CORE', 'https://www.akeebabackup.com/pro-services/subscribe/new/minisupport.html?utm_source=akeeba_backup&utm_campaign=backuperrorcore','https://www.akeebabackup.com/support.html?utm_source=akeeba_backup&utm_campaign=backuperrorcore') ?>
+				<?php endif; ?>
+				<?php echo JText::sprintf('BACKUP_TEXT_SOLVEISSUE_LOG', 'index.php?option=com_akeeba&view=log&tag=backend') ?>
 			</div>
-
-			<?php if(AKEEBA_PRO):?>
-			<button class="btn btn-large btn-primary" onclick="window.location='index.php?option=com_akeeba&view=alices'; return false;">
-				<i class="icon-list-alt icon-white"></i>
-				<?php echo JText::_('BACKUP_ANALYSELOG') ?>
-			</button>
-			<button class="btn btn-mini" onclick="window.location='https://www.akeebabackup.com/documentation/troubleshooter/abbackup.html?utm_source=akeeba_backup&utm_campaign=backuperrorbutton'; return false;">
-				<i class="icon-share-alt"></i>
-				<?php echo JText::_('BACKUP_TROUBLESHOOTINGDOCS') ?>
-			</button>
-			<button class="btn btn-mini" onclick="window.location='<?php echo JURI::base() ?>index.php?option=com_akeeba&view=log'; return false;">
-				<i class="icon-list-alt"></i>
-				<?php echo JText::_('VIEWLOG'); ?>
-			</button>
-
-			<?php else: ?>
+			
 			<button class="btn btn-large btn-primary" onclick="window.location='https://www.akeebabackup.com/documentation/troubleshooter/abbackup.html?utm_source=akeeba_backup&utm_campaign=backuperrorbutton'; return false;">
 				<i class="icon-share-alt icon-white"></i>
-				<?php echo JText::_('BACKUP_TROUBLESHOOTINGDOCS') ?>
+				Troubleshooting Wizard
 			</button>
 			<button class="btn btn-mini" onclick="window.location='<?php echo JURI::base() ?>index.php?option=com_akeeba&view=log'; return false;">
 				<i class="icon-list-alt"></i>
 				<?php echo JText::_('VIEWLOG'); ?>
 			</button>
-			<?php endif; ?>
 		</div>
 	</div>
-
+		
 </div>

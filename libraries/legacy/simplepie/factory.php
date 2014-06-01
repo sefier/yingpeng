@@ -19,7 +19,8 @@ jimport('simplepie.simplepie');
  * @package     Joomla.Legacy
  * @subpackage  Simplepie
  * @since       12.2
- * @deprecated  12.3 (Platform) & 4.0 (CMS) - Use JFeed or supply your own methods
+ *
+ * @deprecated  4.0  Use JFeed or supply your own methods
  */
 class JSimplepieFactory
 {

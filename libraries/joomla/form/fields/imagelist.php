@@ -20,13 +20,14 @@ JFormHelper::loadFieldClass('filelist');
  */
 class JFormFieldImageList extends JFormFieldFileList
 {
+
 	/**
 	 * The form field type.
 	 *
 	 * @var    string
 	 * @since  11.1
 	 */
-	protected $type = 'ImageList';
+	public $type = 'ImageList';
 
 	/**
 	 * Method to get the list of images field options.

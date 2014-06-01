@@ -1,19 +1,20 @@
 <?php
 /**
  * @package     Joomla.Platform
- * @subpackage  OAuth2
+ * @subpackage  Oauth
  *
  * @copyright   Copyright (C) 2005 - 2013 Open Source Matters, Inc. All rights reserved
  * @license     GNU General Public License version 2 or later; see LICENSE
  */
 
 defined('JPATH_PLATFORM') or die;
+jimport('joomla.environment.response');
 
 /**
  * Joomla Platform class for interacting with an OAuth 2.0 server.
  *
  * @package     Joomla.Platform
- * @subpackage  OAuth2
+ * @subpackage  Oauth
  * @since       12.3
  */
 class JOAuth2Client
@@ -66,7 +67,6 @@ class JOAuth2Client
 	 * @return  string  The access token
 	 *
 	 * @since   12.3
-	 * @throws  RuntimeException
 	 */
 	public function authenticate()
 	{
@@ -139,7 +139,6 @@ class JOAuth2Client
 	 * @return  JHttpResponse  The HTTP response
 	 *
 	 * @since   12.3
-	 * @throws  InvalidArgumentException
 	 */
 	public function createUrl()
 	{
@@ -201,8 +200,6 @@ class JOAuth2Client
 	 * @return  string  The URL.
 	 *
 	 * @since   12.3
-	 * @throws  InvalidArgumentException
-	 * @throws  RuntimeException
 	 */
 	public function query($url, $data = null, $headers = array(), $method = 'get', $timeout = null)
 	{
@@ -331,8 +328,6 @@ class JOAuth2Client
 	 * @return  array  The new access token
 	 *
 	 * @since   12.3
-	 * @throws  Exception
-	 * @throws  RuntimeException
 	 */
 	public function refreshToken($token = null)
 	{

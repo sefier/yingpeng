@@ -71,15 +71,13 @@ class AkeebaModelConfigs extends FOFModel
 			'port' => $this->getState('port'),
 			'user' => $this->getState('user'),
 			'pass' => $this->getState('pass'),
-			'privkey' => $this->getState('privkey'),
-			'pubkey' => $this->getState('pubkey'),
 			'initdir' => $this->getState('initdir'),
 		);
 
 		// Perform the FTP connection test
 		$test = new AEArchiverDirectsftp();
 		$test->initialize('', $config);
-		$errors = $test->getWarnings();
+		$errors = $test->getError();
 		if(empty($errors) || $test->connect_ok)
 		{
 			$result = true;

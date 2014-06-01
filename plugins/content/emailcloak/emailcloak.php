@@ -23,7 +23,7 @@ class PlgContentEmailcloak extends JPlugin
 	 *
 	 * @param   string   $context  The context of the content being passed to the plugin.
 	 * @param   mixed    &$row     An object with a "text" property or the string to be cloaked.
-	 * @param   mixed    &$params  Additional parameters. See {@see PlgContentEmailcloak()}.
+	 * @param   array    &$params  Additional parameters. See {@see PlgContentEmailcloak()}.
 	 * @param   integer  $page     Optional page number. Unused. Defaults to zero.
 	 *
 	 * @return  boolean	True on success.
@@ -45,28 +45,25 @@ class PlgContentEmailcloak extends JPlugin
 	}
 
 	/**
-	 * Generate a search pattern based on link and text.
+	 * Genarate a search pattern based on link and text.
 	 *
-	 * @param   string  $link  The target of an email link.
-	 * @param   string  $text  The text enclosed by the link.
-	 *
+	 * @param   string	The target of an email link.
+	 * @param   string	The text enclosed by the link.
 	 * @return  string	A regular expression that matches a link containing the parameters.
 	 */
 	protected function _getPattern ($link, $text)
 	{
 		$pattern = '~(?:<a ([\w "\'=\@\.\-:;]*)href\s*=\s*"mailto:'
 			. $link . '"([\w "\'=\@\.\-:;]*))>' . $text . '</a>~i';
-
 		return $pattern;
 	}
 
 	/**
 	 * Adds an attributes to the js cloaked email.
 	 *
-	 * @param   string  $jsEmail  Js cloaked email.
-	 * @param   string  $before   Attributes before email.
-	 * @param   string  $after    Attributes after email.
-	 *
+	 * @param  string Js cloaked email.
+	 * @param  string Attributes before email.
+	 * @param  string Attributes after email.
 	 * @return string Js cloaked email with attributes.
 	 */
 	protected function _addAttributesToEmail($jsEmail, $before, $after)
@@ -76,23 +73,20 @@ class PlgContentEmailcloak extends JPlugin
 			$before = str_replace("'", "\'", $before);
 			$jsEmail = str_replace("document.write('<a '", "document.write('<a {$before}'", $jsEmail);
 		}
-
 		if ($after !== "")
 		{
 			$after = str_replace("'", "\'", $after);
 			$jsEmail = str_replace("'\'>');", "'\'{$after}>');", $jsEmail);
 		}
-
 		return $jsEmail;
 	}
 
 	/**
 	 * Cloak all emails in text from spambots via Javascript.
 	 *
-	 * @param   string  &$text    The string to be cloaked.
-	 * @param   mixed   &$params  Additional parameters. Parameter "mode" (integer, default 1)
-	 *                             replaces addresses with "mailto:" links if nonzero.
-	 *
+	 * @param   string  The string to be cloaked.
+	 * @param   array   Additional parameters. Parameter "mode" (integer, default 1)
+	 *                  replaces addresses with "mailto:" links if nonzero.
 	 * @return  boolean  True on success.
 	 */
 	protected function _cloak(&$text, &$params)
@@ -104,7 +98,6 @@ class PlgContentEmailcloak extends JPlugin
 		if (JString::strpos($text, '{emailcloak=off}') !== false)
 		{
 			$text = JString::str_ireplace('{emailcloak=off}', '', $text);
-
 			return true;
 		}
 
@@ -117,15 +110,13 @@ class PlgContentEmailcloak extends JPlugin
 		$mode = $this->params->def('mode', 1);
 
 		// any@email.address.com
-		$searchEmail = '([\w\.\-]+\@(?:[a-z0-9\.\-]+\.)+(?:[a-zA-Z0-9\-]{2,10}))';
-
+		$searchEmail = '([\w\.\-]+\@(?:[a-z0-9\.\-]+\.)+(?:[a-z0-9\-]{2,4}))';
 		// any@email.address.com?subject=anyText
 		$searchEmailLink = $searchEmail . '([?&][\x20-\x7f][^"<>]+)';
-
-		// Any Text
+		// anyText
 		$searchText = '([\x20-\x7f][^<>]+)';
 
-		// Any Image link
+		//Any Image link
 		$searchImage	=	"(<img[^>]+>)";
 
 		/*
@@ -135,7 +126,6 @@ class PlgContentEmailcloak extends JPlugin
 		 */
 		$pattern = $this->_getPattern($searchEmail, $searchEmail);
 		$pattern = str_replace('"mailto:', '"http://mce_host([\x20-\x7f][^<>]+/)', $pattern);
-
 		while (preg_match($pattern, $text, $regs, PREG_OFFSET_CAPTURE))
 		{
 			$mail = $regs[3][0];
@@ -158,7 +148,6 @@ class PlgContentEmailcloak extends JPlugin
 		 */
 		$pattern = $this->_getPattern($searchEmail, $searchText);
 		$pattern = str_replace('"mailto:', '"http://mce_host([\x20-\x7f][^<>]+/)', $pattern);
-
 		while (preg_match($pattern, $text, $regs, PREG_OFFSET_CAPTURE))
 		{
 			$mail = $regs[3][0];
@@ -179,7 +168,6 @@ class PlgContentEmailcloak extends JPlugin
 		 * >email@amail.com</a>
 		 */
 		$pattern = $this->_getPattern($searchEmail, $searchEmail);
-
 		while (preg_match($pattern, $text, $regs, PREG_OFFSET_CAPTURE))
 		{
 			$mail = $regs[2][0];
@@ -200,7 +188,6 @@ class PlgContentEmailcloak extends JPlugin
 		 * anytext</a>
 		 */
 		$pattern = $this->_getPattern($searchEmail, $searchText);
-
 		while (preg_match($pattern, $text, $regs, PREG_OFFSET_CAPTURE))
 		{
 			$mail = $regs[2][0];
@@ -220,7 +207,6 @@ class PlgContentEmailcloak extends JPlugin
 		 * <img anything></a>
 		 */
 		$pattern = $this->_getPattern($searchEmail, $searchImage);
-
 		while (preg_match($pattern, $text, $regs, PREG_OFFSET_CAPTURE))
 		{
 			$mail = $regs[2][0];
@@ -240,12 +226,10 @@ class PlgContentEmailcloak extends JPlugin
 		 * subject=Text">email@amail.com</a>
 		 */
 		$pattern = $this->_getPattern($searchEmailLink, $searchEmail);
-
 		while (preg_match($pattern, $text, $regs, PREG_OFFSET_CAPTURE))
 		{
 			$mail = $regs[2][0] . $regs[3][0];
 			$mailText = $regs[5][0];
-
 			// Needed for handling of Body parameter
 			$mail = str_replace('&amp;', '&', $mail);
 
@@ -264,12 +248,10 @@ class PlgContentEmailcloak extends JPlugin
 		 * subject=Text">anytext</a>
 		 */
 		$pattern = $this->_getPattern($searchEmailLink, $searchText);
-
 		while (preg_match($pattern, $text, $regs, PREG_OFFSET_CAPTURE))
 		{
 			$mail = $regs[2][0] . $regs[3][0];
 			$mailText = $regs[5][0];
-
 			// Needed for handling of Body parameter
 			$mail = str_replace('&amp;', '&', $mail);
 
@@ -284,7 +266,6 @@ class PlgContentEmailcloak extends JPlugin
 
 		// Search for plain text email@amail.com
 		$pattern = '~' . $searchEmail . '([^a-z0-9]|$)~i';
-
 		while (preg_match($pattern, $text, $regs, PREG_OFFSET_CAPTURE))
 		{
 			$mail = $regs[1][0];
@@ -293,7 +274,6 @@ class PlgContentEmailcloak extends JPlugin
 			// Replace the found address with the js cloaked email
 			$text = substr_replace($text, $replacement, $regs[1][1], strlen($mail));
 		}
-
 		return true;
 	}
 }

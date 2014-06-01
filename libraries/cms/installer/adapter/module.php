@@ -25,47 +25,38 @@ class JInstallerAdapterModule extends JAdapterInstance
 	 * Install function routing
 	 *
 	 * @var    string
-	 * @since  3.1
+	 * @since 3.1
 	 */
 	protected $route = 'Install';
 
 	/**
-	 * The installation manifest XML object
-	 *
-	 * @var    SimpleXMLElement
-	 * @since  3.1
+	 * @var
+	 * @since 3.1
 	 */
 	protected $manifest = null;
 
 	/**
-	 * A path to the PHP file that the scriptfile declaration in
-	 * the manifest refers to.
-	 *
-	 * @var    string
-	 * @since  3.1
+	 * @var
+	 * @since 3.1
 	 */
 	protected $manifest_script = null;
 
 	/**
 	 * Extension name
 	 *
-	 * @var    string
-	 * @since  3.1
+	 * @var
+	 * @since   3.1
 	 */
 	protected $name = null;
 
 	/**
-	 * Extension element
-	 *
-	 * @var    string
+	 * @var
 	 * @since  3.1
 	 */
 	protected $element = null;
 
 	/**
-	 * <scriptfile> element of the extension manifest
-	 *
-	 * @var    object
+	 * @var    string
 	 * @since  3.1
 	 */
 	protected $scriptElement = null;
@@ -123,8 +114,10 @@ class JInstallerAdapterModule extends JAdapterInstance
 				}
 
 				$client = (string) $this->manifest->attributes()->client;
-				$lang->load($extension . '.sys', $source, null, false, true)
-					|| $lang->load($extension . '.sys', constant('JPATH_' . strtoupper($client)), null, false, true);
+				$lang->load($extension . '.sys', $source, null, false, false)
+					|| $lang->load($extension . '.sys', constant('JPATH_' . strtoupper($client)), null, false, false)
+					|| $lang->load($extension . '.sys', $source, $lang->getDefault(), false, false)
+					|| $lang->load($extension . '.sys', constant('JPATH_' . strtoupper($client)), $lang->getDefault(), false, false);
 			}
 		}
 	}
@@ -193,6 +186,7 @@ class JInstallerAdapterModule extends JAdapterInstance
 		else
 		{
 			// No client attribute was found so we assume the site as the client
+			$cname = 'site';
 			$basePath = JPATH_SITE;
 			$clientId = 0;
 		}
@@ -860,7 +854,7 @@ class JInstallerAdapterModule extends JAdapterInstance
 		$this->parent->removeFiles($this->manifest->languages, $row->client_id);
 
 		// Let's delete all the module copies for the type we are uninstalling
-		$query->clear()
+		$query = $db->getQuery(true)
 			->select($db->quoteName('id'))
 			->from($db->quoteName('#__modules'))
 			->where($db->quoteName('module') . ' = ' . $db->quote($row->element))

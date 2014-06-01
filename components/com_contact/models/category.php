@@ -96,9 +96,6 @@ class ContactModelCategory extends JModelList
 				$params->loadString($item->params);
 				$item->params = $params;
 			}
-			$this->tags = new JHelperTags;
-			$this->tags->getItemTags('com_contact.contact', $item->id);
-
 		}
 
 		return $items;
@@ -215,6 +212,7 @@ class ContactModelCategory extends JModelList
 	{
 		$app = JFactory::getApplication();
 		$params = JComponentHelper::getParams('com_contact');
+		$db = $this->getDbo();
 
 		// List state information
 		$format = $app->input->getWord('format');
@@ -269,7 +267,7 @@ class ContactModelCategory extends JModelList
 			// Filter by start and end dates.
 			$this->setState('filter.publish_date', true);
 		}
-		$this->setState('filter.language', JLanguageMultilang::isEnabled());
+		$this->setState('filter.language', $app->getLanguageFilter());
 
 		// Load the parameters.
 		$this->setState('params', $params);
@@ -318,6 +316,8 @@ class ContactModelCategory extends JModelList
 				$this->_parent = false;
 			}
 		}
+		$this->tags = new JHelperTags;
+		$this->tags->getItemTags('com_contact.category', $this->_item->get('id'));
 
 		return $this->_item;
 	}
@@ -375,31 +375,5 @@ class ContactModelCategory extends JModelList
 			$this->getCategory();
 		}
 		return $this->_children;
-	}
-
-	/**
-	 * Increment the hit counter for the category.
-	 *
-	 * @param   integer  $pk  Optional primary key of the category to increment.
-	 *
-	 * @return  boolean  True if successful; false otherwise and internal error set.
-	 *
-	 * @since   3.2
-	 */
-	public function hit($pk = 0)
-	{
-		$input = JFactory::getApplication()->input;
-		$hitcount = $input->getInt('hitcount', 1);
-
-		if ($hitcount)
-		{
-			$pk = (!empty($pk)) ? $pk : (int) $this->getState('category.id');
-
-			$table = JTable::getInstance('Category', 'JTable');
-			$table->load($pk);
-			$table->hit($pk);
-		}
-
-		return true;
 	}
 }

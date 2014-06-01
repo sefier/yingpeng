@@ -53,9 +53,9 @@ class JDocumentRendererHead extends JDocumentRenderer
 	public function fetchHead($document)
 	{
 		// Convert the tagids to titles
+		$tagsHelper = new JHelperTags();
 		if (isset($document->_metaTags['standard']['tags']))
 		{
-			$tagsHelper = new JHelperTags;
 			$document->_metaTags['standard']['tags'] = implode(', ', $tagsHelper->getTagNames($document->_metaTags['standard']['tags']));
 		}
 
@@ -128,23 +128,15 @@ class JDocumentRendererHead extends JDocumentRenderer
 		// Generate stylesheet links
 		foreach ($document->_styleSheets as $strSrc => $strAttr)
 		{
-			$buffer .= $tab . '<link rel="stylesheet" href="' . $strSrc . '"';
-
-			if (!is_null($strAttr['mime']) && (!$document->isHtml5() || $strAttr['mime'] != 'text/css'))
-			{
-				$buffer .= ' type="' . $strAttr['mime'] . '"';
-			}
-
+			$buffer .= $tab . '<link rel="stylesheet" href="' . $strSrc . '" type="' . $strAttr['mime'] . '"';
 			if (!is_null($strAttr['media']))
 			{
-				$buffer .= ' media="' . $strAttr['media'] . '"';
+				$buffer .= ' media="' . $strAttr['media'] . '" ';
 			}
-
 			if ($temp = JArrayHelper::toString($strAttr['attribs']))
 			{
 				$buffer .= ' ' . $temp;
 			}
-
 			$buffer .= $tagEnd . $lnEnd;
 		}
 
@@ -173,25 +165,18 @@ class JDocumentRendererHead extends JDocumentRenderer
 		foreach ($document->_scripts as $strSrc => $strAttr)
 		{
 			$buffer .= $tab . '<script src="' . $strSrc . '"';
-			$defaultMimes = array(
-				'text/javascript', 'application/javascript', 'text/x-javascript', 'application/x-javascript'
-			);
-
-			if (!is_null($strAttr['mime']) && (!$document->isHtml5() || !in_array($strAttr['mime'], $defaultMimes)))
+			if (!is_null($strAttr['mime']))
 			{
 				$buffer .= ' type="' . $strAttr['mime'] . '"';
 			}
-
 			if ($strAttr['defer'])
 			{
 				$buffer .= ' defer="defer"';
 			}
-
 			if ($strAttr['async'])
 			{
 				$buffer .= ' async="async"';
 			}
-
 			$buffer .= '></script>' . $lnEnd;
 		}
 

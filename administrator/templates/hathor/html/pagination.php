@@ -64,6 +64,8 @@ defined('_JEXEC') or die;
 
 function pagination_list_footer($list)
 {
+	$lang = JFactory::getLanguage();
+
 	/**
 	 * Fix javascript jump menu
 	 *

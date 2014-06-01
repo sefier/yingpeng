@@ -268,6 +268,7 @@ class ContactModelContact extends JModelForm
 
 				->where('a.id = ' . (int) $pk);
 			$published = $this->getState('filter.published');
+			$archived = $this->getState('filter.archived');
 			if (is_numeric($published))
 			{
 				$query->where('a.published IN (1,2)')
@@ -338,7 +339,7 @@ class ContactModelContact extends JModelForm
 				// filter per language if plugin published
 				if (JLanguageMultilang::isEnabled())
 				{
-					$query->where(('a.created_by = ' . (int) $result->user_id) . ' AND ' . ('a.language=' . $db->quote(JFactory::getLanguage()->getTag()) . ' OR a.language=' . $db->quote('*')));
+					$query->where(('a.created_by = ' . (int) $result->user_id) AND ('a.language=' . $db->quote(JFactory::getLanguage()->getTag()) . ' OR a.language=' . $db->quote('*')));
 				}
 				if (is_numeric($published))
 				{
@@ -376,7 +377,7 @@ class ContactModelContact extends JModelForm
 	/**
 	 * Increment the hit counter for the contact.
 	 *
-	 * @param   integer  $pk  Optional primary key of the contact to increment.
+	 * @param   int  $pk  Optional primary key of the article to increment.
 	 *
 	 * @return  boolean  True if successful; false otherwise and internal error set.
 	 *
@@ -390,10 +391,23 @@ class ContactModelContact extends JModelForm
 		if ($hitcount)
 		{
 			$pk = (!empty($pk)) ? $pk : (int) $this->getState('contact.id');
+			$db = $this->getDbo();
 
-			$table = JTable::getInstance('Contact', 'ContactTable');
-			$table->load($pk);
-			$table->hit($pk);
+			$db->setQuery(
+				'UPDATE #__contact_details' .
+				' SET hits = hits + 1' .
+				' WHERE id = '.(int) $pk
+			);
+
+			try
+			{
+				$db->execute();
+			}
+			catch (RuntimeException $e)
+			{
+				$this->setError($e->getMessage());
+				return false;
+			}
 		}
 
 		return true;

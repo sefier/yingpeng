@@ -16,12 +16,12 @@ defined('_JEXEC') or die;
  * @subpackage  com_tags
  * @since       3.1
  */
-class TagsHelper extends JHelperContent
+class TagsHelper
 {
 	/**
 	 * Configure the Submenu links.
 	 *
-	 * @param   string  $extension  The extension.
+	 * @param   string  The extension.
 	 *
 	 * @return  void
 	 *
@@ -29,13 +29,12 @@ class TagsHelper extends JHelperContent
 	 */
 	public static function addSubmenu($extension)
 	{
-		$parts     = explode('.', $extension);
+		$parts = explode('.', $extension);
 		$component = $parts[0];
 
-		// Avoid nonsense situation.
-		if ($component == 'tags')
+		if (count($parts) > 1)
 		{
-			return;
+			$section = $parts[1];
 		}
 
 		// Try to find the component helper.
@@ -52,13 +51,39 @@ class TagsHelper extends JHelperContent
 				if (is_callable(array($cName, 'addSubmenu')))
 				{
 					$lang = JFactory::getLanguage();
-
-					// Loading language file from administrator/language directory then administrator/components/<extension>/language
-					$lang->load($component, JPATH_BASE, null, false, true)
-					||	$lang->load($component, JPath::clean(JPATH_ADMINISTRATOR . '/components/' . $component), null, false, true);
+					// loading language file from the administrator/language directory then
+					// loading language file from the administrator/components/*extension*/language directory
+						$lang->load($component, JPATH_BASE, null, false, false)
+					||	$lang->load($component, JPath::clean(JPATH_ADMINISTRATOR . '/components/' . $component), null, false, false)
+					||	$lang->load($component, JPATH_BASE, $lang->getDefault(), false, false)
+					||	$lang->load($component, JPath::clean(JPATH_ADMINISTRATOR . '/components/' . $component), $lang->getDefault(), false, false);
 
 				}
 			}
 		}
+	}
+
+	/**
+	 * Gets a list of the actions that can be performed.
+	 *
+	 * @return  JObject
+	 *
+	 * @since   3.1
+	 */
+	public static function getActions()
+	{
+		$user   = JFactory::getUser();
+		$result = new JObject;
+
+		$assetName = 'com_tags';
+		$level     = 'component';
+		$actions   = JAccess::getActions('com_tags', $level);
+
+		foreach ($actions as $action)
+		{
+			$result->set($action->name, $user->authorise($action->name, $assetName));
+		}
+
+		return $result;
 	}
 }

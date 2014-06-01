@@ -1,0 +1,38 @@
+/*------------------------------------------------------------------------
+# JF_CALLA-EXTERIORS! - JOOMFREAK.COM JOOMLA 2.5 TEMPLATE 
+# June 2013
+# ------------------------------------------------------------------------
+# COPYRIGHT: (C) 2013 JOOMFREAK.COM / KREATIF MULTIMEDIA GMBH
+# LICENSE: Creative Commons Attribution
+# AUTHOR: JOOMFREAK.COM
+# WEBSITE: http://www.joomfreak.com - http://www.kreatif-multimedia.com
+# EMAIL: info@joomfreak.com
+-------------------------------------------------------------------------*/
+
+#jf-footer .main-inner1 {
+	left: 50%;
+	margin-left: -480px;
+}
+
+.form-left, .form-right {
+	width: 50%;
+}
+
+#jf-footer .copyright {
+	bottom: 60px;
+}
+
+.clearList2, .clr2  {display: none;}
+
+#jf-footer .copyright {
+	filter: progid:DXImageTransform.Microsoft.BasicImage(rotation=0);
+	position: static !important;
+}
+
+.home #jf-header.transparent {
+	background: url(../images/header-bg.png) repeat-x;
+}
+
+div.k2Pagination ul li, div.itemBackToTop a, button, .button, #jf-contact .custom a, #jf-footer li , #jf-social li, div.addthis_toolbox a, #contact-form label#jform_contact_email_copy-lbl  {zoom:1;*display:inline !important;}
+
+body.sigProIsIE7 ul.sigProClassic span.sigProPseudoCaption { filter:alpha(opacity=70); }

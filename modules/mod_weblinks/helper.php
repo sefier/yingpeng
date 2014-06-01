@@ -19,20 +19,10 @@ JModelLegacy::addIncludePath(JPATH_SITE . '/components/com_weblinks/models', 'We
  *
  * @package     Joomla.Site
  * @subpackage  mod_weblinks
- * @since       1.5.0
  */
 class ModWeblinksHelper
 {
-	/**
-	 * Show online member names
-	 *
-	 * @param   mixed  &$params  The parameters set in the administrator backend
-	 *
-	 * @return  mixed   Null if no weblinks based on input parameters else an array containing all the weblinks.
-	 *
-	 * @since   1.5.0
-	 **/
-	public static function getList(&$params)
+	public static function getList($params)
 	{
 		// Get an instance of the generic articles model
 		$model = JModelLegacy::getInstance('Category', 'WeblinksModel', array('ignore_request' => true));
@@ -70,7 +60,7 @@ class ModWeblinksHelper
 		$a_id = $query->castAsChar('a.id');
 		$case_when1 .= $query->concatenate(array($a_id, 'a.alias'), ':');
 		$case_when1 .= ' ELSE ';
-		$case_when1 .= $a_id . ' END as slug';
+		$case_when1 .= $a_id.' END as slug';
 
 		$case_when2 = ' CASE WHEN ';
 		$case_when2 .= $query->charLength('c.alias', '!=', '0');
@@ -78,7 +68,7 @@ class ModWeblinksHelper
 		$c_id = $query->castAsChar('c.id');
 		$case_when2 .= $query->concatenate(array($c_id, 'c.alias'), ':');
 		$case_when2 .= ' ELSE ';
-		$case_when2 .= $c_id . ' END as catslug';
+		$case_when2 .= $c_id.' END as catslug';
 
 		$model->setState(
 			'list.select',
@@ -105,7 +95,6 @@ class ModWeblinksHelper
 					$item->link = $item->url;
 				}
 			}
-
 			return $items;
 		}
 		else

@@ -20,15 +20,6 @@ JLoader::register('NewsfeedsHelper', JPATH_ADMINISTRATOR . '/components/com_news
  */
 class NewsfeedsModelNewsfeed extends JModelAdmin
 {
-
-	/**
-	 * The type alias for this content type.
-	 *
-	 * @var      string
-	 * @since    3.2
-	 */
-	public $typeAlias = 'com_newsfeeds.newsfeed';
-
 	/**
 	 * @var        string    The prefix to use with controller messages.
 	 * @since   1.6
@@ -50,10 +41,40 @@ class NewsfeedsModelNewsfeed extends JModelAdmin
 	{
 		$categoryId = (int) $value;
 
+		$table = $this->getTable();
 		$i = 0;
 
-		if (!parent::checkCategoryId($categoryId))
+		// Check that the category exists
+		if ($categoryId)
 		{
+			$categoryTable = JTable::getInstance('Category');
+			if (!$categoryTable->load($categoryId))
+			{
+				if ($error = $categoryTable->getError())
+				{
+					// Fatal error
+					$this->setError($error);
+					return false;
+				}
+				else
+				{
+					$this->setError(JText::_('JLIB_APPLICATION_ERROR_BATCH_MOVE_CATEGORY_NOT_FOUND'));
+					return false;
+				}
+			}
+		}
+
+		if (empty($categoryId))
+		{
+			$this->setError(JText::_('JLIB_APPLICATION_ERROR_BATCH_MOVE_CATEGORY_NOT_FOUND'));
+			return false;
+		}
+
+		// Check that the user has create permission for the component
+		$user = JFactory::getUser();
+		if (!$user->authorise('core.create', 'com_newsfeeds.category.' . $categoryId))
+		{
+			$this->setError(JText::_('JLIB_APPLICATION_ERROR_BATCH_CANNOT_CREATE'));
 			return false;
 		}
 
@@ -63,16 +84,15 @@ class NewsfeedsModelNewsfeed extends JModelAdmin
 			// Pop the first ID off the stack
 			$pk = array_shift($pks);
 
-			$this->table->reset();
+			$table->reset();
 
 			// Check that the row actually exists
-			if (!$this->table->load($pk))
+			if (!$table->load($pk))
 			{
-				if ($error = $this->table->getError())
+				if ($error = $table->getError())
 				{
 					// Fatal error
 					$this->setError($error);
-
 					return false;
 				}
 				else
@@ -84,37 +104,35 @@ class NewsfeedsModelNewsfeed extends JModelAdmin
 			}
 
 			// Alter the title & alias
-			$data = $this->generateNewTitle($categoryId, $this->table->alias, $this->table->name);
-			$this->table->name = $data['0'];
-			$this->table->alias = $data['1'];
+			$data = $this->generateNewTitle($categoryId, $table->alias, $table->name);
+			$table->name = $data['0'];
+			$table->alias = $data['1'];
 
 			// Reset the ID because we are making a copy
-			$this->table->id = 0;
+			$table->id = 0;
 
 			// New category ID
-			$this->table->catid = $categoryId;
+			$table->catid = $categoryId;
 
 			// TODO: Deal with ordering?
-			//$this->table->ordering	= 1;
+			//$table->ordering	= 1;
 
 			// Check the row.
-			if (!$this->table->check())
+			if (!$table->check())
 			{
-				$this->setError($this->table->getError());
+				$this->setError($table->getError());
 				return false;
 			}
 
-			parent::createTagsHelper($this->tagsObserver, $this->type, $pk, $this->typeAlias, $this->table);
-
 			// Store the row.
-			if (!$this->table->store())
+			if (!$table->store())
 			{
-				$this->setError($this->table->getError());
+				$this->setError($table->getError());
 				return false;
 			}
 
 			// Get the new item ID
-			$newId = $this->table->get('id');
+			$newId = $table->get('id');
 
 			// Add the new ID to the array
 			$newIds[$i] = $newId;
@@ -290,7 +308,7 @@ class NewsfeedsModelNewsfeed extends JModelAdmin
 		if (parent::save($data))
 		{
 
-			$assoc = JLanguageAssociations::isEnabled();
+			$assoc = isset($app->item_associations) ? $app->item_associations : 0;
 			if ($assoc)
 			{
 				$id = (int) $this->getState($this->getName() . '.id');
@@ -339,7 +357,7 @@ class NewsfeedsModelNewsfeed extends JModelAdmin
 					$query->clear()
 						->insert('#__associations');
 
-					foreach ($associations as $id)
+					foreach ($associations as $tag => $id)
 					{
 						$query->values($id . ',' . $db->quote('com_newsfeeds.item') . ',' . $db->quote($key));
 					}
@@ -386,7 +404,7 @@ class NewsfeedsModelNewsfeed extends JModelAdmin
 
 		// Load associated newsfeeds items
 		$app = JFactory::getApplication();
-		$assoc = JLanguageAssociations::isEnabled();
+		$assoc = isset($app->item_associations) ? $app->item_associations : 0;
 
 		if ($assoc)
 		{
@@ -402,7 +420,6 @@ class NewsfeedsModelNewsfeed extends JModelAdmin
 				}
 			}
 		}
-
 		if (!empty($item->id))
 		{
 			$item->tags = new JHelperTags;
@@ -492,7 +509,7 @@ class NewsfeedsModelNewsfeed extends JModelAdmin
 	{
 		// Association newsfeeds items
 		$app = JFactory::getApplication();
-		$assoc = JLanguageAssociations::isEnabled();
+		$assoc = isset($app->item_associations) ? $app->item_associations : 0;
 		if ($assoc)
 		{
 			$languages = JLanguageHelper::getLanguages('lang_code');
@@ -514,12 +531,10 @@ class NewsfeedsModelNewsfeed extends JModelAdmin
 					$add = true;
 					$field = $fieldset->addChild('field');
 					$field->addAttribute('name', $tag);
-					$field->addAttribute('type', 'modal_newsfeed');
+					$field->addAttribute('type', 'modal_newsfeeds');
 					$field->addAttribute('language', $tag);
 					$field->addAttribute('label', $language->title);
 					$field->addAttribute('translate_label', 'false');
-					$field->addAttribute('edit', 'true');
-					$field->addAttribute('clear', 'true');
 				}
 			}
 			if ($add)

@@ -8,10 +8,6 @@
  */
 
 defined('_JEXEC') or die;
-
-// Load chosen.css
-JHtml::_('formbehavior.chosen', 'select');
-
 ?>
 <?php
 	echo JHtml::_('bootstrap.startAccordion', 'templatestyleOptions', array('active' => 'collapse0'));

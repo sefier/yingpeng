@@ -361,6 +361,7 @@ class FinderModelSearch extends JModelList
 		 * process of getting the result total is more complicated.
 		 */
 		$start = 0;
+		$more = false;
 		$items = array();
 		$sorted = array();
 		$maps = array();
@@ -516,6 +517,7 @@ class FinderModelSearch extends JModelList
 				else
 				{
 					// Setup containers in case we have to make multiple passes.
+					$reqMore = false;
 					$reqStart = 0;
 					$reqTemp = array();
 
@@ -837,6 +839,7 @@ class FinderModelSearch extends JModelList
 				else
 				{
 					// Setup containers in case we have to make multiple passes.
+					$reqMore = false;
 					$reqStart = 0;
 					$reqTemp = array();
 
@@ -957,15 +960,14 @@ class FinderModelSearch extends JModelList
 		 * Iterate through the mapping groups and load the excluded links ids
 		 * from each mapping table.
 		 */
-		// Create a new query object.
-		$db = $this->getDbo();
-		$query = $db->getQuery(true);
 		foreach ($maps as $suffix => $ids)
 		{
+			// Create a new query object.
+			$db = $this->getDbo();
+			$query = $db->getQuery(true);
 
 			// Create the query to get the links ids.
-			$query->clear()
-				->select('link_id')
+			$query->select('link_id')
 				->from($db->quoteName('#__finder_links_terms' . $suffix))
 				->where($db->quoteName('term_id') . ' IN (' . implode(',', $ids) . ')')
 				->group($db->quoteName('link_id'));
@@ -1001,7 +1003,7 @@ class FinderModelSearch extends JModelList
 	protected function getTermsQuery($terms)
 	{
 		// Create the SQL query to get the matching link ids.
-		// TODO: Impact of removing SQL_NO_CACHE?
+		//@TODO: Impact of removing SQL_NO_CACHE?
 		$db = $this->getDbo();
 		$query = $db->getQuery(true)
 			->select('SQL_NO_CACHE link_id')
@@ -1071,7 +1073,7 @@ class FinderModelSearch extends JModelList
 		$user = JFactory::getUser();
 		$filter = JFilterInput::getInstance();
 
-		$this->setState('filter.language', JLanguageMultilang::isEnabled());
+		$this->setState('filter.language', $app->getLanguageFilter());
 
 		// Setup the stemmer.
 		if ($params->get('stem', 1) && $params->get('stemmer', 'porter_en'))

@@ -57,19 +57,15 @@ class MediaControllerFile extends JControllerLegacy
 		{
 			return false;
 		}
-
-		if (($params->get('upload_maxsize', 0) * 1024 * 1024) != 0)
+		if (
+			$_SERVER['CONTENT_LENGTH'] > ($params->get('upload_maxsize', 0) * 1024 * 1024) ||
+			$_SERVER['CONTENT_LENGTH'] > (int) (ini_get('upload_max_filesize')) * 1024 * 1024 ||
+			$_SERVER['CONTENT_LENGTH'] > (int) (ini_get('post_max_size')) * 1024 * 1024 ||
+			(($_SERVER['CONTENT_LENGTH'] > (int) (ini_get('memory_limit')) * 1024 * 1024) && ((int) (ini_get('memory_limit')) != -1))
+		)
 		{
-			if (
-				$_SERVER['CONTENT_LENGTH'] > ($params->get('upload_maxsize', 0) * 1024 * 1024)
-				|| $_SERVER['CONTENT_LENGTH'] > (int) (ini_get('upload_max_filesize')) * 1024 * 1024
-				|| $_SERVER['CONTENT_LENGTH'] > (int) (ini_get('post_max_size')) * 1024 * 1024
-				|| (($_SERVER['CONTENT_LENGTH'] > (int) (ini_get('memory_limit')) * 1024 * 1024) && ((int) (ini_get('memory_limit')) != -1))
-			)
-			{
-				JError::raiseWarning(100, JText::_('COM_MEDIA_ERROR_WARNFILETOOLARGE'));
-				return false;
-			}
+			JError::raiseWarning(100, JText::_('COM_MEDIA_ERROR_WARNFILETOOLARGE'));
+			return false;
 		}
 
 		// Perform basic checks on file info before attempting anything
@@ -84,7 +80,7 @@ class MediaControllerFile extends JControllerLegacy
 				return false;
 			}
 
-			if (($params->get('upload_maxsize', 0) * 1024 * 1024) != 0 && $file['size'] > ($params->get('upload_maxsize', 0) * 1024 * 1024))
+			if ($file['size'] > ($params->get('upload_maxsize', 0) * 1024 * 1024))
 			{
 				JError::raiseNotice(100, JText::_('COM_MEDIA_ERROR_WARNFILETOOLARGE'));
 				return false;
@@ -117,14 +113,14 @@ class MediaControllerFile extends JControllerLegacy
 
 			if (!MediaHelper::canUpload($file, $err))
 			{
-				// The file can't be uploaded
-
+				// The file can't be upload
+				JError::raiseNotice(100, JText::_($err));
 				return false;
 			}
 
 			// Trigger the onContentBeforeSave event.
 			$object_file = new JObject($file);
-			$result = $dispatcher->trigger('onContentBeforeSave', array('com_media.file', &$object_file, true));
+			$result = $dispatcher->trigger('onContentBeforeSave', array('com_media.file', &$object_file));
 
 			if (in_array(false, $result, true))
 			{

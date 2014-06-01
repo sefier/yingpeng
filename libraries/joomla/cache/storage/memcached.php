@@ -20,26 +20,20 @@ defined('JPATH_PLATFORM') or die;
 class JCacheStorageMemcached extends JCacheStorage
 {
 	/**
-	 * Memcached connection object
-	 *
 	 * @var    Memcached
 	 * @since  12.1
 	 */
 	protected static $_db = null;
 
 	/**
-	 * Persistent session flag
-	 *
 	 * @var    boolean
 	 * @since  12.1
 	 */
 	protected $_persistent = false;
 
 	/**
-	 * Payload compression level
-	 *
-	 * @var    integer
-	 * @since  12.1
+	 * @var
+	 * @since   12.1
 	 */
 	protected $_compress = 0;
 

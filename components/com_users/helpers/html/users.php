@@ -44,7 +44,7 @@ abstract class JHtmlUsers
 	{
 		if (empty($value))
 		{
-			return static::value($value);
+			return self::value($value);
 		}
 		else
 		{
@@ -79,7 +79,7 @@ abstract class JHtmlUsers
 	{
 		if (empty($value))
 		{
-			return static::value($value);
+			return self::value($value);
 		}
 		else
 		{
@@ -96,7 +96,7 @@ abstract class JHtmlUsers
 			}
 			else
 			{
-				return static::value('');
+				return self::value('');
 			}
 		}
 	}
@@ -105,7 +105,7 @@ abstract class JHtmlUsers
 	{
 		if (empty($value))
 		{
-			return static::value($value);
+			return self::value($value);
 		}
 		else
 		{
@@ -124,7 +124,7 @@ abstract class JHtmlUsers
 			}
 			else
 			{
-				return static::value('');
+				return self::value('');
 			}
 		}
 	}
@@ -133,7 +133,7 @@ abstract class JHtmlUsers
 	{
 		if (empty($value))
 		{
-			return static::value($value);
+			return self::value($value);
 		}
 		else
 		{
@@ -152,7 +152,7 @@ abstract class JHtmlUsers
 			}
 			else
 			{
-				return static::value('');
+				return self::value('');
 			}
 		}
 	}
@@ -161,7 +161,7 @@ abstract class JHtmlUsers
 	{
 		if (empty($value))
 		{
-			return static::value($value);
+			return self::value($value);
 		}
 		else
 		{
@@ -176,14 +176,16 @@ abstract class JHtmlUsers
 			$title = $db->loadResult();
 			if ($title)
 			{
-				$lang->load("plg_editors_$value.sys", JPATH_ADMINISTRATOR, null, false, true)
-					|| $lang->load("plg_editors_$value.sys", JPATH_PLUGINS . '/editors/' . $value, null, false, true);
+				$lang->load("plg_editors_$value.sys", JPATH_ADMINISTRATOR, null, false, false)
+					|| $lang->load("plg_editors_$value.sys", JPATH_PLUGINS . '/editors/' . $value, null, false, false)
+					|| $lang->load("plg_editors_$value.sys", JPATH_ADMINISTRATOR, $lang->getDefault(), false, false)
+					|| $lang->load("plg_editors_$value.sys", JPATH_PLUGINS . '/editors/' . $value, $lang->getDefault(), false, false);
 				$lang->load($title . '.sys');
 				return JText::_($title);
 			}
 			else
 			{
-				return static::value('');
+				return self::value('');
 			}
 		}
 	}

@@ -12,17 +12,7 @@ defined('_JEXEC') or die;
 // Include the helper functions only once
 require_once __DIR__ . '/helper.php';
 
-$cacheid = md5(serialize($module->module));
-
-$cacheparams = new stdClass;
-$cacheparams->cachemode = 'id';
-$cacheparams->class = 'ModArticlesCategoriesHelper';
-$cacheparams->method = 'getList';
-$cacheparams->methodparams = $params;
-$cacheparams->modeparams = $cacheid;
-
-$list = JModuleHelper::moduleCache($module, $params, $cacheparams);
-
+$list = ModArticlesCategoriesHelper::getList($params);
 if (!empty($list))
 {
 	$moduleclass_sfx = htmlspecialchars($params->get('moduleclass_sfx'));

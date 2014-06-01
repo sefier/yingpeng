@@ -9,8 +9,6 @@
 
 defined('_JEXEC') or die;
 
-JLoader::register('FinderIndexerParser', dirname(__DIR__) . '/parser.php');
-
 /**
  * HTML Parser class for the Finder indexer package.
  *

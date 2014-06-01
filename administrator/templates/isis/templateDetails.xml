@@ -34,7 +34,6 @@
 		<position>icon</position>
 		<position>cp_shell</position>
 		<position>cpanel</position>
-		<position>bottom</position>
 		<position>footer</position>
 		<position>login</position>
 		<position>debug</position>
@@ -57,17 +56,12 @@
 				label="TPL_ISIS_COLOR_HEADER_LABEL"
 				description="TPL_ISIS_COLOR_HEADER_DESC" />
 
-				<field name="sidebarColor" class="" type="color" default="#0088CC"
-				validate="color"
-				label="TPL_ISIS_COLOR_SIDEBAR_LABEL"
-				description="TPL_ISIS_COLOR_SIDEBAR_DESC" />
-
 				<field name="logoFile" class="" type="media" default=""
 				label="TPL_ISIS_LOGO_LABEL"
 				description="TPL_ISIS_LOGO_DESC" />
 
 				<field name="admin_menus" type="radio"
-				class="btn-group btn-group-yesno"
+				class="btn-group"
 				default="1"
 				label="TPL_ISIS_FIELD_ADMIN_MENUS_LABEL"
 				description="TPL_ISIS_FIELD_ADMIN_MENUS_DESC"
@@ -79,7 +73,7 @@
 				</field>
 
 				<field name="displayHeader" type="radio"
-				class="btn-group btn-group-yesno"
+				class="btn-group"
 				default="1"
 				label="TPL_ISIS_HEADER_LABEL"
 				description="TPL_ISIS_HEADER_DESC"
@@ -102,7 +96,7 @@
 				</field>
 
 				<field name="stickyToolbar" type="radio"
-				class="btn-group btn-group-yesno"
+				class="btn-group"
 				default="1"
 				label="TPL_ISIS_STICKY_LABEL"
 				description="TPL_ISIS_STICKY_DESC"
