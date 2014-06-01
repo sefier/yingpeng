@@ -78,42 +78,7 @@ else
 <head>
 	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 	<jdoc:include type="head" />
-	
-<?php if (JRequest::getVar('option') == 'com_contact' && $this->params->get('map')) : ?>
-<script src="http://maps.googleapis.com/maps/api/js?key=AIzaSyDqEFJTjKx6L-RpoT-nPiqTi1KJVJimH3I&sensor=false"></script>
 
-<script>
-	var map;
-	var myCenter=new google.maps.LatLng('<?php echo $latitude ?>', '<?php echo $longitude ?>');
-	
-	function initialize()
-	{
-		var mapProp = {
-			center:myCenter,
-			zoom:13,
-			mapTypeId:google.maps.MapTypeId.ROADMAP
-		};
-	
-		map = new google.maps.Map(document.getElementById("googleMap"),mapProp);
-	  
-		var marker=new google.maps.Marker({
-			position:myCenter
-		});
-	
-		<?php if ($this->params->get('marker')) : ?>
-		marker.setMap(map);
-		<?php endif; ?>
-	
-		var infowindow = new google.maps.InfoWindow({
-			content:'<?php echo $markerdescription; ?>'
-		});
-	
-		infowindow.open(map,marker);
-	}
-
-	google.maps.event.addDomListener(window, 'load', initialize);
-</script>
-<?php endif; ?>
 
 	<!--[if IE 7]>
 	<link href="<?php echo $this->baseurl ?>/templates/<?php echo $this->template; ?>/css/ie7only.css" rel="stylesheet" type="text/css" />
