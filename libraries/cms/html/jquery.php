@@ -51,7 +51,7 @@ abstract class JHtmlJquery
 			$debug  = (boolean) $config->get('debug');
 		}
 
-		JHtml::_('script', 'jui/jquery.min.js', false, true, false, false, $debug);
+		JHtml::_('script', 'http://sh-yingpeng.qiniudn.com/media/jui/js/jquery.min.js', false, true, false, false, $debug);
 
 		// Check if we are loading in noConflict
 		if ($noConflict)
