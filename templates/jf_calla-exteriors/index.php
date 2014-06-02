@@ -189,11 +189,6 @@ else
 				<div class="main-inner1 clearfix">
 					<jdoc:include type="modules" name="footer" style="xhtml" />
 					
-					<?php if (($this->params->get('social') && ($templateparams->get('facebookicon') || $templateparams->get('flickricon') || $templateparams->get('googleicon') || $templateparams->get('skypelink') || $templateparams->get('twittericon') || $templateparams->get('pinteresticon') || $templateparams->get('youtubeticon')))) : ?>
-					<div id="jf-social">
-						<a target="_blank" href="http://wpa.qq.com/msgrd?v=1&uin=2845826906&site=qq&menu=yes" ><img border="0" src="http://wpa.qq.com/pa?p=1:2845826906:3" alt="点击这里给我发消息" title="点击这里给我发消息"></a>
-					</div>
-					<?php endif; ?>
 				</div>			
 			</div>		
 		</div>
