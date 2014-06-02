@@ -161,7 +161,7 @@ class ContactControllerContact extends JControllerForm
 			$body	= $name.' <'.$email.'>'."\r\n\r\n".stripslashes($body);
 
 			$mail = JFactory::getMailer();
-			$mail->addRecipient($mailfrom);//$contact->email_to);
+			$mail->addRecipient('hys@sh-yingpeng.com');//$contact->email_to);
 			//$mail->addReplyTo(array($email, $name));
 			$mail->setSender(array($mailfrom, $fromname));
 			$mail->setSubject('用户留言：'.date('Y-m-d H:i:s',time()));//$sitename.': '.$subject);
