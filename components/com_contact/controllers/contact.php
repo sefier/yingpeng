@@ -161,30 +161,30 @@ class ContactControllerContact extends JControllerForm
 			$body	= $prefix."\n".$name.' <'.$email.'>'."\r\n\r\n".stripslashes($body);
 
 			$mail = JFactory::getMailer();
-			$mail->addRecipient($contact->email_to);
-			$mail->addReplyTo(array($email, $name));
+			$mail->addRecipient($mailfrom);//$contact->email_to);
+			//$mail->addReplyTo(array($email, $name));
 			$mail->setSender(array($mailfrom, $fromname));
-			$mail->setSubject($sitename.': '.$subject);
+			$mail->setSubject('用户留言');//$sitename.': '.$subject);
 			$mail->setBody($body);
 			$sent = $mail->Send();
 
 			//If we are supposed to copy the sender, do so.
 
 			// check whether email copy function activated
-			if ( array_key_exists('contact_email_copy', $data)  )
-			{
-				$copytext		= JText::sprintf('COM_CONTACT_COPYTEXT_OF', $contact->name, $sitename);
-				$copytext		.= "\r\n\r\n".$body;
-				$copysubject	= JText::sprintf('COM_CONTACT_COPYSUBJECT_OF', $subject);
+			// if ( array_key_exists('contact_email_copy', $data)  )
+			// {
+			// 	$copytext		= JText::sprintf('COM_CONTACT_COPYTEXT_OF', $contact->name, $sitename);
+			// 	$copytext		.= "\r\n\r\n".$body;
+			// 	$copysubject	= JText::sprintf('COM_CONTACT_COPYSUBJECT_OF', $subject);
 
-				$mail = JFactory::getMailer();
-				$mail->addRecipient($email);
-				$mail->addReplyTo(array($email, $name));
-				$mail->setSender(array($mailfrom, $fromname));
-				$mail->setSubject($copysubject);
-				$mail->setBody($copytext);
-				$sent = $mail->Send();
-			}
+			// 	$mail = JFactory::getMailer();
+			// 	$mail->addRecipient($email);
+			// 	$mail->addReplyTo(array($email, $name));
+			// 	$mail->setSender(array($mailfrom, $fromname));
+			// 	$mail->setSubject($copysubject);
+			// 	$mail->setBody($copytext);
+			// 	$sent = $mail->Send();
+			// }
 
 			return $sent;
 	}
