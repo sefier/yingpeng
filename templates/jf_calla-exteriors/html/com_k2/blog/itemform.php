@@ -316,7 +316,7 @@ $document->addScriptDeclaration("
 									<?php else: ?>
 										<?php if (K2_JVERSION == '15'): ?>
 										<dl id="system-message">
-											<dt class="notice"><?php echo JText::_('K2_NOTICE'); ?></dt>
+											<dt class="notice"><?php echo '测试'; ?></dt>
 											<dd class="notice message fade">
 												<ul>
 													<li><?php echo JText::_('K2_NOTICE_PLEASE_INSTALL_JOOMLAWORKS_SIMPLE_IMAGE_GALLERY_PRO_PLUGIN_IF_YOU_WANT_TO_USE_THE_IMAGE_GALLERY_FEATURES_OF_K2'); ?></li>
@@ -326,7 +326,7 @@ $document->addScriptDeclaration("
 										<?php elseif(K2_JVERSION == '25'): ?>
 										<div id="system-message-container">
 											<dl id="system-message">
-												<dt class="notice"><?php echo JText::_('K2_NOTICE'); ?></dt>
+												<dt class="notice"><?php echo '测试'; ?></dt>
 												<dd class="notice message">
 													<ul>
 														<li><?php echo JText::_('K2_NOTICE_PLEASE_INSTALL_JOOMLAWORKS_SIMPLE_IMAGE_GALLERY_PRO_PLUGIN_IF_YOU_WANT_TO_USE_THE_IMAGE_GALLERY_FEATURES_OF_K2'); ?></li>
@@ -336,7 +336,7 @@ $document->addScriptDeclaration("
 										</div>
 										<?php else: ?>
 										<div class="alert">
-											<h4 class="alert-heading"><?php echo JText::_('K2_NOTICE'); ?></h4>
+											<h4 class="alert-heading"><?php echo '测试'; ?></h4>
 											<div><p><?php echo JText::_('K2_NOTICE_PLEASE_INSTALL_JOOMLAWORKS_SIMPLE_IMAGE_GALLERY_PRO_PLUGIN_IF_YOU_WANT_TO_USE_THE_IMAGE_GALLERY_FEATURES_OF_K2'); ?></p></div>
 										</div>
 										<?php endif; ?>
@@ -434,7 +434,7 @@ $document->addScriptDeclaration("
 									<?php else: ?>
 										<?php if (K2_JVERSION == '15'): ?>
 										<dl id="system-message">
-											<dt class="notice"><?php echo JText::_('K2_NOTICE'); ?></dt>
+											<dt class="notice"><?php echo '测试'; ?></dt>
 											<dd class="notice message fade">
 												<ul>
 													<li><?php echo JText::_('K2_NOTICE_PLEASE_INSTALL_JOOMLAWORKS_ALLVIDEOS_PLUGIN_IF_YOU_WANT_TO_USE_THE_FULL_VIDEO_FEATURES_OF_K2'); ?></li>
@@ -444,7 +444,7 @@ $document->addScriptDeclaration("
 										<?php elseif(K2_JVERSION == '25'): ?>
 										<div id="system-message-container">
 											<dl id="system-message">
-												<dt class="notice"><?php echo JText::_('K2_NOTICE'); ?></dt>
+												<dt class="notice"><?php echo '测试'; ?></dt>
 												<dd class="notice message">
 													<ul>
 														<li><?php echo JText::_('K2_NOTICE_PLEASE_INSTALL_JOOMLAWORKS_ALLVIDEOS_PLUGIN_IF_YOU_WANT_TO_USE_THE_FULL_VIDEO_FEATURES_OF_K2'); ?></li>
@@ -454,7 +454,7 @@ $document->addScriptDeclaration("
 										</div>
 										<?php else: ?>
 										<div class="alert">
-											<h4 class="alert-heading"><?php echo JText::_('K2_NOTICE'); ?></h4>
+											<h4 class="alert-heading"><?php echo '测试'; ?></h4>
 											<div><p><?php echo JText::_('K2_NOTICE_PLEASE_INSTALL_JOOMLAWORKS_ALLVIDEOS_PLUGIN_IF_YOU_WANT_TO_USE_THE_FULL_VIDEO_FEATURES_OF_K2'); ?></p></div>
 										</div>
 										<?php endif; ?>
@@ -549,7 +549,7 @@ $document->addScriptDeclaration("
 										<?php else: ?>
 											<?php if (K2_JVERSION == '15'): ?>
 												<dl id="system-message">
-													<dt class="notice"><?php echo JText::_('K2_NOTICE'); ?></dt>
+													<dt class="notice"><?php echo '测试'; ?></dt>
 													<dd class="notice message fade">
 														<ul>
 															<li><?php echo JText::_('K2_PLEASE_SELECT_A_CATEGORY_FIRST_TO_RETRIEVE_ITS_RELATED_EXTRA_FIELDS'); ?></li>
@@ -559,7 +559,7 @@ $document->addScriptDeclaration("
 											<?php elseif (K2_JVERSION == '25'): ?>
 											<div id="system-message-container">
 												<dl id="system-message">
-													<dt class="notice"><?php echo JText::_('K2_NOTICE'); ?></dt>
+													<dt class="notice"><?php echo '测试'; ?></dt>
 													<dd class="notice message">
 														<ul>
 															<li><?php echo JText::_('K2_PLEASE_SELECT_A_CATEGORY_FIRST_TO_RETRIEVE_ITS_RELATED_EXTRA_FIELDS'); ?></li>
@@ -569,7 +569,7 @@ $document->addScriptDeclaration("
 											</div>
 											<?php else: ?>
 											<div class="alert">
-												<h4 class="alert-heading"><?php echo JText::_('K2_NOTICE'); ?></h4>
+												<h4 class="alert-heading"><?php echo '测试'; ?></h4>
 												<div>
 													<p><?php echo JText::_('K2_PLEASE_SELECT_A_CATEGORY_FIRST_TO_RETRIEVE_ITS_RELATED_EXTRA_FIELDS'); ?></p>
 												</div>
