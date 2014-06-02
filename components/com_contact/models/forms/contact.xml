@@ -11,13 +11,12 @@
 			required="true"
 		/>
 		<field name="contact_email"
-			type="email"
+			type="text"
 			id="contact-email"
 			size="30"
 			description="COM_CONTACT_EMAIL_DESC"
 			label="COM_CONTACT_EMAIL_LABEL"
 			filter="string"
-			validate="contactemail"
 			required="true"
 		/>
 		<field name="contact_message"
@@ -28,7 +27,6 @@
 			description="COM_CONTACT_CONTACT_ENTER_MESSAGE_DESC"
 			label="COM_CONTACT_CONTACT_ENTER_MESSAGE_LABEL"
 			filter="htmlsafe"
-			validate="contactemailmessage"
 			required="true"
 		/>
 		<field name="contact_email_copy"
