@@ -67,9 +67,6 @@ jimport('joomla.html.html.bootstrap');
 	<?php if ($this->params->get('presentation_style') == 'tabs') : ?>
 		<?php echo JHtml::_('bootstrap.addTab', 'myTab', 'basic-details', JText::_('COM_CONTACT_DETAILS', true)); ?>
 	<?php endif; ?>
-	<?php if ($this->params->get('presentation_style') == 'plain'):?>
-		<?php  echo '<h3>'. JText::_('联系我们').'</h3>';  ?>
-	<?php endif; ?>
 
 	<?php if ($this->contact->image && $this->params->get('show_image')) : ?>
 		<div class="thumbnail pull-right">
@@ -109,7 +106,6 @@ jimport('joomla.html.html.bootstrap');
 			<?php echo JHtml::_('bootstrap.addTab', 'myTab', 'display-form', JText::_('COM_CONTACT_EMAIL_FORM', true)); ?>
 		<?php endif; ?>
 		<?php if ($this->params->get('presentation_style') == 'plain'):?>
-			<?php echo '<p>您可以在线留言（推荐），或者通过下方的手机、QQ、电子邮箱进行联系。</p>'; ?>
 			<?php echo '<h3>在线留言</h3>'; ?>
 			<?php  echo '<span class="star">您的留言提交后，我们将安排专业技术工程师，第一时间与您联系。</span>';  ?>
 		<?php endif; ?>
