@@ -194,11 +194,6 @@ else
 						<a target="_blank" href="http://wpa.qq.com/msgrd?v=1&uin=2845826906&site=qq&menu=yes" ><img border="0" src="http://wpa.qq.com/pa?p=1:2845826906:3" alt="点击这里给我发消息" title="点击这里给我发消息"></a>
 					</div>
 					<?php endif; ?>
-					<div class="copyright">
-						<p>copyright©</p>
-						<a title="joomfreak" target="_blank" href="http://www.joomfreak.com">joomfreak.com</a> &amp; 
-						<a title="climagrün" target="_blank" href="http://www.climagruen.it">climagrün® dachbegrünung</a>
-					</div>
 				</div>			
 			</div>		
 		</div>
