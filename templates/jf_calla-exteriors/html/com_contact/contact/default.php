@@ -107,7 +107,7 @@ jimport('joomla.html.html.bootstrap');
 		<?php endif; ?>
 		<?php if ($this->params->get('presentation_style') == 'plain'):?>
 			<?php echo '<h3>在线留言</h3>'; ?>
-			<?php  echo '<span class="star">您的留言提交后，我们将安排专业技术工程师，第一时间与您联系。</span>';  ?>
+			<?php  echo '<span class="star">您的留言提交后，我们将安排专业工程师，第一时间与您联系。</span>';  ?>
 		<?php endif; ?>
 
 		<?php  echo $this->loadTemplate('form');  ?>
