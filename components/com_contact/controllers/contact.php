@@ -164,7 +164,7 @@ class ContactControllerContact extends JControllerForm
 			$mail->addRecipient($mailfrom);//$contact->email_to);
 			//$mail->addReplyTo(array($email, $name));
 			$mail->setSender(array($mailfrom, $fromname));
-			$mail->setSubject('用户留言');//$sitename.': '.$subject);
+			$mail->setSubject('用户留言：'.date('Y-m-d H:i:s',time()));//$sitename.': '.$subject);
 			$mail->setBody($body);
 			$sent = $mail->Send();
 
