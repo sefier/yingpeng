@@ -106,10 +106,10 @@ class ContactControllerContact extends JControllerForm
 
 		// Send the email
 		$sent = false;
-		if (!$params->get('custom_reply'))
-		{
+		// if (!$params->get('custom_reply'))
+		// {
 			$sent = $this->_sendEmail($data, $contact);
-		}
+		// }
 
 		// Set the success message if it was a success
 		if (!($sent instanceof Exception))
