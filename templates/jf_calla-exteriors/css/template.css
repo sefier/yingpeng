@@ -732,7 +732,7 @@ div.itemListBlog div.groupLinks h3.catItemTitle {
 	padding: 0 0 0 15px;
     text-transform: none;
 }
-
+/*
 div.itemListBlog span.catItemImage a:hover span.catItemHover, div.k2ItemsBlock ul li .moduleItemImage:hover span.moduleItemImageHover {
 	background: url(../images/blog-hover.png) no-repeat center center;
 	display: block;
@@ -742,6 +742,7 @@ div.itemListBlog span.catItemImage a:hover span.catItemHover, div.k2ItemsBlock u
 	top: 0;
 	left: 0;
 }
+*/
 
 div.itemHeader div.itemHeaderRight {
 	float: right;
@@ -768,11 +769,11 @@ span.itemImage a:hover span.itemImageHover, span.itemImage a:hover span.itemImag
 	top: 0;
 	left: 0;
 }
-*/
 
 span.itemImage a:hover span.itemImageHoverIcon {
 	background: url(../images/blog-hover.png) no-repeat center center;
 }
+*/
 
 div.itemRelated ul li {
 	float: left;
