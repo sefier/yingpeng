@@ -759,6 +759,7 @@ div.itemImageTitle {
 	padding: 0 10px;
 }
 
+/*
 span.itemImage a:hover span.itemImageHover, span.itemImage a:hover span.itemImageHoverIcon {
 	background: url(../images/overlay.png);
 	display: block;
@@ -768,6 +769,7 @@ span.itemImage a:hover span.itemImageHover, span.itemImage a:hover span.itemImag
 	top: 0;
 	left: 0;
 }
+*/
 
 span.itemImage a:hover span.itemImageHoverIcon {
 	background: url(../images/blog-hover.png) no-repeat center center;
