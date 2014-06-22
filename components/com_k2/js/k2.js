@@ -130,15 +130,6 @@ $K2(document).ready(function(){
 		$K2('.itemFullText').addClass('largerFontSize');
 	});
 
-	// Smooth Scroll
-	$K2('.k2Anchor').click(function(event){
-		event.preventDefault();
-		var target = this.hash;
-		$K2('html, body').stop().animate({
-			scrollTop: $K2(target).offset().top
-		}, 500);
-	});
-
 	// Rating
 	$K2('.itemRatingForm a').click(function(event){
 		event.preventDefault();
