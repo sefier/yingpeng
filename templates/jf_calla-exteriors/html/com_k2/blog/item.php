@@ -662,7 +662,7 @@ defined('_JEXEC') or die;
 	<?php if(!JRequest::getCmd('print')): ?>
 	<div class="itemBackToTop">
 		<a class="k2Anchor" href="/blog.html">
-			<?php echo JText::_('K2_BACK_TO_TOP'); ?>
+			回到业务介绍
 		</a>
 	</div>
 	<?php endif; ?>
