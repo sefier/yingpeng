@@ -584,8 +584,9 @@ div.k2ItemsBlock ul li .moduleItemImage img {
 }
 
 #jf-footer li {
-	display: inline-block;
+	display: block;
 	font-size: 36px;
+  margin: 10px;
 }
 
 #jf-footer li strong {
