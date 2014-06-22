@@ -661,7 +661,7 @@ defined('_JEXEC') or die;
 
 	<?php if(!JRequest::getCmd('print')): ?>
 	<div class="itemBackToTop">
-		<a class="k2Anchor" href="<?php echo $this->item->link; ?>#startOfPageId<?php echo JRequest::getInt('id'); ?>">
+		<a class="k2Anchor" href="/portfolio.html">
 			<?php echo JText::_('K2_BACK_TO_TOP'); ?>
 		</a>
 	</div>
