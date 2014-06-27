@@ -202,9 +202,13 @@ document.write(unescape("%3Cscript src='" + _bdhmProtocol + "hm.baidu.com/h.js%3
 
 if(jQuery('#system-message .alert div p').length != 0){
   if(jQuery('#system-message .alert div p')[0].textContent == '感谢您的邮件。'){
-    alert('我们已经收到您的留言，将会尽快与您联系，感谢您的支持！')
+    jQuery('#system-message').addClass('alert alert-success');
+    jQuery('#system-message').html('我们已经收到您的留言，将会尽快与您联系，感谢您的支持！');
+    jQuery('#system-message').show();
   }else{
-    alert('请完整并正确填写各项信息，谢谢！')
+    jQuery('#system-message').addClass('alert alert-danger');
+    jQuery('#system-message').html('请完整并正确填写各项信息，谢谢！');
+    jQuery('#system-message').show();
   }
 }
 </script>
