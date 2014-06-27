@@ -662,7 +662,7 @@ defined('_JEXEC') or die;
 	<?php if(!JRequest::getCmd('print')): ?>
 	<div class="itemBackToTop">
 		<a class="k2Anchor" href="/portfolio.html">
-			返回
+			&nbsp;&nbsp;后退&nbsp;&nbsp;
 		</a>
 	</div>
 	<?php endif; ?>
