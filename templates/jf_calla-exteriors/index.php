@@ -198,6 +198,15 @@ else
 <script type="text/javascript">
 var _bdhmProtocol = (("https:" == document.location.protocol) ? " https://" : " http://");
 document.write(unescape("%3Cscript src='" + _bdhmProtocol + "hm.baidu.com/h.js%3F12801e0f3c892b349dbfd276cf471ba3' type='text/javascript'%3E%3C/script%3E"));
+
+
+if(jQuery('#system-message .alert div p').length != 0){
+  if(jQuery('#system-message .alert div p')[0].textContent == '感谢您的邮件。'){
+    alert('我们已经收到您的留言，将会尽快与您联系，感谢您的支持！')
+  }else{
+    alert('请完整并正确填写各项信息，谢谢！')
+  }
+}
 </script>
 </body>
 </html>
