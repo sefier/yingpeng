@@ -567,7 +567,7 @@ div.k2ItemsBlock ul li .moduleItemImage img {
 	background: url(../images/linestar-footer.png) no-repeat center 40px;
 	padding: 150px 0 0;
 	position: fixed;
-	bottom: 40px;
+	bottom: 0;
 	width: 960px;
 	z-index: 0;
 }
