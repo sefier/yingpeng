@@ -208,11 +208,7 @@ defined('_JEXEC') or die;
 	  <!-- Item Image -->
 	  <div class="itemImageBlock">
 		  <span class="itemImage">
-		  	<a class="modal" rel="{handler: 'image'}" href="<?php echo $this->item->imageXLarge; ?>" title="<?php echo JText::_('K2_CLICK_TO_PREVIEW_IMAGE'); ?>">
-		  		<img src="http://sh-yingpeng.qiniudn.com<?php echo $this->item->image; ?>" alt="<?php if(!empty($this->item->image_caption)) echo K2HelperUtilities::cleanHtml($this->item->image_caption); else echo K2HelperUtilities::cleanHtml($this->item->title); ?>" style="width:<?php echo $this->item->imageWidth; ?>px; height:auto;" />
-				<span class="itemImageHover"></span>
-				<span class="itemImageHoverIcon"></span>
-		  	</a>
+		  	<img src="http://sh-yingpeng.qiniudn.com<?php echo $this->item->image; ?>" alt="<?php if(!empty($this->item->image_caption)) echo K2HelperUtilities::cleanHtml($this->item->image_caption); else echo K2HelperUtilities::cleanHtml($this->item->title); ?>" style="width:<?php echo $this->item->imageWidth; ?>px; height:auto;" />
 		  </span>
 		
 		<?php if(($this->item->params->get('itemImageMainCaption') && !empty($this->item->image_caption)) || ($this->item->params->get('itemImageMainCredits') && !empty($this->item->image_credits))): ?>
